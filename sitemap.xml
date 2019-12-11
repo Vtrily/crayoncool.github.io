@@ -1,7 +1,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
     
         <url>
-            <loc>http:vtrily.github.io/2019/12/my-first-post/</loc>
+            <loc>https://vtrily.github.io/2019/12/my-first-post/</loc>
             
                 <lastmod>2019-12-10T11:16:49+08:00</lastmod>
             
@@ -15,7 +15,7 @@
         </url>
     
         <url>
-            <loc>http:vtrily.github.io/posts/</loc>
+            <loc>https://vtrily.github.io/posts/</loc>
             
                 <lastmod>2019-12-10T11:16:49+08:00</lastmod>
             
@@ -29,7 +29,7 @@
         </url>
     
         <url>
-            <loc>http:vtrily.github.io/</loc>
+            <loc>https://vtrily.github.io/</loc>
             
                 <lastmod>2019-12-10T11:16:49+08:00</lastmod>
             
@@ -43,7 +43,7 @@
         </url>
     
         <url>
-            <loc>http:vtrily.github.io/about/</loc>
+            <loc>https://vtrily.github.io/about/</loc>
             
                 <lastmod>2019-08-02T11:04:49+08:00</lastmod>
             
@@ -57,7 +57,7 @@
         </url>
     
         <url>
-            <loc>http:vtrily.github.io/categories/</loc>
+            <loc>https://vtrily.github.io/categories/</loc>
             
             
                 <changefreq>weekly</changefreq>
@@ -69,7 +69,7 @@
         </url>
     
         <url>
-            <loc>http:vtrily.github.io/tags/</loc>
+            <loc>https://vtrily.github.io/tags/</loc>
             
             
                 <changefreq>weekly</changefreq>
