@@ -1,7 +1,49 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
     
         <url>
-            <loc>http:crayoncool.github.io/about/</loc>
+            <loc>http:vtrily.github.io/2019/12/my-first-post/</loc>
+            
+                <lastmod>2019-12-10T11:16:49+08:00</lastmod>
+            
+            
+                <changefreq>weekly</changefreq>
+            
+            
+                <priority>0.5</priority>
+            
+            
+        </url>
+    
+        <url>
+            <loc>http:vtrily.github.io/posts/</loc>
+            
+                <lastmod>2019-12-10T11:16:49+08:00</lastmod>
+            
+            
+                <changefreq>weekly</changefreq>
+            
+            
+                <priority>0.5</priority>
+            
+            
+        </url>
+    
+        <url>
+            <loc>http:vtrily.github.io/</loc>
+            
+                <lastmod>2019-12-10T11:16:49+08:00</lastmod>
+            
+            
+                <changefreq>weekly</changefreq>
+            
+            
+                <priority>0.5</priority>
+            
+            
+        </url>
+    
+        <url>
+            <loc>http:vtrily.github.io/about/</loc>
             
                 <lastmod>2019-08-02T11:04:49+08:00</lastmod>
             
@@ -15,9 +57,7 @@
         </url>
     
         <url>
-            <loc>http:crayoncool.github.io/</loc>
-            
-                <lastmod>2019-08-02T11:04:49+08:00</lastmod>
+            <loc>http:vtrily.github.io/categories/</loc>
             
             
                 <changefreq>weekly</changefreq>
@@ -29,19 +69,7 @@
         </url>
     
         <url>
-            <loc>http:crayoncool.github.io/categories/</loc>
-            
-            
-                <changefreq>weekly</changefreq>
-            
-            
-                <priority>0.5</priority>
-            
-            
-        </url>
-    
-        <url>
-            <loc>http:crayoncool.github.io/tags/</loc>
+            <loc>http:vtrily.github.io/tags/</loc>
             
             
                 <changefreq>weekly</changefreq>

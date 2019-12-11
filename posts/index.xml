@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on Vtrily</title>
+    <link>http:vtrily.github.io/posts/</link>
+    <description>Recent content in Posts on Vtrily</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh</language>
+    <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
+    <lastBuildDate>Tue, 10 Dec 2019 11:16:49 +0800</lastBuildDate>
+    
+	<atom:link href="http:vtrily.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>My First Post</title>
+      <link>http:vtrily.github.io/2019/12/my-first-post/</link>
+      <pubDate>Tue, 10 Dec 2019 11:16:49 +0800</pubDate>
+      
+      <guid>http:vtrily.github.io/2019/12/my-first-post/</guid>
+      <description>Hello  aaa bbb ccc  </description>
+    </item>
+    
+  </channel>
+</rss>
