@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Git on Vtrily</title>
+    <link>https://vtrily.github.io/tags/git/</link>
+    <description>Recent content in Git on Vtrily</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh</language>
+    <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
+    <lastBuildDate>Thu, 12 Dec 2019 22:34:43 +0800</lastBuildDate>
+    
+	<atom:link href="https://vtrily.github.io/tags/git/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Git原理</title>
+      <link>https://vtrily.github.io/2019/12/git%E5%8E%9F%E7%90%86/</link>
+      <pubDate>Thu, 12 Dec 2019 22:34:43 +0800</pubDate>
+      
+      <guid>https://vtrily.github.io/2019/12/git%E5%8E%9F%E7%90%86/</guid>
+      <description>Git原理详解 </description>
+    </item>
+    
+  </channel>
+</rss>

@@ -7,10 +7,28 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Tue, 10 Dec 2019 11:16:49 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 12 Dec 2019 22:36:38 +0800</lastBuildDate>
     
 	<atom:link href="https://vtrily.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Maven</title>
+      <link>https://vtrily.github.io/2019/12/maven/</link>
+      <pubDate>Thu, 12 Dec 2019 22:36:38 +0800</pubDate>
+      
+      <guid>https://vtrily.github.io/2019/12/maven/</guid>
+      <description>Maven </description>
+    </item>
+    
+    <item>
+      <title>Git原理</title>
+      <link>https://vtrily.github.io/2019/12/git%E5%8E%9F%E7%90%86/</link>
+      <pubDate>Thu, 12 Dec 2019 22:34:43 +0800</pubDate>
+      
+      <guid>https://vtrily.github.io/2019/12/git%E5%8E%9F%E7%90%86/</guid>
+      <description>Git原理详解 </description>
+    </item>
     
     <item>
       <title>Spring源码解析之DispatcherServlet</title>

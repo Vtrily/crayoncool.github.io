@@ -3,7 +3,35 @@
         <url>
             <loc>https://vtrily.github.io/categories/</loc>
             
-                <lastmod>2019-12-10T11:16:49+08:00</lastmod>
+                <lastmod>2019-12-12T22:36:38+08:00</lastmod>
+            
+            
+                <changefreq>weekly</changefreq>
+            
+            
+                <priority>0.5</priority>
+            
+            
+        </url>
+    
+        <url>
+            <loc>https://vtrily.github.io/2019/12/maven/</loc>
+            
+                <lastmod>2019-12-12T22:36:38+08:00</lastmod>
+            
+            
+                <changefreq>weekly</changefreq>
+            
+            
+                <priority>0.5</priority>
+            
+            
+        </url>
+    
+        <url>
+            <loc>https://vtrily.github.io/tags/maven/</loc>
+            
+                <lastmod>2019-12-12T22:36:38+08:00</lastmod>
             
             
                 <changefreq>weekly</changefreq>
@@ -17,7 +45,77 @@
         <url>
             <loc>https://vtrily.github.io/posts/</loc>
             
-                <lastmod>2019-12-10T11:16:49+08:00</lastmod>
+                <lastmod>2019-12-12T22:36:38+08:00</lastmod>
+            
+            
+                <changefreq>weekly</changefreq>
+            
+            
+                <priority>0.5</priority>
+            
+            
+        </url>
+    
+        <url>
+            <loc>https://vtrily.github.io/tags/</loc>
+            
+                <lastmod>2019-12-12T22:36:38+08:00</lastmod>
+            
+            
+                <changefreq>weekly</changefreq>
+            
+            
+                <priority>0.5</priority>
+            
+            
+        </url>
+    
+        <url>
+            <loc>https://vtrily.github.io/</loc>
+            
+                <lastmod>2019-12-12T22:36:38+08:00</lastmod>
+            
+            
+                <changefreq>weekly</changefreq>
+            
+            
+                <priority>0.5</priority>
+            
+            
+        </url>
+    
+        <url>
+            <loc>https://vtrily.github.io/categories/%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93/</loc>
+            
+                <lastmod>2019-12-12T22:36:38+08:00</lastmod>
+            
+            
+                <changefreq>weekly</changefreq>
+            
+            
+                <priority>0.5</priority>
+            
+            
+        </url>
+    
+        <url>
+            <loc>https://vtrily.github.io/tags/git/</loc>
+            
+                <lastmod>2019-12-12T22:34:43+08:00</lastmod>
+            
+            
+                <changefreq>weekly</changefreq>
+            
+            
+                <priority>0.5</priority>
+            
+            
+        </url>
+    
+        <url>
+            <loc>https://vtrily.github.io/2019/12/git%E5%8E%9F%E7%90%86/</loc>
+            
+                <lastmod>2019-12-12T22:34:43+08:00</lastmod>
             
             
                 <changefreq>weekly</changefreq>
@@ -44,48 +142,6 @@
     
         <url>
             <loc>https://vtrily.github.io/2019/12/spring%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%E4%B9%8Bdispatcherservlet/</loc>
-            
-                <lastmod>2019-12-10T11:16:49+08:00</lastmod>
-            
-            
-                <changefreq>weekly</changefreq>
-            
-            
-                <priority>0.5</priority>
-            
-            
-        </url>
-    
-        <url>
-            <loc>https://vtrily.github.io/tags/</loc>
-            
-                <lastmod>2019-12-10T11:16:49+08:00</lastmod>
-            
-            
-                <changefreq>weekly</changefreq>
-            
-            
-                <priority>0.5</priority>
-            
-            
-        </url>
-    
-        <url>
-            <loc>https://vtrily.github.io/</loc>
-            
-                <lastmod>2019-12-10T11:16:49+08:00</lastmod>
-            
-            
-                <changefreq>weekly</changefreq>
-            
-            
-                <priority>0.5</priority>
-            
-            
-        </url>
-    
-        <url>
-            <loc>https://vtrily.github.io/categories/%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93/</loc>
             
                 <lastmod>2019-12-10T11:16:49+08:00</lastmod>
             
