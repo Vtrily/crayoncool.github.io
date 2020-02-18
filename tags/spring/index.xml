@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Spring on Vtrily</title>
+    <link>https://vtrily.github.io/tags/spring/</link>
+    <description>Recent content in Spring on Vtrily</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh</language>
+    <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
+    <lastBuildDate>Wed, 12 Feb 2020 22:34:43 +0800</lastBuildDate>
+    
+	<atom:link href="https://vtrily.github.io/tags/spring/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>@Autowired和@Resource的区别</title>
+      <link>https://vtrily.github.io/2020/02/autowired%E5%92%8Cresource%E7%9A%84%E5%8C%BA%E5%88%AB/</link>
+      <pubDate>Wed, 12 Feb 2020 22:34:43 +0800</pubDate>
+      
+      <guid>https://vtrily.github.io/2020/02/autowired%E5%92%8Cresource%E7%9A%84%E5%8C%BA%E5%88%AB/</guid>
+      <description>@Autowired和@Resource的区别 </description>
+    </item>
+    
+  </channel>
+</rss>

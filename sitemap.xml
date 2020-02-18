@@ -1,6 +1,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
     
         <url>
+            <loc>https://vtrily.github.io/2020/02/autowired%E5%92%8Cresource%E7%9A%84%E5%8C%BA%E5%88%AB/</loc>
+            
+                <lastmod>2020-02-12T22:34:43+08:00</lastmod>
+            
+            
+                <changefreq>weekly</changefreq>
+            
+            
+                <priority>0.5</priority>
+            
+            
+        </url>
+    
+        <url>
             <loc>https://vtrily.github.io/categories/</loc>
             
                 <lastmod>2020-02-12T22:34:43+08:00</lastmod>
@@ -43,7 +57,35 @@
         </url>
     
         <url>
+            <loc>https://vtrily.github.io/tags/java/</loc>
+            
+                <lastmod>2020-02-12T22:34:43+08:00</lastmod>
+            
+            
+                <changefreq>weekly</changefreq>
+            
+            
+                <priority>0.5</priority>
+            
+            
+        </url>
+    
+        <url>
             <loc>https://vtrily.github.io/posts/</loc>
+            
+                <lastmod>2020-02-12T22:34:43+08:00</lastmod>
+            
+            
+                <changefreq>weekly</changefreq>
+            
+            
+                <priority>0.5</priority>
+            
+            
+        </url>
+    
+        <url>
+            <loc>https://vtrily.github.io/tags/spring/</loc>
             
                 <lastmod>2020-02-12T22:34:43+08:00</lastmod>
             
@@ -102,20 +144,6 @@
             <loc>https://vtrily.github.io/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E8%BF%9E%E6%8E%A5%E6%B1%A0/</loc>
             
                 <lastmod>2020-02-12T22:34:43+08:00</lastmod>
-            
-            
-                <changefreq>weekly</changefreq>
-            
-            
-                <priority>0.5</priority>
-            
-            
-        </url>
-    
-        <url>
-            <loc>https://vtrily.github.io/tags/java/</loc>
-            
-                <lastmod>2020-01-07T20:34:43+08:00</lastmod>
             
             
                 <changefreq>weekly</changefreq>
@@ -374,6 +402,16 @@
             
             
                 <priority>0.5</priority>
+            
+            
+        </url>
+    
+        <url>
+            <loc>https://vtrily.github.io/1/01/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/</loc>
+            
+            
+            
+                <priority>0</priority>
             
             
         </url>

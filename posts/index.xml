@@ -13,6 +13,15 @@
     
     
     <item>
+      <title>@Autowired和@Resource的区别</title>
+      <link>https://vtrily.github.io/2020/02/autowired%E5%92%8Cresource%E7%9A%84%E5%8C%BA%E5%88%AB/</link>
+      <pubDate>Wed, 12 Feb 2020 22:34:43 +0800</pubDate>
+      
+      <guid>https://vtrily.github.io/2020/02/autowired%E5%92%8Cresource%E7%9A%84%E5%8C%BA%E5%88%AB/</guid>
+      <description>@Autowired和@Resource的区别 </description>
+    </item>
+    
+    <item>
       <title>HikariCP学习</title>
       <link>https://vtrily.github.io/2020/02/hikaricp%E5%AD%A6%E4%B9%A0/</link>
       <pubDate>Wed, 12 Feb 2020 22:34:43 +0800</pubDate>
@@ -91,6 +100,15 @@
       
       <guid>https://vtrily.github.io/2019/12/spring%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%E4%B9%8Bdispatcherservlet/</guid>
       <description>Hello  aaa bbb ccc  </description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://vtrily.github.io/1/01/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://vtrily.github.io/1/01/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/</guid>
+      <description></description>
     </item>
     
   </channel>
