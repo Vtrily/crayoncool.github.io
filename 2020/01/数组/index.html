@@ -6,7 +6,7 @@
         <title>数组 | Vtrily</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noodp" />
 <meta name="Description" content="Vtrily&#39;s Blog">
-<link rel="prev" href="https://vtrily.github.io/2019/12/mybatis%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/" />
+<link rel="prev" href="https://vtrily.github.io/2020/01/%E9%93%BE%E8%A1%A8/" />
 <link rel="next" href="https://vtrily.github.io/2020/01/openfeign%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" />
 <link rel="canonical" href="https://vtrily.github.io/2020/01/%E6%95%B0%E7%BB%84/" />
 <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
@@ -19,7 +19,26 @@
 <meta name="theme-color" content="#ffffff">
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="数组"/>
-<meta name="twitter:description" content="数组 1. 数组是什么？ 数组是一种占用连续内存的数据结构。用于存储多个相同类型数据的集合。"/>
+<meta name="twitter:description" content="数组 1.数组是什么？ 数组是一种占用连续内存空间的线性表数据结构。用于存储一组具有相同类型的数据。
+关键词：线性表，连续内存空间，相同数据类型
+优点：
+查询快，通过下标支持随机访问，时间复杂度是O(1)
+缺点:
+添加和删除操作低效，为了要保证内存空间的连续性需要做数据搬移的操作。
+数组和链表的区别
+数组支持通过下标进行随机访问，时间复杂度是O(1)
+2.为什么Java中数组的下标是从0开始的？ 这个问题需要研究一下数组的存储模型，因为数组是一中占用连续内存的数据结构
+base &#43; 下标 * 数据长度
+如果说下标是从1开始的话，寻址公式就会变成
+base &#43; （下标 - 1） * 数据长度
+这样CPU就会多进行一次减法运算，为了最大的利用CPU，所以Java中数组的下标从0开始
+3.Java中数组和容器相比有什么优缺点 容器 优点 容器对数组的操作进行了封装，使用简单，重要的是容器实现了数组的自动扩容机制，数组扩容时不用手写复杂的扩容代码
+Java中ArrayList初始化容量是10，容量不足时会按照
+最大的容量是MAX_ARRAY_SIZE = Integer.MAX_VALUE（2^31-1） - 8
+缺点 容器中只能包装对象，存在封箱拆箱的操作，占用内存大
+数组 优点 占用内存少
+缺点 没有自动扩容机制
+扩容时需要手动实现数据搬移"/>
 <script type="application/ld+json">
     {
     "@context": "http://schema.org",
@@ -41,7 +60,7 @@
     
         "keywords": "java",
     
-    "wordcount":  4 ,
+    "wordcount":  44 ,
     "url": "https:\/\/vtrily.github.io\/2020\/01\/%E6%95%B0%E7%BB%84\/",
     
         "datePublished": "2020-01-06T20:34:43\x2b08:00",
@@ -141,7 +160,7 @@
             </div>
             <div class="post-meta-other">
                 <i class="far fa-calendar-alt fa-fw"></i><time datetime=2020-01-06>2020-01-06</time>&nbsp;
-                <i class="fas fa-pencil-alt fa-fw"></i>约 4 字&nbsp;
+                <i class="fas fa-pencil-alt fa-fw"></i>约 44 字&nbsp;
                 <i class="far fa-clock fa-fw"></i>预计阅读 1 分钟&nbsp;</div>
         </div>
 
@@ -176,8 +195,35 @@
             
             
             <a class="post-dummy-target" id="heading"></a><h1>数组</h1>
-<a class="post-dummy-target" id="1-"></a><h2>1. 数组是什么？</h2>
-<p>数组是一种占用连续内存的数据结构。用于存储多个相同类型数据的集合。</p>
+<a class="post-dummy-target" id="1"></a><h2>1.数组是什么？</h2>
+<p>数组是一种占用连续内存空间的线性表数据结构。用于存储一组具有相同类型的数据。</p>
+<p>关键词：线性表，连续内存空间，相同数据类型</p>
+<p>优点：</p>
+<p>查询快，通过下标支持随机访问，时间复杂度是O(1)</p>
+<p>缺点:</p>
+<p>添加和删除操作低效，为了要保证内存空间的连续性需要做数据搬移的操作。</p>
+<p>数组和链表的区别</p>
+<p>数组支持通过下标进行随机访问，时间复杂度是O(1)</p>
+<a class="post-dummy-target" id="2java0"></a><h2>2.为什么Java中数组的下标是从0开始的？</h2>
+<p>这个问题需要研究一下数组的存储模型，因为数组是一中占用连续内存的数据结构</p>
+<p>base + 下标 * 数据长度</p>
+<p>如果说下标是从1开始的话，寻址公式就会变成</p>
+<p>base + （下标 - 1） * 数据长度</p>
+<p>这样CPU就会多进行一次减法运算，为了最大的利用CPU，所以Java中数组的下标从0开始</p>
+<a class="post-dummy-target" id="3java"></a><h2>3.Java中数组和容器相比有什么优缺点</h2>
+<a class="post-dummy-target" id="heading1"></a><h3>容器</h3>
+<a class="post-dummy-target" id="heading2"></a><h4>优点</h4>
+<p>容器对数组的操作进行了封装，使用简单，重要的是容器实现了数组的自动扩容机制，数组扩容时不用手写复杂的扩容代码</p>
+<p>Java中ArrayList初始化容量是10，容量不足时会按照</p>
+<p>最大的容量是MAX_ARRAY_SIZE = Integer.MAX_VALUE（2^31-1） - 8</p>
+<a class="post-dummy-target" id="heading3"></a><h4>缺点</h4>
+<p>容器中只能包装对象，存在封箱拆箱的操作，占用内存大</p>
+<a class="post-dummy-target" id="heading4"></a><h3>数组</h3>
+<a class="post-dummy-target" id="heading5"></a><h4>优点</h4>
+<p>占用内存少</p>
+<a class="post-dummy-target" id="heading6"></a><h4>缺点</h4>
+<p>没有自动扩容机制</p>
+<p>扩容时需要手动实现数据搬移</p>
 
         </div>
 
@@ -220,7 +266,7 @@
 
     <div class="post-nav">
         
-            <a href="https://vtrily.github.io/2019/12/mybatis%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/" class="prev" rel="prev" title="Mybatis源码解析"><i class="fas fa-angle-left fa-fw"></i>Mybatis源码解析</a>
+            <a href="https://vtrily.github.io/2020/01/%E9%93%BE%E8%A1%A8/" class="prev" rel="prev" title="链表"><i class="fas fa-angle-left fa-fw"></i>链表</a>
         
         
             <a href="https://vtrily.github.io/2020/01/openfeign%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" class="next" rel="next" title="openfeign">openfeign<i class="fas fa-angle-right fa-fw"></i></a>

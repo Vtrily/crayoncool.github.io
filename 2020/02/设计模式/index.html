@@ -3,12 +3,12 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title>HikariCP学习 | Vtrily</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>设计模式之策略模式 | Vtrily</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noodp" />
 <meta name="Description" content="Vtrily&#39;s Blog">
-<link rel="prev" href="https://vtrily.github.io/2020/02/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" />
-<link rel="next" href="https://vtrily.github.io/2020/02/autowired%E5%92%8Cresource%E7%9A%84%E5%8C%BA%E5%88%AB/" />
-<link rel="canonical" href="https://vtrily.github.io/2020/02/hikaricp%E5%AD%A6%E4%B9%A0/" />
+<link rel="prev" href="https://vtrily.github.io/2020/01/openfeign%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" />
+<link rel="next" href="https://vtrily.github.io/2020/02/hikaricp%E5%AD%A6%E4%B9%A0/" />
+<link rel="canonical" href="https://vtrily.github.io/2020/02/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" />
 <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -18,16 +18,19 @@
 <meta name="msapplication-TileColor" content="#da532c">
 <meta name="theme-color" content="#ffffff">
 <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="HikariCP学习"/>
-<meta name="twitter:description" content="HikariCP学习 "/>
+<meta name="twitter:title" content="设计模式之策略模式"/>
+<meta name="twitter:description" content="设计模式之策略模式 设计原则
+找出应用中可能需要变化之处，把它们独立出来，不要和那些不需要变化的代码混在一起
+针对接口编程，而不是针对实现编程
+多用组合，少用继承"/>
 <script type="application/ld+json">
     {
     "@context": "http://schema.org",
     "@type": "BlogPosting",
-    "headline": "HikariCP学习",
+    "headline": "设计模式之策略模式",
     "mainEntityOfPage": {
         "@type": "WebPage",
-        "@id": "https:\/\/vtrily.github.io\/2020\/02\/hikaricp%E5%AD%A6%E4%B9%A0\/"
+        "@id": "https:\/\/vtrily.github.io\/2020\/02\/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F\/"
     },
     
         "image": {
@@ -39,10 +42,10 @@
     
     "genre": "posts",
     
-        "keywords": "HikariCP, 数据库连接池",
+        "keywords": "java, 设计模式",
     
-    "wordcount":  1 ,
-    "url": "https:\/\/vtrily.github.io\/2020\/02\/hikaricp%E5%AD%A6%E4%B9%A0\/",
+    "wordcount":  5 ,
+    "url": "https:\/\/vtrily.github.io\/2020\/02\/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F\/",
     
         "datePublished": "2020-02-12T22:34:43\x2b08:00",
     
@@ -128,7 +131,7 @@
     
 
     <article class="post-warp">
-        <h1 class="post-title animated flipInX">HikariCP学习</h1>
+        <h1 class="post-title animated flipInX">设计模式之策略模式</h1>
 
         <div class="post-meta">
             <div class="post-meta-main">
@@ -141,7 +144,7 @@
             </div>
             <div class="post-meta-other">
                 <i class="far fa-calendar-alt fa-fw"></i><time datetime=2020-02-12>2020-02-12</time>&nbsp;
-                <i class="fas fa-pencil-alt fa-fw"></i>约 1 字&nbsp;
+                <i class="fas fa-pencil-alt fa-fw"></i>约 5 字&nbsp;
                 <i class="far fa-clock fa-fw"></i>预计阅读 1 分钟&nbsp;</div>
         </div>
 
@@ -175,7 +178,11 @@
             
             
             
-            <a class="post-dummy-target" id="hikaricp"></a><h1>HikariCP学习</h1>
+            <a class="post-dummy-target" id="heading"></a><h1>设计模式之策略模式</h1>
+<p>设计原则</p>
+<p>找出应用中可能需要变化之处，把它们独立出来，不要和那些不需要变化的代码混在一起</p>
+<p>针对接口编程，而不是针对实现编程</p>
+<p>多用组合，少用继承</p>
 
         </div>
 
@@ -206,11 +213,11 @@
             
                 
                     <span class="tag">
-                        <a href="https://vtrily.github.io/tags/hikaricp/"><i class="fas fa-tag fa-fw"></i>HikariCP</a>
+                        <a href="https://vtrily.github.io/tags/java/"><i class="fas fa-tag fa-fw"></i>java</a>
                     </span>
                 
                     <span class="tag">
-                        <a href="https://vtrily.github.io/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E8%BF%9E%E6%8E%A5%E6%B1%A0/"><i class="fas fa-tag fa-fw"></i>数据库连接池</a>
+                        <a href="https://vtrily.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"><i class="fas fa-tag fa-fw"></i>设计模式</a>
                     </span>
                 
             
@@ -222,10 +229,10 @@
 
     <div class="post-nav">
         
-            <a href="https://vtrily.github.io/2020/02/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" class="prev" rel="prev" title="设计模式之策略模式"><i class="fas fa-angle-left fa-fw"></i>设计模式之策略模式</a>
+            <a href="https://vtrily.github.io/2020/01/openfeign%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" class="prev" rel="prev" title="openfeign"><i class="fas fa-angle-left fa-fw"></i>openfeign</a>
         
         
-            <a href="https://vtrily.github.io/2020/02/autowired%E5%92%8Cresource%E7%9A%84%E5%8C%BA%E5%88%AB/" class="next" rel="next" title="@Autowired和@Resource的区别">@Autowired和@Resource的区别<i class="fas fa-angle-right fa-fw"></i></a>
+            <a href="https://vtrily.github.io/2020/02/hikaricp%E5%AD%A6%E4%B9%A0/" class="next" rel="next" title="HikariCP学习">HikariCP学习<i class="fas fa-angle-right fa-fw"></i></a>
         
     </div>
 </div>

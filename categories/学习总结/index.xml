@@ -31,12 +31,15 @@
     </item>
     
     <item>
-      <title>Mybatis源码解析</title>
-      <link>https://vtrily.github.io/2019/12/mybatis%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/</link>
-      <pubDate>Fri, 13 Dec 2019 11:22:58 +0800</pubDate>
+      <title>设计模式之策略模式</title>
+      <link>https://vtrily.github.io/2020/02/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/</link>
+      <pubDate>Wed, 12 Feb 2020 22:34:43 +0800</pubDate>
       
-      <guid>https://vtrily.github.io/2019/12/mybatis%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/</guid>
-      <description>mybatis 源码解析 </description>
+      <guid>https://vtrily.github.io/2020/02/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/</guid>
+      <description>设计模式之策略模式 设计原则
+找出应用中可能需要变化之处，把它们独立出来，不要和那些不需要变化的代码混在一起
+针对接口编程，而不是针对实现编程
+多用组合，少用继承</description>
     </item>
     
     <item>

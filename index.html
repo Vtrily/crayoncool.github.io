@@ -273,6 +273,54 @@
     
     
     <h1 class="post-title post-list-title" itemprop="name headline">
+        <a href="https://vtrily.github.io/2020/02/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式之策略模式</a>
+    </h1>
+
+    <div class="post-meta">
+        <a class="author" href="https://vtrily.github.io/" rel="author"><i class="fas fa-user-circle fa-fw"></i>Vtrily&nbsp;</a>
+        发布于&nbsp;<time datetime=2020-02-12>2020-02-12</time>&nbsp;
+        <span class="post-category">
+                收录于
+                <i class="far fa-folder fa-fw"></i><a href="https://vtrily.github.io/categories/%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93/">学习总结</a>
+                    
+            </span>
+    </div>
+    <div class="post-content">
+        
+            
+            
+            
+            
+            
+            
+            
+            设计模式之策略模式 设计原则
+找出应用中可能需要变化之处，把它们独立出来，不要和那些不需要变化的代码混在一起
+针对接口编程，而不是针对实现编程
+多用组合，少用继承
+        
+    </div>
+    <div class="post-footer">
+        <a href="https://vtrily.github.io/2020/02/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">阅读全文</a>
+        
+            <div class="post-tags">
+                
+                    &nbsp;&nbsp;<span class="tag"><a href="https://vtrily.github.io/tags/java/"><i class="fas fa-tag fa-fw"></i>java</a></span>
+                
+                    &nbsp;&nbsp;<span class="tag"><a href="https://vtrily.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"><i class="fas fa-tag fa-fw"></i>设计模式</a></span>
+                
+            </div>
+        
+    </div>
+</article><article class="post" itemscope itemtype="http://schema.org/Article">
+    
+    
+    
+
+    
+    
+    
+    <h1 class="post-title post-list-title" itemprop="name headline">
         <a href="https://vtrily.github.io/2020/01/openfeign%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">openfeign</a>
     </h1>
 
@@ -338,7 +386,26 @@
             
             
             
-            数组 1. 数组是什么？ 数组是一种占用连续内存的数据结构。用于存储多个相同类型数据的集合。
+            数组 1.数组是什么？ 数组是一种占用连续内存空间的线性表数据结构。用于存储一组具有相同类型的数据。
+关键词：线性表，连续内存空间，相同数据类型
+优点：
+查询快，通过下标支持随机访问，时间复杂度是O(1)
+缺点:
+添加和删除操作低效，为了要保证内存空间的连续性需要做数据搬移的操作。
+数组和链表的区别
+数组支持通过下标进行随机访问，时间复杂度是O(1)
+2.为什么Java中数组的下标是从0开始的？ 这个问题需要研究一下数组的存储模型，因为数组是一中占用连续内存的数据结构
+base + 下标 * 数据长度
+如果说下标是从1开始的话，寻址公式就会变成
+base + （下标 - 1） * 数据长度
+这样CPU就会多进行一次减法运算，为了最大的利用CPU，所以Java中数组的下标从0开始
+3.Java中数组和容器相比有什么优缺点 容器 优点 容器对数组的操作进行了封装，使用简单，重要的是容器实现了数组的自动扩容机制，数组扩容时不用手写复杂的扩容代码
+Java中ArrayList初始化容量是10，容量不足时会按照
+最大的容量是MAX_ARRAY_SIZE = Integer.MAX_VALUE（2^31-1） - 8
+缺点 容器中只能包装对象，存在封箱拆箱的操作，占用内存大
+数组 优点 占用内存少
+缺点 没有自动扩容机制
+扩容时需要手动实现数据搬移
         
     </div>
     <div class="post-footer">
@@ -360,15 +427,15 @@
     
     
     <h1 class="post-title post-list-title" itemprop="name headline">
-        <a href="https://vtrily.github.io/2019/12/mybatis%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/">Mybatis源码解析</a>
+        <a href="https://vtrily.github.io/2020/01/%E9%93%BE%E8%A1%A8/">链表</a>
     </h1>
 
     <div class="post-meta">
         <a class="author" href="https://vtrily.github.io/" rel="author"><i class="fas fa-user-circle fa-fw"></i>Vtrily&nbsp;</a>
-        发布于&nbsp;<time datetime=2019-12-13>2019-12-13</time>&nbsp;
+        发布于&nbsp;<time datetime=2020-01-06>2020-01-06</time>&nbsp;
         <span class="post-category">
                 收录于
-                <i class="far fa-folder fa-fw"></i><a href="https://vtrily.github.io/categories/%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93/">学习总结</a>
+                <i class="far fa-folder fa-fw"></i><a href="https://vtrily.github.io/categories/%E7%AE%97%E6%B3%95/">算法</a>
                     
             </span>
     </div>
@@ -381,58 +448,15 @@
             
             
             
-            mybatis 源码解析 
+            链表 1. 链表是什么？ 
         
     </div>
     <div class="post-footer">
-        <a href="https://vtrily.github.io/2019/12/mybatis%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/">阅读全文</a>
+        <a href="https://vtrily.github.io/2020/01/%E9%93%BE%E8%A1%A8/">阅读全文</a>
         
             <div class="post-tags">
                 
-                    &nbsp;&nbsp;<span class="tag"><a href="https://vtrily.github.io/tags/mybatis/"><i class="fas fa-tag fa-fw"></i>mybatis</a></span>
-                
-            </div>
-        
-    </div>
-</article><article class="post" itemscope itemtype="http://schema.org/Article">
-    
-    
-    
-
-    
-    
-    
-    <h1 class="post-title post-list-title" itemprop="name headline">
-        <a href="https://vtrily.github.io/2019/12/maven/">Maven</a>
-    </h1>
-
-    <div class="post-meta">
-        <a class="author" href="https://vtrily.github.io/" rel="author"><i class="fas fa-user-circle fa-fw"></i>Vtrily&nbsp;</a>
-        发布于&nbsp;<time datetime=2019-12-12>2019-12-12</time>&nbsp;
-        <span class="post-category">
-                收录于
-                <i class="far fa-folder fa-fw"></i><a href="https://vtrily.github.io/categories/%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93/">学习总结</a>
-                    
-            </span>
-    </div>
-    <div class="post-content">
-        
-            
-            
-            
-            
-            
-            
-            
-            Maven 
-        
-    </div>
-    <div class="post-footer">
-        <a href="https://vtrily.github.io/2019/12/maven/">阅读全文</a>
-        
-            <div class="post-tags">
-                
-                    &nbsp;&nbsp;<span class="tag"><a href="https://vtrily.github.io/tags/maven/"><i class="fas fa-tag fa-fw"></i>maven</a></span>
+                    &nbsp;&nbsp;<span class="tag"><a href="https://vtrily.github.io/tags/java/"><i class="fas fa-tag fa-fw"></i>java</a></span>
                 
             </div>
         

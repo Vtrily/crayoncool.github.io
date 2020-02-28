@@ -22,6 +22,18 @@
     </item>
     
     <item>
+      <title>设计模式之策略模式</title>
+      <link>https://vtrily.github.io/2020/02/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/</link>
+      <pubDate>Wed, 12 Feb 2020 22:34:43 +0800</pubDate>
+      
+      <guid>https://vtrily.github.io/2020/02/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/</guid>
+      <description>设计模式之策略模式 设计原则
+找出应用中可能需要变化之处，把它们独立出来，不要和那些不需要变化的代码混在一起
+针对接口编程，而不是针对实现编程
+多用组合，少用继承</description>
+    </item>
+    
+    <item>
       <title>openfeign</title>
       <link>https://vtrily.github.io/2020/01/openfeign%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/</link>
       <pubDate>Tue, 07 Jan 2020 20:34:43 +0800</pubDate>
@@ -36,7 +48,35 @@
       <pubDate>Mon, 06 Jan 2020 20:34:43 +0800</pubDate>
       
       <guid>https://vtrily.github.io/2020/01/%E6%95%B0%E7%BB%84/</guid>
-      <description>数组 1. 数组是什么？ 数组是一种占用连续内存的数据结构。用于存储多个相同类型数据的集合。</description>
+      <description>数组 1.数组是什么？ 数组是一种占用连续内存空间的线性表数据结构。用于存储一组具有相同类型的数据。
+关键词：线性表，连续内存空间，相同数据类型
+优点：
+查询快，通过下标支持随机访问，时间复杂度是O(1)
+缺点:
+添加和删除操作低效，为了要保证内存空间的连续性需要做数据搬移的操作。
+数组和链表的区别
+数组支持通过下标进行随机访问，时间复杂度是O(1)
+2.为什么Java中数组的下标是从0开始的？ 这个问题需要研究一下数组的存储模型，因为数组是一中占用连续内存的数据结构
+base + 下标 * 数据长度
+如果说下标是从1开始的话，寻址公式就会变成
+base + （下标 - 1） * 数据长度
+这样CPU就会多进行一次减法运算，为了最大的利用CPU，所以Java中数组的下标从0开始
+3.Java中数组和容器相比有什么优缺点 容器 优点 容器对数组的操作进行了封装，使用简单，重要的是容器实现了数组的自动扩容机制，数组扩容时不用手写复杂的扩容代码
+Java中ArrayList初始化容量是10，容量不足时会按照
+最大的容量是MAX_ARRAY_SIZE = Integer.MAX_VALUE（2^31-1） - 8
+缺点 容器中只能包装对象，存在封箱拆箱的操作，占用内存大
+数组 优点 占用内存少
+缺点 没有自动扩容机制
+扩容时需要手动实现数据搬移</description>
+    </item>
+    
+    <item>
+      <title>链表</title>
+      <link>https://vtrily.github.io/2020/01/%E9%93%BE%E8%A1%A8/</link>
+      <pubDate>Mon, 06 Jan 2020 20:34:43 +0800</pubDate>
+      
+      <guid>https://vtrily.github.io/2020/01/%E9%93%BE%E8%A1%A8/</guid>
+      <description>链表 1. 链表是什么？ </description>
     </item>
     
     <item>
