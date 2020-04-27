@@ -18,15 +18,7 @@
       <pubDate>Fri, 10 Apr 2020 20:34:43 +0800</pubDate>
       
       <guid>https://vtrily.github.io/2020/04/%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90web%E6%8A%80%E6%9C%AF%E6%BC%94%E8%BF%9B/</guid>
-      <description>Web技术演进
-TCP连接 全双工
-三次握手
-四次挥手
-IO模型  阻塞IO模型(BlockingIO) 非阻塞IO模型(Non-BlockingIO) IO复用模型(I/O multiplexing) 信号驱动的IO模型(SIGIO) 异步IO模型(Asynchronous IO)  IO分为两个阶段：1. 数据准备阶段 2.内核空间复制回用户进程缓冲区阶段
-阻塞IO模型（BlockingIO） 特点 在IO执行阶段的两个阶段（等待数据和拷贝数据）都被阻塞
-非阻塞IO模型(Non-BlockingIO) 特点 在非阻塞式IO中，用户进程不断主动询问内核数据是否准备好
-进程轮询调用，消耗CPU资源
-IO复用模型 特点 信号驱动的IO模型(SIGIO) 特点 异步IO模型(Asynchronous IO) 特点 </description>
+      <description>&lt;p&gt;Web技术演进&lt;/p&gt;</description>
     </item>
     
   </channel>

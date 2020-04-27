@@ -19,20 +19,7 @@
 <meta name="theme-color" content="#ffffff">
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="分布式系统DNS域名设计与实践-上"/>
-<meta name="twitter:description" content="DNS域名系统详解 ip地址可读性差 将域名转化成ip地址
-应用场景   浏览器访问网站
-  服务入口地址以域名形式对外暴露
-  域名访问方案  host文件 DNS域名解析系统  host文件 本地存储的域名与ip地址的映射文件
-特点  Key:Value 本地保存 访问速度快  缺点  变更生效慢 hosts文件越来越大 没规定命令规则，主机名冲突 维护映射关系代价高  DNS域名解析系统 是一个数据库系统
-域名分级   根 13个根 1个主根,12个辅根
-  顶级域
-  二级域
-  三级域
-  DNS服务器分级 根服务器 顶级域名服务器 权威域名服务器
-DNS解析过程   优先使用缓存 缓存时间可长可短，可以根据time to live控制
-  Local DNS服务器
-  DNS解析路径查询
-dig查询解析路径"/>
+<meta name="twitter:description" content="分布式系统的DNS域名的设计与实践"/>
 <script type="application/ld+json">
     {
     "@context": "http://schema.org",
@@ -54,7 +41,7 @@ dig查询解析路径"/>
     
         "keywords": "架构, DNS",
     
-    "wordcount":  46 ,
+    "wordcount":  47 ,
     "url": "https:\/\/vtrily.github.io\/2020\/04\/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9Fdns%E5%9F%9F%E5%90%8D%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E8%B7%B5-%E4%B8%8A\/",
     
         "datePublished": "2020-04-10T20:34:43\x2b08:00",
@@ -154,7 +141,7 @@ dig查询解析路径"/>
             </div>
             <div class="post-meta-other">
                 <i class="far fa-calendar-alt fa-fw"></i><time datetime=2020-04-10>2020-04-10</time>&nbsp;
-                <i class="fas fa-pencil-alt fa-fw"></i>约 46 字&nbsp;
+                <i class="fas fa-pencil-alt fa-fw"></i>约 47 字&nbsp;
                 <i class="far fa-clock fa-fw"></i>预计阅读 1 分钟&nbsp;</div>
         </div>
 
@@ -188,7 +175,8 @@ dig查询解析路径"/>
             
             
             
-            <a class="post-dummy-target" id="dns"></a><h1>DNS域名系统详解</h1>
+            <p>分布式系统的DNS域名的设计与实践</p>
+<a class="post-dummy-target" id="dns"></a><h1>DNS域名系统详解</h1>
 <p>ip地址可读性差
 将域名转化成ip地址</p>
 <a class="post-dummy-target" id="heading"></a><h2>应用场景</h2>
@@ -257,7 +245,6 @@ dig查询解析路径"/>
 <p>dig查询解析路径</p>
 <p>dig <a href="http://www.baidu.com">www.baidu.com</a> +trace</p>
 <a class="post-dummy-target" id="font-colordc143cfont"></a><h4>问题：<!-- raw HTML omitted -->描述一个完整的请求链路<!-- raw HTML omitted --></h4>
-
         </div>
 
         <div class="post-footer" id="post-footer">
