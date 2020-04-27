@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>web on Vtrily</title>
+    <link>https://vtrily.github.io/tags/web/</link>
+    <description>Recent content in web on Vtrily</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh</language>
+    <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
+    <lastBuildDate>Fri, 10 Apr 2020 20:34:43 +0800</lastBuildDate>
+    
+	<atom:link href="https://vtrily.github.io/tags/web/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>深入剖析Web技术演进</title>
+      <link>https://vtrily.github.io/2020/04/%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90web%E6%8A%80%E6%9C%AF%E6%BC%94%E8%BF%9B/</link>
+      <pubDate>Fri, 10 Apr 2020 20:34:43 +0800</pubDate>
+      
+      <guid>https://vtrily.github.io/2020/04/%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90web%E6%8A%80%E6%9C%AF%E6%BC%94%E8%BF%9B/</guid>
+      <description>Web技术演进
+TCP连接 全双工
+三次握手
+四次挥手
+IO模型  阻塞IO模型(BlockingIO) 非阻塞IO模型(Non-BlockingIO) IO复用模型(I/O multiplexing) 信号驱动的IO模型(SIGIO) 异步IO模型(Asynchronous IO)  IO分为两个阶段：1. 数据准备阶段 2.内核空间复制回用户进程缓冲区阶段
+阻塞IO模型（BlockingIO） 特点 在IO执行阶段的两个阶段（等待数据和拷贝数据）都被阻塞
+非阻塞IO模型(Non-BlockingIO) 特点 在非阻塞式IO中，用户进程不断主动询问内核数据是否准备好
+进程轮询调用，消耗CPU资源
+IO复用模型 特点 信号驱动的IO模型(SIGIO) 特点 异步IO模型(Asynchronous IO) 特点 </description>
+    </item>
+    
+  </channel>
+</rss>

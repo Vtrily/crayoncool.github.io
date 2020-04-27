@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="zh">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>分布式架构整体介绍-中 | Vtrily</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noodp" />
+<meta name="Description" content="Vtrily&#39;s Blog">
+<link rel="prev" href="https://vtrily.github.io/2020/01/%E6%95%B0%E7%BB%84/" />
+<link rel="next" href="https://vtrily.github.io/2020/01/synchronized%E7%9B%B8%E5%85%B3%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" />
+<link rel="canonical" href="https://vtrily.github.io/2020/01/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84%E6%95%B4%E4%BD%93%E4%BB%8B%E7%BB%8D-%E4%B8%AD/" />
+<link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="分布式架构整体介绍-中"/>
+<meta name="twitter:description" content="分布式系统架构技术选型  服务网关 监控平台 RPC框架 监控中心 注册中心 消息队列 配置中心  服务网关 系统的唯一入口，封装了系统内部架构，为客户端提供服务
+服务网关功能  统一接入 用户鉴权 过滤请求 协议适配 路由转发  BIO，NIO,AIO底层比较分析
+服务网关实现  web框架 过滤拦截 RPC客户端  监控平台选择  被动监控和主动监控  被动监控，主动触发客户端执行脚本，会存在大量的磁盘IO，占用服务器资源
+主动监控： 客户端进行埋点只做计数，收集数据
+核心功能   数据采集
+  数据上报
+  数据展示
+  告警
+  RPC框架选型 主要考虑维度
+ 语言 框架特性 成熟度 技术支持 社区活跃度  注册中心选型 主要考虑维度
+ 数据模型 数据一致性 健康检查 性能与容量 易用性 扩展性  消息队列选择 主要考虑维度"/>
+<script type="application/ld+json">
+    {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "分布式架构整体介绍-中",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https:\/\/vtrily.github.io\/2020\/01\/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84%E6%95%B4%E4%BD%93%E4%BB%8B%E7%BB%8D-%E4%B8%AD\/"
+    },
+    
+        "image": {
+            "@type": "ImageObject",
+            "url": "https:\/\/vtrily.github.io\/cover.png",
+            "width":  800 ,
+            "height":  600 
+        },
+    
+    "genre": "posts",
+    
+        "keywords": "架构",
+    
+    "wordcount":  130 ,
+    "url": "https:\/\/vtrily.github.io\/2020\/01\/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84%E6%95%B4%E4%BD%93%E4%BB%8B%E7%BB%8D-%E4%B8%AD\/",
+    
+        "datePublished": "2020-01-06T20:34:43\x2b08:00",
+    
+    
+        "dateModified": "2020-01-06T20:34:43\x2b08:00",
+    
+    
+        "license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.",
+    
+    
+        "publisher": {
+            "@type": "Organization",
+            "name": "Vtrily",
+            "logo": {
+            "@type": "ImageObject",
+            "url": "https:\/\/vtrily.github.io\/logo.png",
+            "width":  127 ,
+            "height":  40 
+            }
+        },
+    
+    
+    "description": ""
+    }
+    </script>
+<link rel="stylesheet" href="/css/style.min.css">
+<link rel="stylesheet" href="/css/lib/fontawesome-free/all.min.min.css">
+
+<link rel="stylesheet" href="/css/lib/animate/animate.min.min.css">
+
+    </head>
+    <body>
+        <script>
+            window.isDark = (window.localStorage && window.localStorage.getItem('theme')) === 'dark';
+            window.isDark && document.body.classList.add('dark-theme');
+        </script>
+        <div class="wrapper">
+            <nav class="navbar">
+    <div class="navbar-container">
+        <div class="navbar-header animated bounceIn">
+            <a href="https://vtrily.github.io/">Vtrily</a>
+        </div>
+        <div class="navbar-menu">
+            
+            
+                <a class="menu-item" href="https://vtrily.github.io/posts" title="">文章</a>
+            
+                <a class="menu-item" href="https://vtrily.github.io/tags" title="">标签</a>
+            
+                <a class="menu-item" href="https://vtrily.github.io/categories" title="">分类</a>
+            
+            <a href="javascript:void(0);" class="theme-switch"><i class="fas fa-adjust fa-rotate-180 fa-fw"></i></a>
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile">
+     <div class="navbar-container">
+        <div class="navbar-header">
+            <div class="navbar-header-title animated bounceIn">
+                <a href="https://vtrily.github.io/">Vtrily</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="navbar-menu" id="mobile-menu">
+            
+            
+                <a class="menu-item" href="https://vtrily.github.io/posts" title="">文章</a>
+            
+                <a class="menu-item" href="https://vtrily.github.io/tags" title="">标签</a>
+            
+                <a class="menu-item" href="https://vtrily.github.io/categories" title="">分类</a>
+            
+            <a href="javascript:void(0);" class="theme-switch"><i class="fas fa-adjust fa-rotate-180 fa-fw"></i></a>
+        </div>
+    </div>
+</nav><main class="main">
+                <div class="container">
+                    
+    
+    
+    
+
+    <article class="post-warp">
+        <h1 class="post-title animated flipInX">分布式架构整体介绍-中</h1>
+
+        <div class="post-meta">
+            <div class="post-meta-main">
+                <a class="author" href="https://vtrily.github.io/" rel="author"><i class="fas fa-user-circle fa-fw"></i>Vtrily&nbsp;</a>
+                <span class="post-category">
+                        收录于
+                        <i class="far fa-folder fa-fw"></i><a href="https://vtrily.github.io/categories/%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93/">学习总结</a>
+                            
+                    </span>
+            </div>
+            <div class="post-meta-other">
+                <i class="far fa-calendar-alt fa-fw"></i><time datetime=2020-01-06>2020-01-06</time>&nbsp;
+                <i class="fas fa-pencil-alt fa-fw"></i>约 130 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>预计阅读 1 分钟&nbsp;</div>
+        </div>
+
+        
+
+        
+
+        <div class="post-content">
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <a class="post-dummy-target" id="heading"></a><h1>分布式系统架构技术选型</h1>
+<ul>
+<li>服务网关</li>
+<li>监控平台</li>
+<li>RPC框架</li>
+<li>监控中心</li>
+<li>注册中心</li>
+<li>消息队列</li>
+<li>配置中心</li>
+</ul>
+<a class="post-dummy-target" id="heading1"></a><h2>服务网关</h2>
+<p>系统的唯一入口，封装了系统内部架构，为客户端提供服务</p>
+<a class="post-dummy-target" id="heading2"></a><h3>服务网关功能</h3>
+<ul>
+<li>统一接入</li>
+<li>用户鉴权</li>
+<li>过滤请求</li>
+<li>协议适配</li>
+<li>路由转发</li>
+</ul>
+<p>BIO，NIO,AIO底层比较分析</p>
+<a class="post-dummy-target" id="heading3"></a><h3>服务网关实现</h3>
+<ul>
+<li>web框架</li>
+<li>过滤拦截</li>
+<li>RPC客户端</li>
+</ul>
+<a class="post-dummy-target" id="heading4"></a><h2>监控平台选择</h2>
+<ul>
+<li>被动监控和主动监控</li>
+</ul>
+<p>被动监控，主动触发客户端执行脚本，会存在大量的磁盘IO，占用服务器资源</p>
+<p>主动监控： 客户端进行埋点只做计数，收集数据</p>
+<a class="post-dummy-target" id="heading5"></a><h3>核心功能</h3>
+<ul>
+<li>
+<p>数据采集</p>
+</li>
+<li>
+<p>数据上报</p>
+</li>
+<li>
+<p>数据展示</p>
+</li>
+<li>
+<p>告警</p>
+</li>
+</ul>
+<a class="post-dummy-target" id="rpc"></a><h2>RPC框架选型</h2>
+<p>主要考虑维度</p>
+<ul>
+<li>语言</li>
+<li>框架特性</li>
+<li>成熟度</li>
+<li>技术支持</li>
+<li>社区活跃度</li>
+</ul>
+<a class="post-dummy-target" id="heading6"></a><h2>注册中心选型</h2>
+<p>主要考虑维度</p>
+<ul>
+<li>数据模型</li>
+<li>数据一致性</li>
+<li>健康检查</li>
+<li>性能与容量</li>
+<li>易用性</li>
+<li>扩展性</li>
+</ul>
+<a class="post-dummy-target" id="heading7"></a><h2>消息队列选择</h2>
+<p>主要考虑维度</p>
+<ul>
+<li>系统定位</li>
+<li>支持功能</li>
+<li>可用性</li>
+<li>可靠性</li>
+<li>运维</li>
+</ul>
+<a class="post-dummy-target" id="heading8"></a><h2>配置中心选择</h2>
+<p>主要考虑维度</p>
+<ul>
+<li>配置存储</li>
+<li>本地缓存</li>
+<li>配置生效时间</li>
+<li>权限管理</li>
+<li>审计</li>
+<li>配置版本管理</li>
+<li>灰度发布</li>
+<li>配置更新推送</li>
+<li>配置定时拉取</li>
+<li>配置项维护</li>
+<li>多环境</li>
+<li>社区活跃度</li>
+</ul>
+<a class="post-dummy-target" id="font-colordc143cfont"></a><h2><!-- raw HTML omitted -->分布式锁的续租问题如何解决？<!-- raw HTML omitted --></h2>
+<p>锁的时间锁多长时间合适？</p>
+<p>默认10s</p>
+<p>选CP还是AP?</p>
+<p>架构演进</p>
+<p>从无到有，从有到平台化，好用</p>
+<a class="post-dummy-target" id="heading9"></a><h2>分布式系统高可用架构设计</h2>
+<ul>
+<li>请求生命周期分析（请求链路分析）</li>
+<li>服务冗余</li>
+<li>存储冗余</li>
+<li>模块拆分（业务解耦）</li>
+</ul>
+<a class="post-dummy-target" id="font-colordc143cfont1"></a><h3><!-- raw HTML omitted -->请求生命周期<!-- raw HTML omitted --></h3>
+<p>DNS-&gt; LVS -&gt; NG -&gt; CDN -&gt; 网关 -&gt; 业务逻辑 -&gt; 数据访问 -&gt; 存储</p>
+<p><!-- raw HTML omitted -->四层负载和七层负载<!-- raw HTML omitted --></p>
+<a class="post-dummy-target" id="heading10"></a><h3>服务冗余</h3>
+<ul>
+<li>服务注册于发现</li>
+<li>连接管理</li>
+<li>负载均衡、路由</li>
+<li>健康检查</li>
+<li>节点探活</li>
+<li>失效处理</li>
+</ul>
+<p>入口高可用设计</p>
+<p>DNS
+LVS
+NG</p>
+<p>部署多台LVS和NG</p>
+<a class="post-dummy-target" id="heading11"></a><h3>存储冗余</h3>
+<p>主要保证数据的高可靠</p>
+<a class="post-dummy-target" id="heading12"></a><h4>主从部署</h4>
+<ul>
+<li>
+<p>一主一从或多从
+优点：
+缺点：同步压力大</p>
+</li>
+<li>
+<p>级联部署
+优点：主挂了，不影响同步
+缺点：中间节点结了之后会有影响，同步的可靠性不是很好，依赖上游</p>
+</li>
+<li>
+<p>延迟库部署
+一主多从
+级联部署延迟从做备份</p>
+</li>
+<li>
+<p>主从切换</p>
+</li>
+</ul>
+<p>从节点提升为主，主恢复后，作为从节点</p>
+<p>虚IP部署方案</p>
+<a class="post-dummy-target" id="heading13"></a><h3>数据隔离</h3>
+<p>不同业务不同数据库，防止互相影响</p>
+<a class="post-dummy-target" id="heading14"></a><h3>模块拆分</h3>
+<p>拆分原则</p>
+<ul>
+<li>职责单一</li>
+<li>业务隔离</li>
+<li>粒度合理</li>
+<li>结合场景</li>
+<li>适应组织架构</li>
+<li>避免循环依赖</li>
+</ul>
+
+        </div>
+
+        <div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>本文于 2020-01-06 更新</span>
+            </div>
+            <div class="post-info-license">
+                
+            </div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md">
+                
+            </div>
+            <div class="post-info-share">
+                
+                    <span></span>
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section>
+            
+                
+                    <span class="tag">
+                        <a href="https://vtrily.github.io/tags/%E6%9E%B6%E6%9E%84/"><i class="fas fa-tag fa-fw"></i>架构</a>
+                    </span>
+                
+            
+        </section>
+        <section>
+            <span><a href="javascript:window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="https://vtrily.github.io/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+            <a href="https://vtrily.github.io/2020/01/%E6%95%B0%E7%BB%84/" class="prev" rel="prev" title="数组"><i class="fas fa-angle-left fa-fw"></i>数组</a>
+        
+        
+            <a href="https://vtrily.github.io/2020/01/synchronized%E7%9B%B8%E5%85%B3%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" class="next" rel="next" title="Synchronized基础">Synchronized基础<i class="fas fa-angle-right fa-fw"></i></a>
+        
+    </div>
+</div>
+
+        <div class="post-comment">
+            
+            
+
+            
+        </div>
+    </article></div>
+            </main>
+            <footer class="footer">
+    <div class="copyright">
+        <div class="copyright-line">
+            由 <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreffer">Hugo</a> 强力驱动&nbsp;|&nbsp;主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="external nofollow noopener noreffer">LoveIt<i class="far fa-heart fa-fw"></i></a>
+        </div>
+        <div class="copyright-line">
+            <i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2019 - 2020</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="https://vtrily.github.io/">Vtrily</a></span><span class="license">&nbsp;|&nbsp;<a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+    </div>
+</footer>
+
+
+    
+    
+
+
+
+
+    
+    
+
+
+
+
+    
+    
+
+
+
+
+
+    
+    
+
+
+
+    
+    
+
+
+
+    
+    
+
+
+
+
+
+    
+    
+
+
+
+
+
+    
+    
+
+
+
+    
+    
+
+
+
+
+
+    
+    
+
+
+
+
+    
+    
+
+
+
+
+    
+    
+
+
+
+    
+    
+
+
+
+
+
+    
+    
+
+
+<script src="/js/lib/jquery/jquery.slim.min.min.js"></script>
+<script src="/js/lib/lazysizes/lazysizes.min.min.js"></script>
+<script src="/js/lib/smooth-scroll/smooth-scroll.polyfills.min.min.js"></script><script>window.scroll = new SmoothScroll('[data-scroll]', {speed: 300, speedAsDuration: true});</script>
+
+
+    
+    
+
+    
+
+    
+
+    
+
+    
+
+
+
+
+
+
+<script src="/js/blog.min.js"></script>
+
+
+    
+</div>
+        <a href="#" class="dynamic-to-top" id="dynamic-to-top" data-scroll><span>&nbsp;</span></a>
+    </body>
+</html>

@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="zh">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>分布式架构整体介绍-中 | Vtrily</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noodp" />
+<meta name="Description" content="Vtrily&#39;s Blog">
+<link rel="prev" href="https://vtrily.github.io/2020/04/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9Fdns%E5%9F%9F%E5%90%8D%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E8%B7%B5-%E4%B8%8A/" />
+<link rel="next" href="https://vtrily.github.io/2020/04/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E8%B7%B5-%E4%B8%8B/" />
+<link rel="canonical" href="https://vtrily.github.io/2020/04/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84%E6%95%B4%E4%BD%93%E4%BB%8B%E7%BB%8D-%E4%B8%8B/" />
+<link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="分布式架构整体介绍-中"/>
+<meta name="twitter:description" content="高扩展架构设计 无状态设计  有状态部署  高性能架构设计  CDN访问加速 业务逻辑性能优化 存储性能优化  CDN性能加速 Content Delivery Network 内容分发网络，依靠部署在各地的边缘服务器，使用户就近获取所需内容，降低网络拥塞，提高用户访问响应速度和命中率
+访问步骤  访问DNS获取CDN地址 访问就近CDN节点 判断是否需要回源 返回数据  业务逻辑性能优化  RPC异步调用 几个调用同时调用，以最大的时间为准 消息队列 减少没有必要的串行处理 参数调优 增加服务节点 增加处理速度  存储性能优化  使用缓存 redis缓存  先删redis再更新DB
+先更新DB再删redis
+redis删除失败后
+ 索引优化（索引原理） 聚簇索引，二级索引，联合索引  mysql索引为什么要用B&#43;树?
+mysql字符串索引的时候会将字符串长度作为索引key吗？
+什么时候会走二级索引？
+ 分库分表  垂直拆分
+水平拆分
+冷热数据
+服务治理  服务分组 过载保护 熔断降级 权重支持  服务分组  P99含义回顾"/>
+<script type="application/ld+json">
+    {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "分布式架构整体介绍-中",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https:\/\/vtrily.github.io\/2020\/04\/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84%E6%95%B4%E4%BD%93%E4%BB%8B%E7%BB%8D-%E4%B8%8B\/"
+    },
+    
+        "image": {
+            "@type": "ImageObject",
+            "url": "https:\/\/vtrily.github.io\/cover.png",
+            "width":  800 ,
+            "height":  600 
+        },
+    
+    "genre": "posts",
+    
+        "keywords": "架构",
+    
+    "wordcount":  47 ,
+    "url": "https:\/\/vtrily.github.io\/2020\/04\/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84%E6%95%B4%E4%BD%93%E4%BB%8B%E7%BB%8D-%E4%B8%8B\/",
+    
+        "datePublished": "2020-04-10T20:34:43\x2b08:00",
+    
+    
+        "dateModified": "2020-04-10T20:34:43\x2b08:00",
+    
+    
+        "license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.",
+    
+    
+        "publisher": {
+            "@type": "Organization",
+            "name": "Vtrily",
+            "logo": {
+            "@type": "ImageObject",
+            "url": "https:\/\/vtrily.github.io\/logo.png",
+            "width":  127 ,
+            "height":  40 
+            }
+        },
+    
+    
+    "description": ""
+    }
+    </script>
+<link rel="stylesheet" href="/css/style.min.css">
+<link rel="stylesheet" href="/css/lib/fontawesome-free/all.min.min.css">
+
+<link rel="stylesheet" href="/css/lib/animate/animate.min.min.css">
+
+    </head>
+    <body>
+        <script>
+            window.isDark = (window.localStorage && window.localStorage.getItem('theme')) === 'dark';
+            window.isDark && document.body.classList.add('dark-theme');
+        </script>
+        <div class="wrapper">
+            <nav class="navbar">
+    <div class="navbar-container">
+        <div class="navbar-header animated bounceIn">
+            <a href="https://vtrily.github.io/">Vtrily</a>
+        </div>
+        <div class="navbar-menu">
+            
+            
+                <a class="menu-item" href="https://vtrily.github.io/posts" title="">文章</a>
+            
+                <a class="menu-item" href="https://vtrily.github.io/tags" title="">标签</a>
+            
+                <a class="menu-item" href="https://vtrily.github.io/categories" title="">分类</a>
+            
+            <a href="javascript:void(0);" class="theme-switch"><i class="fas fa-adjust fa-rotate-180 fa-fw"></i></a>
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile">
+     <div class="navbar-container">
+        <div class="navbar-header">
+            <div class="navbar-header-title animated bounceIn">
+                <a href="https://vtrily.github.io/">Vtrily</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="navbar-menu" id="mobile-menu">
+            
+            
+                <a class="menu-item" href="https://vtrily.github.io/posts" title="">文章</a>
+            
+                <a class="menu-item" href="https://vtrily.github.io/tags" title="">标签</a>
+            
+                <a class="menu-item" href="https://vtrily.github.io/categories" title="">分类</a>
+            
+            <a href="javascript:void(0);" class="theme-switch"><i class="fas fa-adjust fa-rotate-180 fa-fw"></i></a>
+        </div>
+    </div>
+</nav><main class="main">
+                <div class="container">
+                    
+    
+    
+    
+
+    <article class="post-warp">
+        <h1 class="post-title animated flipInX">分布式架构整体介绍-中</h1>
+
+        <div class="post-meta">
+            <div class="post-meta-main">
+                <a class="author" href="https://vtrily.github.io/" rel="author"><i class="fas fa-user-circle fa-fw"></i>Vtrily&nbsp;</a>
+                <span class="post-category">
+                        收录于
+                        <i class="far fa-folder fa-fw"></i><a href="https://vtrily.github.io/categories/%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93/">学习总结</a>
+                            
+                    </span>
+            </div>
+            <div class="post-meta-other">
+                <i class="far fa-calendar-alt fa-fw"></i><time datetime=2020-04-10>2020-04-10</time>&nbsp;
+                <i class="fas fa-pencil-alt fa-fw"></i>约 47 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>预计阅读 1 分钟&nbsp;</div>
+        </div>
+
+        
+
+        
+
+        <div class="post-content">
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <a class="post-dummy-target" id="heading"></a><h1>高扩展架构设计</h1>
+<a class="post-dummy-target" id="heading1"></a><h2>无状态设计</h2>
+<ul>
+<li>有状态部署</li>
+</ul>
+<a class="post-dummy-target" id="heading2"></a><h1>高性能架构设计</h1>
+<ul>
+<li>CDN访问加速</li>
+<li>业务逻辑性能优化</li>
+<li>存储性能优化</li>
+</ul>
+<a class="post-dummy-target" id="cdn"></a><h2>CDN性能加速</h2>
+<p>Content Delivery Network 内容分发网络，依靠部署在各地的边缘服务器，使用户就近获取所需内容，降低网络拥塞，提高用户访问响应速度和命中率</p>
+<a class="post-dummy-target" id="heading3"></a><h3>访问步骤</h3>
+<ul>
+<li>访问DNS获取CDN地址</li>
+<li>访问就近CDN节点</li>
+<li>判断是否需要回源</li>
+<li>返回数据</li>
+</ul>
+<a class="post-dummy-target" id="heading4"></a><h2>业务逻辑性能优化</h2>
+<ul>
+<li>RPC异步调用
+几个调用同时调用，以最大的时间为准</li>
+<li>消息队列
+减少没有必要的串行处理</li>
+<li>参数调优</li>
+<li>增加服务节点
+增加处理速度</li>
+</ul>
+<a class="post-dummy-target" id="heading5"></a><h2>存储性能优化</h2>
+<ul>
+<li>使用缓存
+redis缓存</li>
+</ul>
+<p>先删redis再更新DB</p>
+<p>先更新DB再删redis</p>
+<p>redis删除失败后</p>
+<ul>
+<li>索引优化（索引原理）
+聚簇索引，二级索引，联合索引</li>
+</ul>
+<p>mysql索引为什么要用B+树?</p>
+<p>mysql字符串索引的时候会将字符串长度作为索引key吗？</p>
+<p>什么时候会走二级索引？</p>
+<ul>
+<li>分库分表</li>
+</ul>
+<p>垂直拆分</p>
+<p>水平拆分</p>
+<p>冷热数据</p>
+<a class="post-dummy-target" id="heading6"></a><h1>服务治理</h1>
+<ul>
+<li>服务分组</li>
+<li>过载保护</li>
+<li>熔断降级</li>
+<li>权重支持</li>
+</ul>
+<a class="post-dummy-target" id="heading7"></a><h2>服务分组</h2>
+<a class="post-dummy-target" id="heading8"></a><h2></h2>
+<p>P99含义回顾</p>
+
+        </div>
+
+        <div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>本文于 2020-04-10 更新</span>
+            </div>
+            <div class="post-info-license">
+                
+            </div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md">
+                
+            </div>
+            <div class="post-info-share">
+                
+                    <span></span>
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section>
+            
+                
+                    <span class="tag">
+                        <a href="https://vtrily.github.io/tags/%E6%9E%B6%E6%9E%84/"><i class="fas fa-tag fa-fw"></i>架构</a>
+                    </span>
+                
+            
+        </section>
+        <section>
+            <span><a href="javascript:window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="https://vtrily.github.io/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+            <a href="https://vtrily.github.io/2020/04/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9Fdns%E5%9F%9F%E5%90%8D%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E8%B7%B5-%E4%B8%8A/" class="prev" rel="prev" title="分布式系统DNS域名设计与实践-上"><i class="fas fa-angle-left fa-fw"></i>分布式系统DNS域名设计与实践-上</a>
+        
+        
+            <a href="https://vtrily.github.io/2020/04/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E8%B7%B5-%E4%B8%8B/" class="next" rel="next" title="分布式系统反向代理设计与实践-下">分布式系统反向代理设计与实践-下<i class="fas fa-angle-right fa-fw"></i></a>
+        
+    </div>
+</div>
+
+        <div class="post-comment">
+            
+            
+
+            
+        </div>
+    </article></div>
+            </main>
+            <footer class="footer">
+    <div class="copyright">
+        <div class="copyright-line">
+            由 <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreffer">Hugo</a> 强力驱动&nbsp;|&nbsp;主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="external nofollow noopener noreffer">LoveIt<i class="far fa-heart fa-fw"></i></a>
+        </div>
+        <div class="copyright-line">
+            <i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2019 - 2020</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="https://vtrily.github.io/">Vtrily</a></span><span class="license">&nbsp;|&nbsp;<a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+    </div>
+</footer>
+
+
+    
+    
+
+
+
+
+    
+    
+
+
+
+
+    
+    
+
+
+
+
+
+    
+    
+
+
+
+    
+    
+
+
+
+    
+    
+
+
+
+
+
+    
+    
+
+
+
+
+
+    
+    
+
+
+
+    
+    
+
+
+
+
+
+    
+    
+
+
+
+
+    
+    
+
+
+
+
+    
+    
+
+
+
+    
+    
+
+
+
+
+
+    
+    
+
+
+<script src="/js/lib/jquery/jquery.slim.min.min.js"></script>
+<script src="/js/lib/lazysizes/lazysizes.min.min.js"></script>
+<script src="/js/lib/smooth-scroll/smooth-scroll.polyfills.min.min.js"></script><script>window.scroll = new SmoothScroll('[data-scroll]', {speed: 300, speedAsDuration: true});</script>
+
+
+    
+    
+
+    
+
+    
+
+    
+
+    
+
+
+
+
+
+
+<script src="/js/blog.min.js"></script>
+
+
+    
+</div>
+        <a href="#" class="dynamic-to-top" id="dynamic-to-top" data-scroll><span>&nbsp;</span></a>
+    </body>
+</html>

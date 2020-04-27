@@ -7,10 +7,110 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Wed, 12 Feb 2020 22:34:43 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 14 Apr 2020 20:34:43 +0800</lastBuildDate>
     
 	<atom:link href="https://vtrily.github.io/categories/%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>分布式系统DNS域名设计与实践-下</title>
+      <link>https://vtrily.github.io/2020/04/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9Fdns%E5%9F%9F%E5%90%8D%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E8%B7%B5-%E4%B8%8B/</link>
+      <pubDate>Tue, 14 Apr 2020 20:34:43 +0800</pubDate>
+      
+      <guid>https://vtrily.github.io/2020/04/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9Fdns%E5%9F%9F%E5%90%8D%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E8%B7%B5-%E4%B8%8B/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>分布式系统反向代理设计与实践-上</title>
+      <link>https://vtrily.github.io/2020/04/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E8%B7%B5-%E4%B8%8A/</link>
+      <pubDate>Tue, 14 Apr 2020 20:34:43 +0800</pubDate>
+      
+      <guid>https://vtrily.github.io/2020/04/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E8%B7%B5-%E4%B8%8A/</guid>
+      <description>反向代理与正向代理分析 正向代理作用 反向代理意义 反向代理在分布式架构中的作用 DR模式 封装MAC地址
+CIP-&amp;gt;VIP VIP-&amp;gt;DIP LVS进行分发的时候写入DIP的MAC地址，目标IP是VIP,同时写入RIPMAC地址, VIP根据RIPMAC地址找到Real Server
+TUN模式 封装IP地址 CIP,VIP-&amp;gt;DIP,CIP,RIP,VIP 隧道模式运维起来比较难
+NAT模式 数据进出都需要经过LVS,节点过多时成为系统瓶颈
+FULL-NAT模式
+多做了几次地址的转换
+反向代理中的调度算法  轮训 权重轮训 最小连接调度 权重最小连接调度 基于局部的最少链接 带复制的基于局部性最少链接 目标地址散列调度 源地址散列调度  轮训中为啥会有权重的判断 机器摘除时权重设为0</description>
+    </item>
+    
+    <item>
+      <title>分布式系统反向代理设计与实践-下</title>
+      <link>https://vtrily.github.io/2020/04/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E8%B7%B5-%E4%B8%8B/</link>
+      <pubDate>Tue, 14 Apr 2020 20:34:43 +0800</pubDate>
+      
+      <guid>https://vtrily.github.io/2020/04/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E8%B7%B5-%E4%B8%8B/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>分布式架构整体介绍-中</title>
+      <link>https://vtrily.github.io/2020/04/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84%E6%95%B4%E4%BD%93%E4%BB%8B%E7%BB%8D-%E4%B8%8B/</link>
+      <pubDate>Fri, 10 Apr 2020 20:34:43 +0800</pubDate>
+      
+      <guid>https://vtrily.github.io/2020/04/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84%E6%95%B4%E4%BD%93%E4%BB%8B%E7%BB%8D-%E4%B8%8B/</guid>
+      <description>高扩展架构设计 无状态设计  有状态部署  高性能架构设计  CDN访问加速 业务逻辑性能优化 存储性能优化  CDN性能加速 Content Delivery Network 内容分发网络，依靠部署在各地的边缘服务器，使用户就近获取所需内容，降低网络拥塞，提高用户访问响应速度和命中率
+访问步骤  访问DNS获取CDN地址 访问就近CDN节点 判断是否需要回源 返回数据  业务逻辑性能优化  RPC异步调用 几个调用同时调用，以最大的时间为准 消息队列 减少没有必要的串行处理 参数调优 增加服务节点 增加处理速度  存储性能优化  使用缓存 redis缓存  先删redis再更新DB
+先更新DB再删redis
+redis删除失败后
+ 索引优化（索引原理） 聚簇索引，二级索引，联合索引  mysql索引为什么要用B+树?
+mysql字符串索引的时候会将字符串长度作为索引key吗？
+什么时候会走二级索引？
+ 分库分表  垂直拆分
+水平拆分
+冷热数据
+服务治理  服务分组 过载保护 熔断降级 权重支持  服务分组  P99含义回顾</description>
+    </item>
+    
+    <item>
+      <title>分布式系统DNS域名设计与实践-上</title>
+      <link>https://vtrily.github.io/2020/04/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9Fdns%E5%9F%9F%E5%90%8D%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E8%B7%B5-%E4%B8%8A/</link>
+      <pubDate>Fri, 10 Apr 2020 20:34:43 +0800</pubDate>
+      
+      <guid>https://vtrily.github.io/2020/04/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9Fdns%E5%9F%9F%E5%90%8D%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E8%B7%B5-%E4%B8%8A/</guid>
+      <description>DNS域名系统详解 ip地址可读性差 将域名转化成ip地址
+应用场景   浏览器访问网站
+  服务入口地址以域名形式对外暴露
+  域名访问方案  host文件 DNS域名解析系统  host文件 本地存储的域名与ip地址的映射文件
+特点  Key:Value 本地保存 访问速度快  缺点  变更生效慢 hosts文件越来越大 没规定命令规则，主机名冲突 维护映射关系代价高  DNS域名解析系统 是一个数据库系统
+域名分级   根 13个根 1个主根,12个辅根
+  顶级域
+  二级域
+  三级域
+  DNS服务器分级 根服务器 顶级域名服务器 权威域名服务器
+DNS解析过程   优先使用缓存 缓存时间可长可短，可以根据time to live控制
+  Local DNS服务器
+  DNS解析路径查询
+dig查询解析路径</description>
+    </item>
+    
+    <item>
+      <title>深入剖析Web技术演进</title>
+      <link>https://vtrily.github.io/2020/04/%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90web%E6%8A%80%E6%9C%AF%E6%BC%94%E8%BF%9B/</link>
+      <pubDate>Fri, 10 Apr 2020 20:34:43 +0800</pubDate>
+      
+      <guid>https://vtrily.github.io/2020/04/%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90web%E6%8A%80%E6%9C%AF%E6%BC%94%E8%BF%9B/</guid>
+      <description>Web技术演进
+TCP连接 全双工
+三次握手
+四次挥手
+IO模型  阻塞IO模型(BlockingIO) 非阻塞IO模型(Non-BlockingIO) IO复用模型(I/O multiplexing) 信号驱动的IO模型(SIGIO) 异步IO模型(Asynchronous IO)  IO分为两个阶段：1. 数据准备阶段 2.内核空间复制回用户进程缓冲区阶段
+阻塞IO模型（BlockingIO） 特点 在IO执行阶段的两个阶段（等待数据和拷贝数据）都被阻塞
+非阻塞IO模型(Non-BlockingIO) 特点 在非阻塞式IO中，用户进程不断主动询问内核数据是否准备好
+进程轮询调用，消耗CPU资源
+IO复用模型 特点 信号驱动的IO模型(SIGIO) 特点 异步IO模型(Asynchronous IO) 特点 </description>
+    </item>
+    
+    <item>
+      <title>MapperedByteBuffer解析</title>
+      <link>https://vtrily.github.io/2020/03/mappedbytebuffer%E8%A7%A3%E6%9E%90/</link>
+      <pubDate>Tue, 24 Mar 2020 22:34:43 +0800</pubDate>
+      
+      <guid>https://vtrily.github.io/2020/03/mappedbytebuffer%E8%A7%A3%E6%9E%90/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>@Autowired和@Resource的区别</title>
@@ -19,6 +119,29 @@
       
       <guid>https://vtrily.github.io/2020/02/autowired%E5%92%8Cresource%E7%9A%84%E5%8C%BA%E5%88%AB/</guid>
       <description>@Autowired和@Resource的区别 </description>
+    </item>
+    
+    <item>
+      <title>dubbo源码解析之扩展点机制</title>
+      <link>https://vtrily.github.io/2020/02/dubbo%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%E4%B9%8B%E6%89%A9%E5%B1%95%E7%82%B9%E6%9C%BA%E5%88%B6/</link>
+      <pubDate>Wed, 12 Feb 2020 22:34:43 +0800</pubDate>
+      
+      <guid>https://vtrily.github.io/2020/02/dubbo%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%E4%B9%8B%E6%89%A9%E5%B1%95%E7%82%B9%E6%9C%BA%E5%88%B6/</guid>
+      <description>dubbo之扩展点机制 dubbo的扩展点机制主要有什么？   扩展点自动包装
+  扩展点自动装配
+  扩展点自适应
+  扩展点自动激活
+  问题  多个包装类只能生效一个？  并不是，它是一个嵌套关系
+ 包装类内部使用哪个实现？  最底层的那个类
+ 不加载包装类AOP会不会失效？  自动包装
+  自激活扩展类如何构建链表？
+  自激活扩展类的链表节点顺序？
+  源码分析 根据LoadBalance的加载机制分析扩展机制
+获取扩展类实例 getExtension getDefaultExtension getAdaptiveExtension getActivateExtension
+getExtension流程
+1.加载缓存 2.加载扩展类信息 3.实例化扩展类 4.注入依赖 5.查找包装类注入扩展类实例 6.返回
+getAdaptiveExtension 1.加载缓存 2.加载扩展类信息 3.生成代理类代码 4.实例化 5.注入依赖 6.返回
+getActivateExtension 1.加载所有扩展类 2.获取扩展类注解信息 3.创建匹配的扩展类实例 4.排序扩展类实例 5，返回</description>
     </item>
     
     <item>
@@ -31,6 +154,47 @@
     </item>
     
     <item>
+      <title>Reactor设计模式</title>
+      <link>https://vtrily.github.io/2020/02/reactor%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/</link>
+      <pubDate>Wed, 12 Feb 2020 22:34:43 +0800</pubDate>
+      
+      <guid>https://vtrily.github.io/2020/02/reactor%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>TCP-IP协议之RST标志</title>
+      <link>https://vtrily.github.io/2020/02/tcp-ip%E5%8D%8F%E8%AE%AE%E4%B9%8Brst%E6%A0%87%E5%BF%97/</link>
+      <pubDate>Wed, 12 Feb 2020 22:34:43 +0800</pubDate>
+      
+      <guid>https://vtrily.github.io/2020/02/tcp-ip%E5%8D%8F%E8%AE%AE%E4%B9%8Brst%E6%A0%87%E5%BF%97/</guid>
+      <description>TCP的 </description>
+    </item>
+    
+    <item>
+      <title>zookeeper源码解析</title>
+      <link>https://vtrily.github.io/2020/02/zookeeper%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/</link>
+      <pubDate>Wed, 12 Feb 2020 22:34:43 +0800</pubDate>
+      
+      <guid>https://vtrily.github.io/2020/02/zookeeper%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/</guid>
+      <description>dubbo之扩展点机制 dubbo的扩展点机制主要有什么？   扩展点自动包装
+  扩展点自动装配
+  扩展点自适应
+  扩展点自动激活
+  问题  多个包装类只能生效一个？  并不是，它是一个嵌套关系
+ 包装类内部使用哪个实现？  最底层的那个类
+ 不加载包装类AOP会不会失效？  自动包装
+  自激活扩展类如何构建链表？
+  自激活扩展类的链表节点顺序？
+  源码分析 根据LoadBalance的加载机制分析扩展机制
+获取扩展类实例 getExtension getDefaultExtension getAdaptiveExtension getActivateExtension
+getExtension流程
+1.加载缓存 2.加载扩展类信息 3.实例化扩展类 4.注入依赖 5.查找包装类注入扩展类实例 6.返回
+getAdaptiveExtension 1.加载缓存 2.加载扩展类信息 3.生成代理类代码 4.实例化 5.注入依赖 6.返回
+getActivateExtension 1.加载所有扩展类 2.获取扩展类注解信息 3.创建匹配的扩展类实例 4.排序扩展类实例 5，返回</description>
+    </item>
+    
+    <item>
       <title>设计模式之策略模式</title>
       <link>https://vtrily.github.io/2020/02/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/</link>
       <pubDate>Wed, 12 Feb 2020 22:34:43 +0800</pubDate>
@@ -39,7 +203,27 @@
       <description>设计模式之策略模式 设计原则
 找出应用中可能需要变化之处，把它们独立出来，不要和那些不需要变化的代码混在一起
 针对接口编程，而不是针对实现编程
-多用组合，少用继承</description>
+多用组合，少用继承
+Reactor设计模式</description>
+    </item>
+    
+    <item>
+      <title>分布式架构整体介绍-中</title>
+      <link>https://vtrily.github.io/2020/01/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84%E6%95%B4%E4%BD%93%E4%BB%8B%E7%BB%8D-%E4%B8%AD/</link>
+      <pubDate>Mon, 06 Jan 2020 20:34:43 +0800</pubDate>
+      
+      <guid>https://vtrily.github.io/2020/01/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84%E6%95%B4%E4%BD%93%E4%BB%8B%E7%BB%8D-%E4%B8%AD/</guid>
+      <description>分布式系统架构技术选型  服务网关 监控平台 RPC框架 监控中心 注册中心 消息队列 配置中心  服务网关 系统的唯一入口，封装了系统内部架构，为客户端提供服务
+服务网关功能  统一接入 用户鉴权 过滤请求 协议适配 路由转发  BIO，NIO,AIO底层比较分析
+服务网关实现  web框架 过滤拦截 RPC客户端  监控平台选择  被动监控和主动监控  被动监控，主动触发客户端执行脚本，会存在大量的磁盘IO，占用服务器资源
+主动监控： 客户端进行埋点只做计数，收集数据
+核心功能   数据采集
+  数据上报
+  数据展示
+  告警
+  RPC框架选型 主要考虑维度
+ 语言 框架特性 成熟度 技术支持 社区活跃度  注册中心选型 主要考虑维度
+ 数据模型 数据一致性 健康检查 性能与容量 易用性 扩展性  消息队列选择 主要考虑维度</description>
     </item>
     
     <item>
@@ -57,7 +241,7 @@
       <pubDate>Thu, 12 Dec 2019 22:36:38 +0800</pubDate>
       
       <guid>https://vtrily.github.io/2019/12/mysql%E4%B9%8B%E7%B4%A2%E5%BC%95/</guid>
-      <description>索引 </description>
+      <description>索引  索引的本质？ 索引命中策略？ 索引的最左匹配策略？ 为什么索引用的是B+树而不是B树？  </description>
     </item>
     
     <item>

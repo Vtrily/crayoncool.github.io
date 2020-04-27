@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>反向代理 on Vtrily</title>
+    <link>https://vtrily.github.io/tags/%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86/</link>
+    <description>Recent content in 反向代理 on Vtrily</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh</language>
+    <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
+    <lastBuildDate>Tue, 14 Apr 2020 20:34:43 +0800</lastBuildDate>
+    
+	<atom:link href="https://vtrily.github.io/tags/%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>分布式系统反向代理设计与实践-上</title>
+      <link>https://vtrily.github.io/2020/04/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E8%B7%B5-%E4%B8%8A/</link>
+      <pubDate>Tue, 14 Apr 2020 20:34:43 +0800</pubDate>
+      
+      <guid>https://vtrily.github.io/2020/04/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E8%B7%B5-%E4%B8%8A/</guid>
+      <description>反向代理与正向代理分析 正向代理作用 反向代理意义 反向代理在分布式架构中的作用 DR模式 封装MAC地址
+CIP-&amp;gt;VIP VIP-&amp;gt;DIP LVS进行分发的时候写入DIP的MAC地址，目标IP是VIP,同时写入RIPMAC地址, VIP根据RIPMAC地址找到Real Server
+TUN模式 封装IP地址 CIP,VIP-&amp;gt;DIP,CIP,RIP,VIP 隧道模式运维起来比较难
+NAT模式 数据进出都需要经过LVS,节点过多时成为系统瓶颈
+FULL-NAT模式
+多做了几次地址的转换
+反向代理中的调度算法  轮训 权重轮训 最小连接调度 权重最小连接调度 基于局部的最少链接 带复制的基于局部性最少链接 目标地址散列调度 源地址散列调度  轮训中为啥会有权重的判断 机器摘除时权重设为0</description>
+    </item>
+    
+    <item>
+      <title>分布式系统反向代理设计与实践-下</title>
+      <link>https://vtrily.github.io/2020/04/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E8%B7%B5-%E4%B8%8B/</link>
+      <pubDate>Tue, 14 Apr 2020 20:34:43 +0800</pubDate>
+      
+      <guid>https://vtrily.github.io/2020/04/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E8%B7%B5-%E4%B8%8B/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>
