@@ -1,6 +1,11 @@
 # MyBatis 3代码结构分析
 
 
+
+待完善
+
+<!--more-->
+
 # MyBatis 3 代码结构分析
 
 分析MyBatis 3版本为3.5.2-SNAPSHOT

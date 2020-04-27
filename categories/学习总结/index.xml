@@ -18,7 +18,7 @@
       <pubDate>Tue, 14 Apr 2020 20:34:43 +0800</pubDate>
       
       <guid>https://vtrily.github.io/2020/04/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9Fdns%E5%9F%9F%E5%90%8D%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E8%B7%B5-%E4%B8%8B/</guid>
-      <description></description>
+      <description>&lt;p&gt;待完善&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -36,7 +36,7 @@
       <pubDate>Tue, 14 Apr 2020 20:34:43 +0800</pubDate>
       
       <guid>https://vtrily.github.io/2020/04/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E8%B7%B5-%E4%B8%8B/</guid>
-      <description></description>
+      <description>&lt;p&gt;待完善&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -72,7 +72,7 @@
       <pubDate>Tue, 24 Mar 2020 22:34:43 +0800</pubDate>
       
       <guid>https://vtrily.github.io/2020/03/mappedbytebuffer%E8%A7%A3%E6%9E%90/</guid>
-      <description></description>
+      <description>&lt;p&gt;待完善&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -81,7 +81,7 @@
       <pubDate>Wed, 12 Feb 2020 22:34:43 +0800</pubDate>
       
       <guid>https://vtrily.github.io/2020/02/autowired%E5%92%8Cresource%E7%9A%84%E5%8C%BA%E5%88%AB/</guid>
-      <description>@Autowired和@Resource的区别 </description>
+      <description>&lt;p&gt;待完善&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -99,7 +99,7 @@
       <pubDate>Wed, 12 Feb 2020 22:34:43 +0800</pubDate>
       
       <guid>https://vtrily.github.io/2020/02/hikaricp%E5%AD%A6%E4%B9%A0/</guid>
-      <description>HikariCP学习 </description>
+      <description>&lt;p&gt;待完善&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -126,21 +126,7 @@
       <pubDate>Wed, 12 Feb 2020 22:34:43 +0800</pubDate>
       
       <guid>https://vtrily.github.io/2020/02/zookeeper%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/</guid>
-      <description>dubbo之扩展点机制 dubbo的扩展点机制主要有什么？   扩展点自动包装
-  扩展点自动装配
-  扩展点自适应
-  扩展点自动激活
-  问题  多个包装类只能生效一个？  并不是，它是一个嵌套关系
- 包装类内部使用哪个实现？  最底层的那个类
- 不加载包装类AOP会不会失效？  自动包装
-  自激活扩展类如何构建链表？
-  自激活扩展类的链表节点顺序？
-  源码分析 根据LoadBalance的加载机制分析扩展机制
-获取扩展类实例 getExtension getDefaultExtension getAdaptiveExtension getActivateExtension
-getExtension流程
-1.加载缓存 2.加载扩展类信息 3.实例化扩展类 4.注入依赖 5.查找包装类注入扩展类实例 6.返回
-getAdaptiveExtension 1.加载缓存 2.加载扩展类信息 3.生成代理类代码 4.实例化 5.注入依赖 6.返回
-getActivateExtension 1.加载所有扩展类 2.获取扩展类注解信息 3.创建匹配的扩展类实例 4.排序扩展类实例 5，返回</description>
+      <description>&lt;p&gt;待完善&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -149,11 +135,7 @@ getActivateExtension 1.加载所有扩展类 2.获取扩展类注解信息 3.创
       <pubDate>Wed, 12 Feb 2020 22:34:43 +0800</pubDate>
       
       <guid>https://vtrily.github.io/2020/02/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/</guid>
-      <description>设计模式之策略模式 设计原则
-找出应用中可能需要变化之处，把它们独立出来，不要和那些不需要变化的代码混在一起
-针对接口编程，而不是针对实现编程
-多用组合，少用继承
-Reactor设计模式</description>
+      <description>&lt;p&gt;待完善&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -180,7 +162,7 @@ Reactor设计模式</description>
       <pubDate>Thu, 12 Dec 2019 22:36:38 +0800</pubDate>
       
       <guid>https://vtrily.github.io/2019/12/mysql%E4%B9%8B%E7%B4%A2%E5%BC%95/</guid>
-      <description>索引  索引的本质？ 索引命中策略？ 索引的最左匹配策略？ 为什么索引用的是B+树而不是B树？  </description>
+      <description>&lt;p&gt;待完善&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -198,7 +180,7 @@ Reactor设计模式</description>
       <pubDate>Thu, 12 Dec 2019 22:34:43 +0800</pubDate>
       
       <guid>https://vtrily.github.io/2019/12/%E6%B7%B1%E6%8B%B7%E8%B4%9D%E4%B8%8E%E6%B5%85%E6%8B%B7%E8%B4%9D/</guid>
-      <description>深拷贝与浅拷贝 </description>
+      <description>&lt;p&gt;待完善&lt;/p&gt;</description>
     </item>
     
     <item>
