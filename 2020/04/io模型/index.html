@@ -3,12 +3,12 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title>分布式系统DNS域名设计与实践-上 | Vtrily</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>IO模型 | Vtrily</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noodp" />
 <meta name="Description" content="Vtrily&#39;s Blog">
-<link rel="prev" href="https://vtrily.github.io/2020/03/mappedbytebuffer%E8%A7%A3%E6%9E%90/" />
-<link rel="next" href="https://vtrily.github.io/2020/04/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84%E6%95%B4%E4%BD%93%E4%BB%8B%E7%BB%8D-%E4%B8%8B/" />
-<link rel="canonical" href="https://vtrily.github.io/2020/04/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9Fdns%E5%9F%9F%E5%90%8D%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E8%B7%B5-%E4%B8%8A/" />
+<link rel="prev" href="https://vtrily.github.io/2020/04/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84%E6%95%B4%E4%BD%93%E4%BB%8B%E7%BB%8D-%E4%B8%8B/" />
+<link rel="next" href="https://vtrily.github.io/2020/04/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E8%B7%B5-%E4%B8%8B/" />
+<link rel="canonical" href="https://vtrily.github.io/2020/04/io%E6%A8%A1%E5%9E%8B/" />
 <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -18,16 +18,16 @@
 <meta name="msapplication-TileColor" content="#da532c">
 <meta name="theme-color" content="#ffffff">
 <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="分布式系统DNS域名设计与实践-上"/>
-<meta name="twitter:description" content="分布式系统的DNS域名的设计与实践"/>
+<meta name="twitter:title" content="IO模型"/>
+<meta name="twitter:description" content="Web技术演进"/>
 <script type="application/ld+json">
     {
     "@context": "http://schema.org",
     "@type": "BlogPosting",
-    "headline": "分布式系统DNS域名设计与实践-上",
+    "headline": "IO模型",
     "mainEntityOfPage": {
         "@type": "WebPage",
-        "@id": "https:\/\/vtrily.github.io\/2020\/04\/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9Fdns%E5%9F%9F%E5%90%8D%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E8%B7%B5-%E4%B8%8A\/"
+        "@id": "https:\/\/vtrily.github.io\/2020\/04\/io%E6%A8%A1%E5%9E%8B\/"
     },
     
         "image": {
@@ -39,10 +39,10 @@
     
     "genre": "posts",
     
-        "keywords": "架构, DNS",
+        "keywords": "架构, web",
     
-    "wordcount":  47 ,
-    "url": "https:\/\/vtrily.github.io\/2020\/04\/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9Fdns%E5%9F%9F%E5%90%8D%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E8%B7%B5-%E4%B8%8A\/",
+    "wordcount":  31 ,
+    "url": "https:\/\/vtrily.github.io\/2020\/04\/io%E6%A8%A1%E5%9E%8B\/",
     
         "datePublished": "2020-04-10T20:34:43\x2b08:00",
     
@@ -128,7 +128,7 @@
     
 
     <article class="post-warp">
-        <h1 class="post-title animated flipInX">分布式系统DNS域名设计与实践-上</h1>
+        <h1 class="post-title animated flipInX">IO模型</h1>
 
         <div class="post-meta">
             <div class="post-meta-main">
@@ -141,7 +141,7 @@
             </div>
             <div class="post-meta-other">
                 <i class="far fa-calendar-alt fa-fw"></i><time datetime=2020-04-10>2020-04-10</time>&nbsp;
-                <i class="fas fa-pencil-alt fa-fw"></i>约 47 字&nbsp;
+                <i class="fas fa-pencil-alt fa-fw"></i>约 31 字&nbsp;
                 <i class="far fa-clock fa-fw"></i>预计阅读 1 分钟&nbsp;</div>
         </div>
 
@@ -175,76 +175,40 @@
             
             
             
-            <p>分布式系统的DNS域名的设计与实践</p>
-<a class="post-dummy-target" id="dns"></a><h1>DNS域名系统详解</h1>
-<p>ip地址可读性差
-将域名转化成ip地址</p>
-<a class="post-dummy-target" id="heading"></a><h2>应用场景</h2>
-<ol>
-<li>
-<p>浏览器访问网站</p>
-</li>
-<li>
-<p>服务入口地址以域名形式对外暴露</p>
-</li>
-</ol>
-<a class="post-dummy-target" id="heading1"></a><h2>域名访问方案</h2>
+            <p>Web技术演进</p>
+<a class="post-dummy-target" id="tcp"></a><h1>TCP连接</h1>
+<p>全双工</p>
+<p>三次握手</p>
+<p>四次挥手</p>
+<a class="post-dummy-target" id="io"></a><h1>IO模型</h1>
 <ul>
-<li>host文件</li>
-<li>DNS域名解析系统</li>
+<li>阻塞IO模型(BlockingIO)</li>
+<li>非阻塞IO模型(Non-BlockingIO)</li>
+<li>IO复用模型(I/O multiplexing)</li>
+<li>信号驱动的IO模型(SIGIO)</li>
+<li>异步IO模型(Asynchronous IO)</li>
 </ul>
-<a class="post-dummy-target" id="host"></a><h3>host文件</h3>
-<p>本地存储的域名与ip地址的映射文件</p>
-<a class="post-dummy-target" id="heading2"></a><h4>特点</h4>
-<ul>
-<li>Key:Value</li>
-<li>本地保存</li>
-<li>访问速度快</li>
-</ul>
-<a class="post-dummy-target" id="heading3"></a><h4>缺点</h4>
-<ul>
-<li>变更生效慢</li>
-<li>hosts文件越来越大</li>
-<li>没规定命令规则，主机名冲突</li>
-<li>维护映射关系代价高</li>
-</ul>
-<a class="post-dummy-target" id="dns1"></a><h3>DNS域名解析系统</h3>
-<p>是一个数据库系统</p>
-<a class="post-dummy-target" id="heading4"></a><h4>域名分级</h4>
-<ul>
-<li>
-<p>根
-13个根
-1个主根,12个辅根</p>
-</li>
-<li>
-<p>顶级域</p>
-</li>
-<li>
-<p>二级域</p>
-</li>
-<li>
-<p>三级域</p>
-</li>
-</ul>
-<p>DNS服务器分级
-根服务器
-顶级域名服务器
-权威域名服务器</p>
-<a class="post-dummy-target" id="dns2"></a><h4>DNS解析过程</h4>
-<ul>
-<li>
-<p>优先使用缓存
-缓存时间可长可短，可以根据time to live控制</p>
-</li>
-<li>
-<p>Local DNS服务器</p>
-</li>
-</ul>
-<p>DNS解析路径查询</p>
-<p>dig查询解析路径</p>
-<p>dig <a href="http://www.baidu.com">www.baidu.com</a> +trace</p>
-<a class="post-dummy-target" id="font-colordc143cfont"></a><h4>问题：<!-- raw HTML omitted -->描述一个完整的请求链路<!-- raw HTML omitted --></h4>
+<p>IO分为两个阶段：1. 数据准备阶段 2.内核空间复制回用户进程缓冲区阶段</p>
+<a class="post-dummy-target" id="ioblockingio"></a><h2>阻塞IO模型（BlockingIO）</h2>
+<p><img src="/blog-img/1587891803983.jpg" alt="阻塞IO模型"></p>
+<a class="post-dummy-target" id="heading"></a><h3>特点</h3>
+<p>在IO执行阶段的两个阶段（等待数据和拷贝数据）都被阻塞</p>
+<a class="post-dummy-target" id="iononblockingio"></a><h2>非阻塞IO模型(Non-BlockingIO)</h2>
+<p><img src="/blog-img/1587896234262.jpg" alt="非阻塞IO模型"></p>
+<a class="post-dummy-target" id="heading1"></a><h3>特点</h3>
+<p>在非阻塞式IO中，用户进程不断主动询问内核数据是否准备好</p>
+<p>进程轮询调用，消耗CPU资源</p>
+<a class="post-dummy-target" id="io1"></a><h2>IO复用模型</h2>
+<p><img src="/blog-img/1587900039436.jpg" alt="IO复用模型"></p>
+<a class="post-dummy-target" id="heading2"></a><h3>特点</h3>
+<a class="post-dummy-target" id="iosigio"></a><h2>信号驱动的IO模型(SIGIO)</h2>
+<p><img src="/blog-img/1587900362430.jpg" alt="信号驱动的IO模型"></p>
+<a class="post-dummy-target" id="heading3"></a><h3>特点</h3>
+<a class="post-dummy-target" id="ioasynchronous-io"></a><h2>异步IO模型(Asynchronous IO)</h2>
+<p><img src="/blog-img/1587900421245.jpg" alt="异步IO模型"></p>
+<a class="post-dummy-target" id="heading4"></a><h3>特点</h3>
+<a class="post-dummy-target" id="tomcat"></a><h1>tomcat流程</h1>
+<a class="post-dummy-target" id="heading5"></a><h1></h1>
         </div>
 
         <div class="post-footer" id="post-footer">
@@ -278,7 +242,7 @@
                     </span>
                 
                     <span class="tag">
-                        <a href="https://vtrily.github.io/tags/dns/"><i class="fas fa-tag fa-fw"></i>DNS</a>
+                        <a href="https://vtrily.github.io/tags/web/"><i class="fas fa-tag fa-fw"></i>web</a>
                     </span>
                 
             
@@ -290,10 +254,10 @@
 
     <div class="post-nav">
         
-            <a href="https://vtrily.github.io/2020/03/mappedbytebuffer%E8%A7%A3%E6%9E%90/" class="prev" rel="prev" title="MapperedByteBuffer解析"><i class="fas fa-angle-left fa-fw"></i>MapperedByteBuffer解析</a>
+            <a href="https://vtrily.github.io/2020/04/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84%E6%95%B4%E4%BD%93%E4%BB%8B%E7%BB%8D-%E4%B8%8B/" class="prev" rel="prev" title="分布式架构整体介绍-中"><i class="fas fa-angle-left fa-fw"></i>分布式架构整体介绍-中</a>
         
         
-            <a href="https://vtrily.github.io/2020/04/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84%E6%95%B4%E4%BD%93%E4%BB%8B%E7%BB%8D-%E4%B8%8B/" class="next" rel="next" title="分布式架构整体介绍-中">分布式架构整体介绍-中<i class="fas fa-angle-right fa-fw"></i></a>
+            <a href="https://vtrily.github.io/2020/04/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E8%B7%B5-%E4%B8%8B/" class="next" rel="next" title="分布式系统反向代理设计与实践-下">分布式系统反向代理设计与实践-下<i class="fas fa-angle-right fa-fw"></i></a>
         
     </div>
 </div>
