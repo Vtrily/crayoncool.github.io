@@ -18,7 +18,7 @@
       <pubDate>Mon, 06 Jan 2020 20:34:43 +0800</pubDate>
       
       <guid>https://vtrily.github.io/2020/01/hashmap%E7%9B%B8%E5%85%B3%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/</guid>
-      <description>&lt;p&gt;待完善&lt;/p&gt;</description>
+      <description>&lt;p&gt;为什么HashMap底层树化标准的元素个数是8？&lt;/p&gt;</description>
     </item>
     
   </channel>

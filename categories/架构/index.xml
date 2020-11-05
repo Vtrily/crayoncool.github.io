@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>架构 on Vtrily</title>
+    <link>https://vtrily.github.io/categories/%E6%9E%B6%E6%9E%84/</link>
+    <description>Recent content in 架构 on Vtrily</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh</language>
+    <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
+    <lastBuildDate>Tue, 14 Jul 2020 20:34:43 +0800</lastBuildDate>
+    
+	<atom:link href="https://vtrily.github.io/categories/%E6%9E%B6%E6%9E%84/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>企业级黑名单系统架构设计</title>
+      <link>https://vtrily.github.io/2020/07/%E4%BC%81%E4%B8%9A%E7%BA%A7%E9%BB%91%E5%90%8D%E5%8D%95%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/</link>
+      <pubDate>Tue, 14 Jul 2020 20:34:43 +0800</pubDate>
+      
+      <guid>https://vtrily.github.io/2020/07/%E4%BC%81%E4%B8%9A%E7%BA%A7%E9%BB%91%E5%90%8D%E5%8D%95%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/</guid>
+      <description>&lt;p&gt;黑名单系统&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>电商运营活动架构演进</title>
+      <link>https://vtrily.github.io/2020/07/%E7%94%B5%E5%95%86%E8%BF%90%E8%90%A5%E6%B4%BB%E5%8A%A8%E6%9E%B6%E6%9E%84%E6%BC%94%E8%BF%9B/</link>
+      <pubDate>Tue, 14 Jul 2020 20:34:43 +0800</pubDate>
+      
+      <guid>https://vtrily.github.io/2020/07/%E7%94%B5%E5%95%86%E8%BF%90%E8%90%A5%E6%B4%BB%E5%8A%A8%E6%9E%B6%E6%9E%84%E6%BC%94%E8%BF%9B/</guid>
+      <description>&lt;p&gt;电商运营活动架构演进&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>RPC工作原理分析</title>
+      <link>https://vtrily.github.io/2020/05/rpc%E6%A1%86%E6%9E%B6%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90/</link>
+      <pubDate>Wed, 20 May 2020 20:34:43 +0800</pubDate>
+      
+      <guid>https://vtrily.github.io/2020/05/rpc%E6%A1%86%E6%9E%B6%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90/</guid>
+      <description>&lt;p&gt;RPC工作原理分析&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

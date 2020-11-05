@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>RPC on Vtrily</title>
+    <link>https://vtrily.github.io/tags/rpc/</link>
+    <description>Recent content in RPC on Vtrily</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh</language>
+    <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
+    <lastBuildDate>Wed, 20 May 2020 20:34:43 +0800</lastBuildDate>
+    
+	<atom:link href="https://vtrily.github.io/tags/rpc/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>RPC工作原理分析</title>
+      <link>https://vtrily.github.io/2020/05/rpc%E6%A1%86%E6%9E%B6%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90/</link>
+      <pubDate>Wed, 20 May 2020 20:34:43 +0800</pubDate>
+      
+      <guid>https://vtrily.github.io/2020/05/rpc%E6%A1%86%E6%9E%B6%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90/</guid>
+      <description>&lt;p&gt;RPC工作原理分析&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

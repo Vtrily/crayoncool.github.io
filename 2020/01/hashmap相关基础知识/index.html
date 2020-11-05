@@ -19,7 +19,7 @@
 <meta name="theme-color" content="#ffffff">
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="HashMap基础"/>
-<meta name="twitter:description" content="待完善"/>
+<meta name="twitter:description" content="为什么HashMap底层树化标准的元素个数是8？"/>
 <script type="application/ld+json">
     {
     "@context": "http://schema.org",
@@ -41,7 +41,7 @@
     
         "keywords": "java",
     
-    "wordcount":  1 ,
+    "wordcount":  138 ,
     "url": "https:\/\/vtrily.github.io\/2020\/01\/hashmap%E7%9B%B8%E5%85%B3%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86\/",
     
         "datePublished": "2020-01-06T20:34:43\x2b08:00",
@@ -141,7 +141,7 @@
             </div>
             <div class="post-meta-other">
                 <i class="far fa-calendar-alt fa-fw"></i><time datetime=2020-01-06>2020-01-06</time>&nbsp;
-                <i class="fas fa-pencil-alt fa-fw"></i>约 1 字&nbsp;
+                <i class="fas fa-pencil-alt fa-fw"></i>约 138 字&nbsp;
                 <i class="far fa-clock fa-fw"></i>预计阅读 1 分钟&nbsp;</div>
         </div>
 
@@ -175,7 +175,100 @@
             
             
             
-            <p>待完善</p>
+            <p>为什么HashMap底层树化标准的元素个数是8？</p>
+<a class="post-dummy-target" id="heading"></a><h2>问题</h2>
+<ol>
+<li>
+<p>HashMap的底层存储结构是怎样的？</p>
+</li>
+<li>
+<p>线程安全吗？为什么不安全？</p>
+</li>
+<li>
+<p>1.7和1.8版本的HashMap有什么区别？1.7的有什么隐患，什么原因导致的？</p>
+</li>
+<li>
+<p>hashcode是唯一的吗？插入元素的时候怎么比较的？</p>
+</li>
+<li>
+<p>跟HashTable,ConcurrentHashMap有什么区别？</p>
+</li>
+<li>
+<p>为什么要转化成红黑树？</p>
+</li>
+<li>
+<p>为什么树化标准是8个？</p>
+</li>
+<li>
+<p>hash方法</p>
+</li>
+<li>
+<p>为什么退化为链表的阈值是6？</p>
+</li>
+</ol>
+<a class="post-dummy-target" id="1-hashmap"></a><h3>1. HashMap的底层存储结构是怎样的？</h3>
+<p>由数组和链表结构组成的数据结构，允许key为null,value为null</p>
+<a class="post-dummy-target" id="2-"></a><h3>2. 线程安全吗？为什么不安全？</h3>
+<p>线程不安全,多线程resize的时候可能会造成死循环</p>
+<a class="post-dummy-target" id="3-1718hashmap17"></a><h3>3. 1.7和1.8版本的HashMap有什么区别？1.7的有什么隐患，什么原因导致的？</h3>
+<p>1.7 版本resize的时候采用的是头插法，两个线程同时操作的时候可能会造成死循环。
+1.8 之前链表是头插法
+1.8 之后是尾插法</p>
+<a class="post-dummy-target" id="heading1"></a><h4>为什么是头插法？</h4>
+<p>头插法新来的值会取代原有的值，原有的值就顺推到链表中去（认为后来的值被查找的可能性更大，提升查找的效率）</p>
+<p>1.8 之后改为尾部插入</p>
+<a class="post-dummy-target" id="heading2"></a><h4>为什么改为尾部插入？</h4>
+<p>保证了数据在链表中的顺序是一致的。避免多线程反转的时候造成死循环。</p>
+<p>为什么会死循环？</p>
+<p>这个时候我们就要熟悉HashMap的resize机制。</p>
+<a class="post-dummy-target" id="resize"></a><h4>什么时候进行resize?</h4>
+<p>影响HashMap resize的因素有两个：Capacity:HashMap当前长度和LoadFactory: 负载因子，默认值为0.75f。HashMap的初始容量是16，为了减少冲突发生的概率，当HashMap的数组长度到达一个临界值的时候，就会触发扩容，把所有元素rehash之后再放到扩容后的容器中。</p>
+<pre><code>临界值 = DEFAULT_INITIAL_CAPACITY * DEFAULT_LOAD_FACTORY
+
+</code></pre><p>默认情况下当长度超过16*0.75 = 12时，就会触发扩容。</p>
+<a class="post-dummy-target" id="hashma075"></a><h4>为什么HashMa的负载因子是0.75？</h4>
+<p>要搞清这个问题，我们首先要知道负载因子是什么</p>
+<pre><code>负载因子=填入表中的元素个数/散列表的长度
+</code></pre><p>它表示的是Hash表中元素的填满程度</p>
+<p>负载因子越大，说明填的元素越多，空间利用率高，但此时冲突的几率也会随之变大。</p>
+<p>负载因子越小，填的元素少，冲突发生的机会减少，存在空间浪费，rehash的次数随之变大。</p>
+<p>这个和泊松分布有关系，在负载因子是0.75的情况下，节点在 Hash表中的遵循参数平均为0.5的泊松分布，这个时候当链表长度达到8的概率为0.00000006，几乎是不可能事件。</p>
+<p>扩容这个操作是耗时操作，为了提高性能就需要最大限度的减少扩容rehash操作次数。</p>
+<ol start="8">
+<li>hash方法</li>
+</ol>
+<pre><code>static final int hash(Object key) {
+    int h;
+    return (key == null) ? 0 : (h = key.hashCode()) ^ (h &gt;&gt;&gt; 16);
+}
+</code></pre><p>取key的hashCode，将hashCode无符号右移16位，将hashCode于右移之后的值进行异或操作</p>
+<a class="post-dummy-target" id="16"></a><h4>为什么要右移16位？</h4>
+<p>右移16位是为了减少碰撞，降低hash冲突的几率。int类型的数值是4个字节的，右移16位异或可以同时保留高16位与低16位的特征</p>
+<a class="post-dummy-target" id="heading3"></a><h4>为什么要异或运算？</h4>
+<p>异或能更好地保留各部分的特征，如果采用&amp;运算计算出来的值会向1靠拢，采用|运算计算出来的值会向0靠拢</p>
+<p>这么做的最终目的是为了让hash后的结果分布的更均匀，减少hash碰撞，提升运行效率</p>
+<a class="post-dummy-target" id="hashmap16"></a><h4>为什么HashMap的默认长度是16？</h4>
+<p>HashMap在put元素的时候会计算数组的下标，计算方法如下</p>
+<pre><code>int index = key.hashCode &amp; (n - 1);
+</code></pre><p>因为是将二进制进行按位于，(16-1) 是 1111,末位是1，这样也能保证计算后的index既可以是奇数也可以是偶数，并且只要传进来的key足够分散，均匀那么按位于的时候获得的index就会减少重复，这样也就减少了hash的碰撞以及hashMap的查询效率。</p>
+<p>那么到了这里你也许会问？ 那么就然16可以，是不是只要是2的整数次幂就可以呢？</p>
+<p>答案是肯定的。那为什么不是8,4呢？ 因为是8或者4的话很容易导致map扩容影响性能，如果分配的太大的话又会浪费资源，所以就使用16作为初始大小</p>
+<p>1 减少hash碰撞</p>
+<p>2 提高map查询效率</p>
+<p>3 分配过小防止频繁扩容</p>
+<p>4 分配过大浪费资源</p>
+<a class="post-dummy-target" id="heading4"></a><h4>如何解决散列冲突？</h4>
+<p>开放寻址法和链表法</p>
+<p>线性探测和二次探测和双重Hash</p>
+<p>死循环的代码</p>
+<pre><code>do {
+    Entry&lt;K,V&gt; next = e.next;
+    int i = indexFor(e.hash, newCapacity);
+    e.next = newTable[i];
+    newTable[i] = e;
+    e = next;
+} while (e != null);
+</code></pre>
         </div>
 
         <div class="post-footer" id="post-footer">

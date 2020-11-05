@@ -7,10 +7,143 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Tue, 14 Apr 2020 20:34:43 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 23 Jul 2020 20:34:43 +0800</lastBuildDate>
     
 	<atom:link href="https://vtrily.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>树</title>
+      <link>https://vtrily.github.io/2020/07/%E6%A0%91/</link>
+      <pubDate>Thu, 23 Jul 2020 20:34:43 +0800</pubDate>
+      
+      <guid>https://vtrily.github.io/2020/07/%E6%A0%91/</guid>
+      <description>&lt;p&gt;二叉树有哪几种存储方式？什么样的二叉树适合用数组来存储？&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>红黑树</title>
+      <link>https://vtrily.github.io/2020/07/%E7%BA%A2%E9%BB%91%E6%A0%91/</link>
+      <pubDate>Thu, 23 Jul 2020 20:34:43 +0800</pubDate>
+      
+      <guid>https://vtrily.github.io/2020/07/%E7%BA%A2%E9%BB%91%E6%A0%91/</guid>
+      <description>&lt;p&gt;如何定义一个红黑树？&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>二分查找</title>
+      <link>https://vtrily.github.io/2020/07/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/</link>
+      <pubDate>Tue, 14 Jul 2020 20:34:43 +0800</pubDate>
+      
+      <guid>https://vtrily.github.io/2020/07/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/</guid>
+      <description>&lt;p&gt;二分查找的应用场景&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>企业级黑名单系统架构设计</title>
+      <link>https://vtrily.github.io/2020/07/%E4%BC%81%E4%B8%9A%E7%BA%A7%E9%BB%91%E5%90%8D%E5%8D%95%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/</link>
+      <pubDate>Tue, 14 Jul 2020 20:34:43 +0800</pubDate>
+      
+      <guid>https://vtrily.github.io/2020/07/%E4%BC%81%E4%B8%9A%E7%BA%A7%E9%BB%91%E5%90%8D%E5%8D%95%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/</guid>
+      <description>&lt;p&gt;黑名单系统&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>电商运营活动架构演进</title>
+      <link>https://vtrily.github.io/2020/07/%E7%94%B5%E5%95%86%E8%BF%90%E8%90%A5%E6%B4%BB%E5%8A%A8%E6%9E%B6%E6%9E%84%E6%BC%94%E8%BF%9B/</link>
+      <pubDate>Tue, 14 Jul 2020 20:34:43 +0800</pubDate>
+      
+      <guid>https://vtrily.github.io/2020/07/%E7%94%B5%E5%95%86%E8%BF%90%E8%90%A5%E6%B4%BB%E5%8A%A8%E6%9E%B6%E6%9E%84%E6%BC%94%E8%BF%9B/</guid>
+      <description>&lt;p&gt;电商运营活动架构演进&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>跳表</title>
+      <link>https://vtrily.github.io/2020/07/%E8%B7%B3%E8%A1%A8/</link>
+      <pubDate>Tue, 14 Jul 2020 20:34:43 +0800</pubDate>
+      
+      <guid>https://vtrily.github.io/2020/07/%E8%B7%B3%E8%A1%A8/</guid>
+      <description>&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;什么是跳表？&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;为什么redis的有序集合（Sorted Set）会选择用跳表来实现？为什么不用红黑树？&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;</description>
+    </item>
+    
+    <item>
+      <title>递归（数据结构与算法笔记）</title>
+      <link>https://vtrily.github.io/2020/06/%E9%80%92%E5%BD%92%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0/</link>
+      <pubDate>Thu, 11 Jun 2020 20:34:43 +0800</pubDate>
+      
+      <guid>https://vtrily.github.io/2020/06/%E9%80%92%E5%BD%92%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0/</guid>
+      <description>&lt;p&gt;递归&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>队列（数据结构与算法笔记）</title>
+      <link>https://vtrily.github.io/2020/06/%E9%98%9F%E5%88%97/</link>
+      <pubDate>Mon, 08 Jun 2020 20:34:43 +0800</pubDate>
+      
+      <guid>https://vtrily.github.io/2020/06/%E9%98%9F%E5%88%97/</guid>
+      <description>&lt;p&gt;队列在线程池等有限资源池中的应用&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Java并发编程:核心理论</title>
+      <link>https://vtrily.github.io/2020/06/java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E7%90%86%E8%AE%BA/</link>
+      <pubDate>Wed, 03 Jun 2020 20:34:43 +0800</pubDate>
+      
+      <guid>https://vtrily.github.io/2020/06/java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E7%90%86%E8%AE%BA/</guid>
+      <description>&lt;p&gt;Java并发机制的底层实现原理&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>ThreadLocal</title>
+      <link>https://vtrily.github.io/2020/06/threadlocal/</link>
+      <pubDate>Wed, 03 Jun 2020 20:34:43 +0800</pubDate>
+      
+      <guid>https://vtrily.github.io/2020/06/threadlocal/</guid>
+      <description>&lt;p&gt;ThreadLocal类的实现&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>RPC工作原理分析</title>
+      <link>https://vtrily.github.io/2020/05/rpc%E6%A1%86%E6%9E%B6%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90/</link>
+      <pubDate>Wed, 20 May 2020 20:34:43 +0800</pubDate>
+      
+      <guid>https://vtrily.github.io/2020/05/rpc%E6%A1%86%E6%9E%B6%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90/</guid>
+      <description>&lt;p&gt;RPC工作原理分析&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>栈（数据结构与算法笔记）</title>
+      <link>https://vtrily.github.io/2020/05/%E6%A0%88/</link>
+      <pubDate>Wed, 20 May 2020 20:34:43 +0800</pubDate>
+      
+      <guid>https://vtrily.github.io/2020/05/%E6%A0%88/</guid>
+      <description>&lt;p&gt;如何利用栈实现Chrome浏览器的前进后退功能？&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>TCP粘包问题</title>
+      <link>https://vtrily.github.io/2020/04/tcp%E7%B2%98%E5%8C%85%E9%97%AE%E9%A2%98/</link>
+      <pubDate>Tue, 28 Apr 2020 20:34:43 +0800</pubDate>
+      
+      <guid>https://vtrily.github.io/2020/04/tcp%E7%B2%98%E5%8C%85%E9%97%AE%E9%A2%98/</guid>
+      <description>&lt;p&gt;待完善&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>tomcat流程</title>
+      <link>https://vtrily.github.io/2020/04/tomcat%E6%B5%81%E7%A8%8B/</link>
+      <pubDate>Tue, 28 Apr 2020 20:34:43 +0800</pubDate>
+      
+      <guid>https://vtrily.github.io/2020/04/tomcat%E6%B5%81%E7%A8%8B/</guid>
+      <description>&lt;p&gt;待完善&lt;/p&gt;</description>
+    </item>
     
     <item>
       <title>分布式系统DNS域名设计与实践-下</title>
@@ -45,7 +178,25 @@
       <pubDate>Fri, 10 Apr 2020 20:34:43 +0800</pubDate>
       
       <guid>https://vtrily.github.io/2020/04/io%E6%A8%A1%E5%9E%8B/</guid>
-      <description>&lt;p&gt;Web技术演进&lt;/p&gt;</description>
+      <description>&lt;p&gt;UNIX环境中的IO模型分析&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>mysql存储原理学习</title>
+      <link>https://vtrily.github.io/2020/04/mysql%E5%AD%98%E5%82%A8%E5%8E%9F%E7%90%86%E5%AD%A6%E4%B9%A0/</link>
+      <pubDate>Fri, 10 Apr 2020 20:34:43 +0800</pubDate>
+      
+      <guid>https://vtrily.github.io/2020/04/mysql%E5%AD%98%E5%82%A8%E5%8E%9F%E7%90%86%E5%AD%A6%E4%B9%A0/</guid>
+      <description>&lt;p&gt;MySQL存储原理深入剖析与技术分析&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>mysql存储原理学习</title>
+      <link>https://vtrily.github.io/2020/04/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84%E5%AD%98%E5%82%A8%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E8%B7%B5%E4%B8%8B/</link>
+      <pubDate>Fri, 10 Apr 2020 20:34:43 +0800</pubDate>
+      
+      <guid>https://vtrily.github.io/2020/04/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84%E5%AD%98%E5%82%A8%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E8%B7%B5%E4%B8%8B/</guid>
+      <description>&lt;p&gt;分布式架构数据存储设计与实践&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -112,6 +263,25 @@
     </item>
     
     <item>
+      <title>SpringBoot核心知识</title>
+      <link>https://vtrily.github.io/2020/02/springboot%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86/</link>
+      <pubDate>Wed, 12 Feb 2020 22:34:43 +0800</pubDate>
+      
+      <guid>https://vtrily.github.io/2020/02/springboot%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86/</guid>
+      <description>SpringBootApplication注解
+SpringBoot启动机制</description>
+    </item>
+    
+    <item>
+      <title>Spring核心剖析</title>
+      <link>https://vtrily.github.io/2020/02/spring%E6%A0%B8%E5%BF%83%E5%89%96%E6%9E%90/</link>
+      <pubDate>Wed, 12 Feb 2020 22:34:43 +0800</pubDate>
+      
+      <guid>https://vtrily.github.io/2020/02/spring%E6%A0%B8%E5%BF%83%E5%89%96%E6%9E%90/</guid>
+      <description>&lt;p&gt;待完善&lt;/p&gt;</description>
+    </item>
+    
+    <item>
       <title>TCP-IP协议之RST标志</title>
       <link>https://vtrily.github.io/2020/02/tcp-ip%E5%8D%8F%E8%AE%AE%E4%B9%8Brst%E6%A0%87%E5%BF%97/</link>
       <pubDate>Wed, 12 Feb 2020 22:34:43 +0800</pubDate>
@@ -130,6 +300,15 @@
     </item>
     
     <item>
+      <title>微服务架构之企业级网关</title>
+      <link>https://vtrily.github.io/2020/02/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84%E4%B9%8B%E4%BC%81%E4%B8%9A%E7%BA%A7%E7%BD%91%E5%85%B3/</link>
+      <pubDate>Wed, 12 Feb 2020 22:34:43 +0800</pubDate>
+      
+      <guid>https://vtrily.github.io/2020/02/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84%E4%B9%8B%E4%BC%81%E4%B8%9A%E7%BA%A7%E7%BD%91%E5%85%B3/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>设计模式之策略模式</title>
       <link>https://vtrily.github.io/2020/02/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/</link>
       <pubDate>Wed, 12 Feb 2020 22:34:43 +0800</pubDate>
@@ -144,7 +323,7 @@
       <pubDate>Mon, 06 Jan 2020 20:34:43 +0800</pubDate>
       
       <guid>https://vtrily.github.io/2020/01/hashmap%E7%9B%B8%E5%85%B3%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/</guid>
-      <description>&lt;p&gt;待完善&lt;/p&gt;</description>
+      <description>&lt;p&gt;为什么HashMap底层树化标准的元素个数是8？&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -153,7 +332,7 @@
       <pubDate>Mon, 06 Jan 2020 20:34:43 +0800</pubDate>
       
       <guid>https://vtrily.github.io/2020/01/synchronized%E7%9B%B8%E5%85%B3%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/</guid>
-      <description></description>
+      <description>&lt;p&gt;HashMap和HashTable的安全性有什么区别？&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -171,7 +350,7 @@
       <pubDate>Mon, 06 Jan 2020 20:34:43 +0800</pubDate>
       
       <guid>https://vtrily.github.io/2020/01/%E6%95%B0%E7%BB%84/</guid>
-      <description>&lt;p&gt;待完善&lt;/p&gt;</description>
+      <description>&lt;p&gt;数组是一种占用连续内存空间的线性表数据结构。用于存储一组具有相同类型的数据。&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -180,7 +359,7 @@
       <pubDate>Mon, 06 Jan 2020 20:34:43 +0800</pubDate>
       
       <guid>https://vtrily.github.io/2020/01/%E9%93%BE%E8%A1%A8/</guid>
-      <description>&lt;p&gt;待完善&lt;/p&gt;</description>
+      <description>&lt;p&gt;如何利用链表实现LRU缓存淘汰算法&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -235,6 +414,64 @@
       
       <guid>https://vtrily.github.io/2019/12/spring%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%E4%B9%8Bdispatcherservlet/</guid>
       <description>&lt;p&gt;待完善&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://vtrily.github.io/1/01/cas/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://vtrily.github.io/1/01/cas/</guid>
+      <description>前言
+CAS（Compare and Swap），即比较并替换，实现并发算法时常用到的一种技术，Doug lea大神在java同步器中大量使用了CAS技术，鬼斧神工的实现了多线程执行的安全性。
+CAS的思想很简单：三个参数，一个当前内存值V、旧的预期值A、即将更新的值B，当且仅当预期值A和内存值V相同时，将内存值修改为B并返回true，否则什么都不做，并返回false。
+问题 一个n++的问题。
+public class Case {
+public volatile int n; public void add() { n++; }  } 通过javap -verbose Case看看add方法的字节码指令
+public void add(); flags: ACC_PUBLIC Code: stack=3, locals=1, args_size=1 0: aload_0 1: dup 2: getfield #2 // Field n:I 5: iconst_1 6: iadd 7: putfield #2 // Field n:I 10: return n++被拆分成了几个指令：
+执行getfield拿到原始n； 执行iadd进行加1操作； 执行putfield写把累加后的值写回n； 通过volatile修饰的变量可以保证线程之间的可见性，但并不能保证这3个指令的原子执行，在多线程并发执行下，无法做到线程安全，得到正确的结果，那么应该如何解决呢？
+如何解决 在add方法加上synchronized修饰解决。
+public class Case {
+public volatile int n; public synchronized void add() { n++; }  } 这个方案当然可行，但是性能上差了点，还有其它方案么？</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://vtrily.github.io/1/01/%E9%9D%A2%E8%AF%95%E7%82%B92/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://vtrily.github.io/1/01/%E9%9D%A2%E8%AF%95%E7%82%B92/</guid>
+      <description>Java  泛型实现、多态实现 equal、hashcode、==区别 try、catch、finally执行顺序，finally执行return语句会发生什么 引用类型有哪几类，各种的用途，threadLocal是什么类型 SPI实现 hashmap大小为什么是2的n次方 多线程单例实现 happen before CAS、Lock、AQS、synchronized nio底层实现 类加载器、类加载过程、什么时候会触发类 对象创建过程、对象结构 JVM内存结构、JVM内存模型、volatile JVM垃圾收集过程 调优分析（堆转存快照分析、调优命令、工具）  Spring  IOC初始化流程、循环依赖解决 SpringMVC处理流程 AOP原理  操作系统  进程和线程区别、线程同步机制、进程间通信 IO多路复用 awk、sed命令  网络  TCP三次握手四次挥手 TCP、UDP区别和使用场景 HTTP2.0相比HTTP1.1的优点 HTTPS建立连接过程 浏览器发出请求到接受响应的详细过程  Mysql  数据库范式 事务、锁、MVCC 索引最左匹配，b+tree搜索过程 分库分表 查询优化方法  mongo  关系、非关系型数据库区别，各自优缺点 mongo优势，适用场景 分片实现  缓存  redis分布式锁设计 redis分布式限流设计 redis高可用实现 缓存和DB数据一致性保障 缓存雪崩、穿透  消息  消息队列解决什么问题（解耦、削峰、异步） 高可用实现 如何保证不被重复消费 如何保证可靠性 如何保证顺序性  算法  用两个线程顺序打印0到10的奇偶数 LRU算法实现 先进先出环形队列 堆排序 第2（k）大数 合并两个有序数组、合并k个有序数组 删除单向链表的倒数第k个节点 二叉树遍历（递归、while） 给两个整数数组 A 和 B ，返回两个数组中公共的、长度最长的子数组的长度 给定一个正整数 n，将其拆分为至少两个正整数的和，并使这些整数的乘积最大化，返回最大乘积 计算从 0 到 n (含 n) 中数字 2 出现的次数（22计两次）  分布式  CAP理论 一致性hash 分布式事务 微服务组成部分（网关、服务发现、服务注册、限流、熔断降级） docker、k8s  系统设计  短链服务设计 秒杀设计 高并发下统计最大值、最小值、平均值 延时队列  </description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://vtrily.github.io/1/01/%E9%9D%A2%E8%AF%95%E7%82%B93/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://vtrily.github.io/1/01/%E9%9D%A2%E8%AF%95%E7%82%B93/</guid>
+      <description>讲一下线程参数的含义 Innodb的索引实现为什么是B+树? Redis的使用，分布式锁的实现 操作系统虚拟内存换页的过程 TCP三次握手 vol atile关键字的作用 乐观锁、悲观锁 Hashllap结构，是否线程安全? Concurrent HashM ap如何保证线程安全? 之前用过哪些设计模式? 算法题:滑动窗口#
+字节跳动技术二面
+说一下B树和B+树的区别. 说一下HashMap的实现，扩容机制，扩容时如何保证可操作? Redis扩容机制(渐进式单线程扩容) Spring A0P的原理Spring IoC的原理，如何实现，如何解决循环依赖? 两线程对变量i进行加1操作，结果如何?为什么?怎么解决? CAS概念、原子类实现原理 synchronize底层实现，如何实现Lock? AQS有什么特点? 手写项目中某个模块代码。 介绍各种网络协议。 DNS在网络层用哪个协议，为什么。 介绍HTTPS协议，详述SSL建 立连接过程。 代码题:反转单链表。 代码题:复杂链表复制。 代码题:数组a,先单调地址再单调递减，输出数组中不同元素个数。要求:空间复杂度，不能改变原数组#
+字节跳动技术三面
+算法题多到爆炸，感觉是算法专场，宇宙条果真名不虚传说一下 Java垃圾回收机制 64匹马，8个赛道， 找最快的4匹马。 64匹马，8个赛道， 找最快的8匹马。
+给出两个升序数组A、B和长度m、n,求第k个大的 给出数组A，长度为n，数组中元素的值位于[0, n - 1]之间，求是否有重复元素 讲一下多线程与多进程区别J Vh中什么时候会进行垃圾回收? 什么样的对象是可以回收的? Spring主要思想是什么? 你未来的发展方向是什么?确定了么? 打算一直做Java? 有考虑过转吗? 那你平时是怎么学习Java的呢? 分享最近看的一本书#
+字节跳动技术四面
+场景题目:设计一个短域名服务:短信存不了太长网站，需要弄成短域名，你该如何设计一-个服务，可以为全国的网址服务。 TCP为什么是三次握手四次挥手? 数据库的隔离级别 sql题 写了个连表查询外加模糊查询 算法:镜像二叉树</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://vtrily.github.io/1/01/%E9%9D%A2%E8%AF%95%E7%9F%A5%E8%AF%86%E7%82%B9/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://vtrily.github.io/1/01/%E9%9D%A2%E8%AF%95%E7%9F%A5%E8%AF%86%E7%82%B9/</guid>
+      <description>Java集合：HashMap和ConcurrentHashMap，平时最好有读一些源码，最好知道每个参数为什么设置成这么大？有什么好处？ JUC包肯定要学，即使平时的编程根本不用，也必须得会。至少要知道aba，cas，aqs，unsafe，volatile，sync，以及常见的各种lock，死锁，线程池参数等，也必须要明白自旋，阻塞，死锁和它如何去定位，oom如何定位问题，cpu过高如何定位等基本的操作，你可以没有生产调试经验，但不代表你可以不会top，jps，jstack，jmap这些可能会问的东西。以及可能衍生的jmm模型和mesi协议等。 大厂必问JVM：垃圾回收算法，垃圾收集器、JVM内存模型，每个区域用途，各种oom的种类，jvm调优经验，类加载过程，双亲委派等。 Spring就得抽空看源码了，一般会问到bean的生命周期，如何解决循环依赖，实现事务原理，动态代理原理等。 Dubbo也是必须问的，设计框架，负载均衡。 Redis更要多懂一点，单线程模型，aof，rdb，rewrite，主从，cluster，哪些类型？包含一些缓存常见的问题击穿、穿透、雪崩、数据一致性等。 Mysql，事务，锁，索引，b+树，主从这些你必须会 Mq ，我用的rocketmq，你得知道为什么用，重复消费，顺序消息，事务消息，高可用，消息丢失，挤压场景，整个消息发送消费的流程，读过源码更佳，更好吹 Netty的话，零拷贝，bio，nio，aio，架构设计怎么样子的？用过看过更好 算法，建议去刷题，我运气好，简单的算法让我碰到了，一些快排，堆排，二叉树相关的，链表反转，成环，环节点，跳楼梯等常规的简单算法建议刷刷，双指针，dp，递归这些还是多找找感觉，大数据内存有限的场景的统计，有时间一些middle可以去试试，手写红黑树你要是可以，那我估计算法你稳了。 网络，http，tcp，https，udp，7层网络协议等，最好结合自己理解，背，你都要背下来。 还有就是一些分布式事务实现，架构实现，比如抢红包，高并发下单等常规的场景设计，你来设计，你怎么去设计？多找一些大牛或者上网自己查，帮你看看有哪些漏洞，有那些解决方案？业界有哪些好的中间件？
+自我介绍、自己做的项目和技术领域 说一下sync的底层实现，锁优化，和lock的对比 讲一下JVM参数调优详细过程 为什么这么设置？好处是什么？描述gc场景，如何去分析gc日志？ redis数据结构，使用场景，微博场景使用redis如何去设计用户关系？ 线程池参数设定，为什么这么设定，作用？7大参数 spring的循环依赖如何解决？为什么要三级缓存？ 优先级队列的底层原理
+高并发下单扣库存场景如何设计 rocketMQ架构设计原理 Dubbo框架实现原理 最近读了什么书？平时怎么学习？ 常用的负载均衡，该怎么用，你能说下吗？
+JVM的主要组成部分及其作用？ JVM运行时数据区包含哪些？ JVM垃圾回收机制，何时触发MinorGC等操作 JVM的垃圾回收算法： JVM 调优的工具？ 常用的JVM调优参数？ 堆栈的区别？ 详细介绍一下 CMS 垃圾回收器？ 怎么判断对象是否可以被回收？ 新生代垃圾回收器和老生代垃圾回收器都有哪些？有什么区别？ java类加载过程? 把你知道的中间件都说一下吧（瞬间懵了一下）
+HashMap 为什么线程不安全？是否模拟过不安全的场景？ 说一下 Java 的值传递和引用传递 SpringBoot 和 SpringMVC 的区别 说一下 Spring 中 bean 的加载过程 JVM 的垃圾回收器了解吗？垃圾回收算法有哪些？JDK8 默认的垃圾回收器是什么？ 有什么想跟我沟通的吗？
+流量在某一时刻暴涨，然后又猛跌如何应对？ redis 消息队列如何对过期信息/无效信息进行删除？ 讲一讲 redis 的持久化机制？ 为什么JAVA类加载要用双亲委派？ 怎么实现同步？ JAVA锁有哪几种？ 两种锁的区别？ 了解过AQS吗？ 场景题：给一个方法加上超时异常 生产者消费者模型的作用是什么？ short s1=1;s1=s1+1；有什么错?</description>
     </item>
     
   </channel>

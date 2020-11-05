@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="zh">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title> | Vtrily</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noodp" />
+<meta name="Description" content="Vtrily&#39;s Blog">
+<link rel="prev" href="https://vtrily.github.io/1/01/%E9%9D%A2%E8%AF%95%E7%82%B93/" />
+<link rel="next" href="https://vtrily.github.io/1/01/cas/" />
+<link rel="canonical" href="https://vtrily.github.io/1/01/%E9%9D%A2%E8%AF%95%E7%82%B92/" />
+<link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content=""/>
+<meta name="twitter:description" content="Java  泛型实现、多态实现 equal、hashcode、==区别 try、catch、finally执行顺序，finally执行return语句会发生什么 引用类型有哪几类，各种的用途，threadLocal是什么类型 SPI实现 hashmap大小为什么是2的n次方 多线程单例实现 happen before CAS、Lock、AQS、synchronized nio底层实现 类加载器、类加载过程、什么时候会触发类 对象创建过程、对象结构 JVM内存结构、JVM内存模型、volatile JVM垃圾收集过程 调优分析（堆转存快照分析、调优命令、工具）  Spring  IOC初始化流程、循环依赖解决 SpringMVC处理流程 AOP原理  操作系统  进程和线程区别、线程同步机制、进程间通信 IO多路复用 awk、sed命令  网络  TCP三次握手四次挥手 TCP、UDP区别和使用场景 HTTP2.0相比HTTP1.1的优点 HTTPS建立连接过程 浏览器发出请求到接受响应的详细过程  Mysql  数据库范式 事务、锁、MVCC 索引最左匹配，b&#43;tree搜索过程 分库分表 查询优化方法  mongo  关系、非关系型数据库区别，各自优缺点 mongo优势，适用场景 分片实现  缓存  redis分布式锁设计 redis分布式限流设计 redis高可用实现 缓存和DB数据一致性保障 缓存雪崩、穿透  消息  消息队列解决什么问题（解耦、削峰、异步） 高可用实现 如何保证不被重复消费 如何保证可靠性 如何保证顺序性  算法  用两个线程顺序打印0到10的奇偶数 LRU算法实现 先进先出环形队列 堆排序 第2（k）大数 合并两个有序数组、合并k个有序数组 删除单向链表的倒数第k个节点 二叉树遍历（递归、while） 给两个整数数组 A 和 B ，返回两个数组中公共的、长度最长的子数组的长度 给定一个正整数 n，将其拆分为至少两个正整数的和，并使这些整数的乘积最大化，返回最大乘积 计算从 0 到 n (含 n) 中数字 2 出现的次数（22计两次）  分布式  CAP理论 一致性hash 分布式事务 微服务组成部分（网关、服务发现、服务注册、限流、熔断降级） docker、k8s  系统设计  短链服务设计 秒杀设计 高并发下统计最大值、最小值、平均值 延时队列  "/>
+<script type="application/ld+json">
+    {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https:\/\/vtrily.github.io\/1\/01\/%E9%9D%A2%E8%AF%95%E7%82%B92\/"
+    },
+    
+        "image": {
+            "@type": "ImageObject",
+            "url": "https:\/\/vtrily.github.io\/cover.png",
+            "width":  800 ,
+            "height":  600 
+        },
+    
+    "genre": "posts",
+    
+    "wordcount":  89 ,
+    "url": "https:\/\/vtrily.github.io\/1\/01\/%E9%9D%A2%E8%AF%95%E7%82%B92\/",
+    
+    
+    
+        "license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.",
+    
+    
+        "publisher": {
+            "@type": "Organization",
+            "name": "Vtrily",
+            "logo": {
+            "@type": "ImageObject",
+            "url": "https:\/\/vtrily.github.io\/logo.png",
+            "width":  127 ,
+            "height":  40 
+            }
+        },
+    
+    
+    "description": ""
+    }
+    </script>
+<link rel="stylesheet" href="/css/style.min.css">
+<link rel="stylesheet" href="/css/lib/fontawesome-free/all.min.min.css">
+
+<link rel="stylesheet" href="/css/lib/animate/animate.min.min.css">
+
+    </head>
+    <body>
+        <script>
+            window.isDark = (window.localStorage && window.localStorage.getItem('theme')) === 'dark';
+            window.isDark && document.body.classList.add('dark-theme');
+        </script>
+        <div class="wrapper">
+            <nav class="navbar">
+    <div class="navbar-container">
+        <div class="navbar-header animated bounceIn">
+            <a href="https://vtrily.github.io/">Vtrily</a>
+        </div>
+        <div class="navbar-menu">
+            
+            
+                <a class="menu-item" href="https://vtrily.github.io/posts" title="">文章</a>
+            
+                <a class="menu-item" href="https://vtrily.github.io/tags" title="">标签</a>
+            
+                <a class="menu-item" href="https://vtrily.github.io/categories" title="">分类</a>
+            
+            <a href="javascript:void(0);" class="theme-switch"><i class="fas fa-adjust fa-rotate-180 fa-fw"></i></a>
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile">
+     <div class="navbar-container">
+        <div class="navbar-header">
+            <div class="navbar-header-title animated bounceIn">
+                <a href="https://vtrily.github.io/">Vtrily</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="navbar-menu" id="mobile-menu">
+            
+            
+                <a class="menu-item" href="https://vtrily.github.io/posts" title="">文章</a>
+            
+                <a class="menu-item" href="https://vtrily.github.io/tags" title="">标签</a>
+            
+                <a class="menu-item" href="https://vtrily.github.io/categories" title="">分类</a>
+            
+            <a href="javascript:void(0);" class="theme-switch"><i class="fas fa-adjust fa-rotate-180 fa-fw"></i></a>
+        </div>
+    </div>
+</nav><main class="main">
+                <div class="container">
+                    
+    
+    
+    
+
+    <article class="post-warp">
+        <h1 class="post-title animated flipInX"></h1>
+
+        <div class="post-meta">
+            <div class="post-meta-main">
+                <a class="author" href="https://vtrily.github.io/" rel="author"><i class="fas fa-user-circle fa-fw"></i>Vtrily&nbsp;</a>
+                
+            </div>
+            <div class="post-meta-other">
+                <i class="far fa-calendar-alt fa-fw"></i><time datetime=0001-01-01>0001-01-01</time>&nbsp;
+                <i class="fas fa-pencil-alt fa-fw"></i>约 89 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>预计阅读 1 分钟&nbsp;</div>
+        </div>
+
+        
+
+        
+
+        <div class="post-content">
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <a class="post-dummy-target" id="java"></a><h1>Java</h1>
+<ol>
+<li>泛型实现、多态实现</li>
+<li>equal、hashcode、==区别</li>
+<li>try、catch、finally执行顺序，finally执行return语句会发生什么</li>
+<li>引用类型有哪几类，各种的用途，threadLocal是什么类型</li>
+<li>SPI实现</li>
+<li>hashmap大小为什么是2的n次方</li>
+<li>多线程单例实现</li>
+<li>happen before</li>
+<li>CAS、Lock、AQS、synchronized</li>
+<li>nio底层实现</li>
+<li>类加载器、类加载过程、什么时候会触发类</li>
+<li>对象创建过程、对象结构</li>
+<li>JVM内存结构、JVM内存模型、volatile</li>
+<li>JVM垃圾收集过程</li>
+<li>调优分析（堆转存快照分析、调优命令、工具）</li>
+</ol>
+<a class="post-dummy-target" id="spring"></a><h1>Spring</h1>
+<ol>
+<li>IOC初始化流程、循环依赖解决</li>
+<li>SpringMVC处理流程</li>
+<li>AOP原理</li>
+</ol>
+<a class="post-dummy-target" id="heading"></a><h1>操作系统</h1>
+<ol>
+<li>进程和线程区别、线程同步机制、进程间通信</li>
+<li>IO多路复用</li>
+<li>awk、sed命令</li>
+</ol>
+<a class="post-dummy-target" id="heading1"></a><h1>网络</h1>
+<ol>
+<li>TCP三次握手四次挥手</li>
+<li>TCP、UDP区别和使用场景</li>
+<li>HTTP2.0相比HTTP1.1的优点</li>
+<li>HTTPS建立连接过程</li>
+<li>浏览器发出请求到接受响应的详细过程</li>
+</ol>
+<a class="post-dummy-target" id="mysql"></a><h1>Mysql</h1>
+<ol>
+<li>数据库范式</li>
+<li>事务、锁、MVCC</li>
+<li>索引最左匹配，b+tree搜索过程</li>
+<li>分库分表</li>
+<li>查询优化方法</li>
+</ol>
+<a class="post-dummy-target" id="mongo"></a><h1>mongo</h1>
+<ol>
+<li>关系、非关系型数据库区别，各自优缺点</li>
+<li>mongo优势，适用场景</li>
+<li>分片实现</li>
+</ol>
+<a class="post-dummy-target" id="heading2"></a><h1>缓存</h1>
+<ol>
+<li>redis分布式锁设计</li>
+<li>redis分布式限流设计</li>
+<li>redis高可用实现</li>
+<li>缓存和DB数据一致性保障</li>
+<li>缓存雪崩、穿透</li>
+</ol>
+<a class="post-dummy-target" id="heading3"></a><h1>消息</h1>
+<ol>
+<li>消息队列解决什么问题（解耦、削峰、异步）</li>
+<li>高可用实现</li>
+<li>如何保证不被重复消费</li>
+<li>如何保证可靠性</li>
+<li>如何保证顺序性</li>
+</ol>
+<a class="post-dummy-target" id="heading4"></a><h1>算法</h1>
+<ol>
+<li>用两个线程顺序打印0到10的奇偶数</li>
+<li>LRU算法实现</li>
+<li>先进先出环形队列</li>
+<li>堆排序</li>
+<li>第2（k）大数</li>
+<li>合并两个有序数组、合并k个有序数组</li>
+<li>删除单向链表的倒数第k个节点</li>
+<li>二叉树遍历（递归、while）</li>
+<li>给两个整数数组 A 和 B ，返回两个数组中公共的、长度最长的子数组的长度</li>
+<li>给定一个正整数 n，将其拆分为至少两个正整数的和，并使这些整数的乘积最大化，返回最大乘积</li>
+<li>计算从 0 到 n (含 n) 中数字 2 出现的次数（22计两次）</li>
+</ol>
+<a class="post-dummy-target" id="heading5"></a><h1>分布式</h1>
+<ol>
+<li>CAP理论</li>
+<li>一致性hash</li>
+<li>分布式事务</li>
+<li>微服务组成部分（网关、服务发现、服务注册、限流、熔断降级）</li>
+<li>docker、k8s</li>
+</ol>
+<a class="post-dummy-target" id="heading6"></a><h1>系统设计</h1>
+<ol>
+<li>短链服务设计</li>
+<li>秒杀设计</li>
+<li>高并发下统计最大值、最小值、平均值</li>
+<li>延时队列</li>
+</ol>
+
+        </div>
+
+        <div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>本文于 0001-01-01 更新</span>
+            </div>
+            <div class="post-info-license">
+                
+            </div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md">
+                
+            </div>
+            <div class="post-info-share">
+                
+                    <span></span>
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section>
+            
+        </section>
+        <section>
+            <span><a href="javascript:window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="https://vtrily.github.io/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+            <a href="https://vtrily.github.io/1/01/%E9%9D%A2%E8%AF%95%E7%82%B93/" class="prev" rel="prev" title=""><i class="fas fa-angle-left fa-fw"></i></a>
+        
+        
+            <a href="https://vtrily.github.io/1/01/cas/" class="next" rel="next" title=""><i class="fas fa-angle-right fa-fw"></i></a>
+        
+    </div>
+</div>
+
+        <div class="post-comment">
+            
+            
+
+            
+        </div>
+    </article></div>
+            </main>
+            <footer class="footer">
+    <div class="copyright">
+        <div class="copyright-line">
+            由 <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreffer">Hugo</a> 强力驱动&nbsp;|&nbsp;主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="external nofollow noopener noreffer">LoveIt<i class="far fa-heart fa-fw"></i></a>
+        </div>
+        <div class="copyright-line">
+            <i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2019 - 2020</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="https://vtrily.github.io/">Vtrily</a></span><span class="license">&nbsp;|&nbsp;<a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+    </div>
+</footer>
+
+
+    
+    
+
+
+
+
+    
+    
+
+
+
+
+    
+    
+
+
+
+
+
+    
+    
+
+
+
+    
+    
+
+
+
+    
+    
+
+
+
+
+
+    
+    
+
+
+
+
+
+    
+    
+
+
+
+    
+    
+
+
+
+
+
+    
+    
+
+
+
+
+    
+    
+
+
+
+
+    
+    
+
+
+
+    
+    
+
+
+
+
+
+    
+    
+
+
+<script src="/js/lib/jquery/jquery.slim.min.min.js"></script>
+<script src="/js/lib/lazysizes/lazysizes.min.min.js"></script>
+<script src="/js/lib/smooth-scroll/smooth-scroll.polyfills.min.min.js"></script><script>window.scroll = new SmoothScroll('[data-scroll]', {speed: 300, speedAsDuration: true});</script>
+
+
+    
+    
+
+    
+
+    
+
+    
+
+    
+
+
+
+
+
+
+<script src="/js/blog.min.js"></script>
+
+
+    
+</div>
+        <a href="#" class="dynamic-to-top" id="dynamic-to-top" data-scroll><span>&nbsp;</span></a>
+    </body>
+</html>
