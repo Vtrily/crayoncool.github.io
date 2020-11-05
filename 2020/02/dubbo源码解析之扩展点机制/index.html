@@ -6,7 +6,7 @@
         <title>dubbo源码解析之扩展点机制 | Vtrily</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noodp" />
 <meta name="Description" content="Vtrily&#39;s Blog">
-<link rel="prev" href="https://vtrily.github.io/2020/02/hikaricp%E5%AD%A6%E4%B9%A0/" />
+<link rel="prev" href="https://vtrily.github.io/2020/02/dubbo%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%E4%B9%8B%E6%89%A9%E5%B1%95%E7%82%B9%E6%9C%BA%E5%88%B6%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%88%86%E6%9E%90/" />
 <link rel="next" href="https://vtrily.github.io/2020/02/autowired%E5%92%8Cresource%E7%9A%84%E5%8C%BA%E5%88%AB/" />
 <link rel="canonical" href="https://vtrily.github.io/2020/02/dubbo%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%E4%B9%8B%E6%89%A9%E5%B1%95%E7%82%B9%E6%9C%BA%E5%88%B6/" />
 <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
@@ -41,7 +41,7 @@
     
         "keywords": "dubbo, 扩展点机制",
     
-    "wordcount":  43 ,
+    "wordcount":  60 ,
     "url": "https:\/\/vtrily.github.io\/2020\/02\/dubbo%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%E4%B9%8B%E6%89%A9%E5%B1%95%E7%82%B9%E6%9C%BA%E5%88%B6\/",
     
         "datePublished": "2020-02-12T22:34:43\x2b08:00",
@@ -141,7 +141,7 @@
             </div>
             <div class="post-meta-other">
                 <i class="far fa-calendar-alt fa-fw"></i><time datetime=2020-02-12>2020-02-12</time>&nbsp;
-                <i class="fas fa-pencil-alt fa-fw"></i>约 43 字&nbsp;
+                <i class="fas fa-pencil-alt fa-fw"></i>约 60 字&nbsp;
                 <i class="far fa-clock fa-fw"></i>预计阅读 1 分钟&nbsp;</div>
         </div>
 
@@ -176,22 +176,32 @@
             
             
             <p>本文主要分析dubbo的扩展点机制</p>
+<p>Dubbo总体分为业务层，RPC层，Remote层</p>
 <a class="post-dummy-target" id="dubbo"></a><h1>dubbo之扩展点机制</h1>
+<p>Java SPI</p>
+<p>Dubbo SPI</p>
+<p>Dubbo的SPI是在Java SPI的基础上实现了IOC和AOP的增强</p>
 <a class="post-dummy-target" id="dubbo1"></a><h2>dubbo的扩展点机制主要有什么？</h2>
 <ul>
-<li>
-<p>扩展点自动包装</p>
-</li>
-<li>
-<p>扩展点自动装配</p>
-</li>
-<li>
-<p>扩展点自适应</p>
-</li>
-<li>
-<p>扩展点自动激活</p>
-</li>
+<li>扩展点自动包装</li>
 </ul>
+<p>Wrapper类，不是扩展点真正的实现，Wrapper类中持有真正的扩展点实现类，在Wrapper类中添加额外的逻辑，这就是所谓的AOP增强</p>
+<ul>
+<li>扩展点自动装配</li>
+</ul>
+<p>扩展点实现类的成员如果为其他扩展点类型，自动注入依赖，这就是IOC增强</p>
+<ul>
+<li>扩展点自适应</li>
+</ul>
+<p>有些扩展并不想在框架启动阶段被加载，而是希望在扩展方法被调用时，根据运行时参数进行加载
+静态指定扩展点实现，SPI注解和配置</p>
+<p>动态指定扩展点实现
+@Adaptive注解</p>
+<ul>
+<li>扩展点自动激活</li>
+</ul>
+<p>对于集合类扩展点，例如Filter,每个Filter实现不同的功能，需要多个同时激活，可以用自动激活来简化配置
+@Activate</p>
 <a class="post-dummy-target" id="heading"></a><h2>问题</h2>
 <ul>
 <li>多个包装类只能生效一个？</li>
@@ -240,6 +250,8 @@ getActivateExtension</p>
 3.创建匹配的扩展类实例
 4.排序扩展类实例
 5，返回</p>
+<p>getExtensionClasses()</p>
+<p>双重检查，因为加锁之前可能会被注入值，因为场景是高并发的</p>
         </div>
 
         <div class="post-footer" id="post-footer">
@@ -285,7 +297,7 @@ getActivateExtension</p>
 
     <div class="post-nav">
         
-            <a href="https://vtrily.github.io/2020/02/hikaricp%E5%AD%A6%E4%B9%A0/" class="prev" rel="prev" title="HikariCP学习"><i class="fas fa-angle-left fa-fw"></i>HikariCP学习</a>
+            <a href="https://vtrily.github.io/2020/02/dubbo%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%E4%B9%8B%E6%89%A9%E5%B1%95%E7%82%B9%E6%9C%BA%E5%88%B6%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%88%86%E6%9E%90/" class="prev" rel="prev" title="dubbo源码解析之扩展点机制"><i class="fas fa-angle-left fa-fw"></i>dubbo源码解析之扩展点机制</a>
         
         
             <a href="https://vtrily.github.io/2020/02/autowired%E5%92%8Cresource%E7%9A%84%E5%8C%BA%E5%88%AB/" class="next" rel="next" title="@Autowired和@Resource的区别">@Autowired和@Resource的区别<i class="fas fa-angle-right fa-fw"></i></a>

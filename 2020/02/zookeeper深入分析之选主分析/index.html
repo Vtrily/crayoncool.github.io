@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="zh">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>ZooKeeper深入分析之选主分析 | Vtrily</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noodp" />
+<meta name="Description" content="Vtrily&#39;s Blog">
+<link rel="prev" href="https://vtrily.github.io/2020/02/%E4%B8%BB%E6%B5%81rpc%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94%E5%88%86%E6%9E%90/" />
+<link rel="next" href="https://vtrily.github.io/2020/02/zookeeper%E6%B7%B1%E5%85%A5%E5%88%86%E6%9E%90%E4%B9%8B%E6%95%B0%E6%8D%AE%E5%AD%98%E5%82%A8/" />
+<link rel="canonical" href="https://vtrily.github.io/2020/02/zookeeper%E6%B7%B1%E5%85%A5%E5%88%86%E6%9E%90%E4%B9%8B%E9%80%89%E4%B8%BB%E5%88%86%E6%9E%90/" />
+<link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="ZooKeeper深入分析之选主分析"/>
+<meta name="twitter:description" content="ZooKeeper深入分析"/>
+<script type="application/ld+json">
+    {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "ZooKeeper深入分析之选主分析",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https:\/\/vtrily.github.io\/2020\/02\/zookeeper%E6%B7%B1%E5%85%A5%E5%88%86%E6%9E%90%E4%B9%8B%E9%80%89%E4%B8%BB%E5%88%86%E6%9E%90\/"
+    },
+    
+        "image": {
+            "@type": "ImageObject",
+            "url": "https:\/\/vtrily.github.io\/cover.png",
+            "width":  800 ,
+            "height":  600 
+        },
+    
+    "genre": "posts",
+    
+        "keywords": "ZooKeeper",
+    
+    "wordcount":  949 ,
+    "url": "https:\/\/vtrily.github.io\/2020\/02\/zookeeper%E6%B7%B1%E5%85%A5%E5%88%86%E6%9E%90%E4%B9%8B%E9%80%89%E4%B8%BB%E5%88%86%E6%9E%90\/",
+    
+        "datePublished": "2020-02-12T22:34:43\x2b08:00",
+    
+    
+        "dateModified": "2020-02-12T22:34:43\x2b08:00",
+    
+    
+        "license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.",
+    
+    
+        "publisher": {
+            "@type": "Organization",
+            "name": "Vtrily",
+            "logo": {
+            "@type": "ImageObject",
+            "url": "https:\/\/vtrily.github.io\/logo.png",
+            "width":  127 ,
+            "height":  40 
+            }
+        },
+    
+    
+    "description": ""
+    }
+    </script>
+<link rel="stylesheet" href="/css/style.min.css">
+<link rel="stylesheet" href="/css/lib/fontawesome-free/all.min.min.css">
+
+<link rel="stylesheet" href="/css/lib/animate/animate.min.min.css">
+
+    </head>
+    <body>
+        <script>
+            window.isDark = (window.localStorage && window.localStorage.getItem('theme')) === 'dark';
+            window.isDark && document.body.classList.add('dark-theme');
+        </script>
+        <div class="wrapper">
+            <nav class="navbar">
+    <div class="navbar-container">
+        <div class="navbar-header animated bounceIn">
+            <a href="https://vtrily.github.io/">Vtrily</a>
+        </div>
+        <div class="navbar-menu">
+            
+            
+                <a class="menu-item" href="https://vtrily.github.io/posts" title="">文章</a>
+            
+                <a class="menu-item" href="https://vtrily.github.io/tags" title="">标签</a>
+            
+                <a class="menu-item" href="https://vtrily.github.io/categories" title="">分类</a>
+            
+            <a href="javascript:void(0);" class="theme-switch"><i class="fas fa-adjust fa-rotate-180 fa-fw"></i></a>
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile">
+     <div class="navbar-container">
+        <div class="navbar-header">
+            <div class="navbar-header-title animated bounceIn">
+                <a href="https://vtrily.github.io/">Vtrily</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="navbar-menu" id="mobile-menu">
+            
+            
+                <a class="menu-item" href="https://vtrily.github.io/posts" title="">文章</a>
+            
+                <a class="menu-item" href="https://vtrily.github.io/tags" title="">标签</a>
+            
+                <a class="menu-item" href="https://vtrily.github.io/categories" title="">分类</a>
+            
+            <a href="javascript:void(0);" class="theme-switch"><i class="fas fa-adjust fa-rotate-180 fa-fw"></i></a>
+        </div>
+    </div>
+</nav><main class="main">
+                <div class="container">
+                    
+    
+    
+    
+
+    <article class="post-warp">
+        <h1 class="post-title animated flipInX">ZooKeeper深入分析之选主分析</h1>
+
+        <div class="post-meta">
+            <div class="post-meta-main">
+                <a class="author" href="https://vtrily.github.io/" rel="author"><i class="fas fa-user-circle fa-fw"></i>Vtrily&nbsp;</a>
+                <span class="post-category">
+                        收录于
+                        <i class="far fa-folder fa-fw"></i><a href="https://vtrily.github.io/categories/%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93/">学习总结</a>
+                            
+                    </span>
+            </div>
+            <div class="post-meta-other">
+                <i class="far fa-calendar-alt fa-fw"></i><time datetime=2020-02-12>2020-02-12</time>&nbsp;
+                <i class="fas fa-pencil-alt fa-fw"></i>约 949 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>预计阅读 5 分钟&nbsp;</div>
+        </div>
+
+        
+
+        
+
+        <div class="post-content">
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <p>ZooKeeper深入分析</p>
+<a class="post-dummy-target" id="zookeeper"></a><h2>ZooKeeper核心模块</h2>
+<ul>
+<li>
+<p>选主逻辑</p>
+</li>
+<li>
+<p>数据一致性保障</p>
+</li>
+<li>
+<p>数据模型</p>
+</li>
+</ul>
+<a class="post-dummy-target" id="heading"></a><h2>节点角色</h2>
+<p>Server节点组成一个集群，在集群中存在一个唯一的leader节点负责响应写入请求，其他节点只负责接收转发Client请求</p>
+<p>Leader：响应写入请求，发起提案，超过半数Follower同意写入，写入成功；
+Follower:响应查询，将写入请求发给Leader,参与选举和写入投票
+Observer:响应查询，将写入请求发给Leader，不参与投票，只接收写入结果</p>
+<a class="post-dummy-target" id="heading1"></a><h2>选主逻辑</h2>
+<a class="post-dummy-target" id="heading2"></a><h3>投票</h3>
+<p>获得法定数量票数：超过一半成为主</p>
+<a class="post-dummy-target" id="heading3"></a><h3>判断依据</h3>
+<p>Epoch:leader的任期</p>
+<p>ZXID:ZooKeeper事务ID，越大表述数据越新</p>
+<p>SID:集群中每个节点的唯一编号</p>
+<p>比较策略：任期大的胜出，任期相同比较ZXID大的胜出，ZXID相同比较SID大的胜出</p>
+<a class="post-dummy-target" id="heading4"></a><h3>逻辑</h3>
+<p>节点进入Looking状态</p>
+<p>广播发起投票</p>
+<p>选出最大发起二次投票</p>
+<p>超过半数成为主</p>
+<a class="post-dummy-target" id="heading5"></a><h3>选主代码分析</h3>
+<p>选主代码主要在FastLeaderElection类中的lookForLeader方法</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">  1
+</span><span class="lnt">  2
+</span><span class="lnt">  3
+</span><span class="lnt">  4
+</span><span class="lnt">  5
+</span><span class="lnt">  6
+</span><span class="lnt">  7
+</span><span class="lnt">  8
+</span><span class="lnt">  9
+</span><span class="lnt"> 10
+</span><span class="lnt"> 11
+</span><span class="lnt"> 12
+</span><span class="lnt"> 13
+</span><span class="lnt"> 14
+</span><span class="lnt"> 15
+</span><span class="lnt"> 16
+</span><span class="lnt"> 17
+</span><span class="lnt"> 18
+</span><span class="lnt"> 19
+</span><span class="lnt"> 20
+</span><span class="lnt"> 21
+</span><span class="lnt"> 22
+</span><span class="lnt"> 23
+</span><span class="lnt"> 24
+</span><span class="lnt"> 25
+</span><span class="lnt"> 26
+</span><span class="lnt"> 27
+</span><span class="lnt"> 28
+</span><span class="lnt"> 29
+</span><span class="lnt"> 30
+</span><span class="lnt"> 31
+</span><span class="lnt"> 32
+</span><span class="lnt"> 33
+</span><span class="lnt"> 34
+</span><span class="lnt"> 35
+</span><span class="lnt"> 36
+</span><span class="lnt"> 37
+</span><span class="lnt"> 38
+</span><span class="lnt"> 39
+</span><span class="lnt"> 40
+</span><span class="lnt"> 41
+</span><span class="lnt"> 42
+</span><span class="lnt"> 43
+</span><span class="lnt"> 44
+</span><span class="lnt"> 45
+</span><span class="lnt"> 46
+</span><span class="lnt"> 47
+</span><span class="lnt"> 48
+</span><span class="lnt"> 49
+</span><span class="lnt"> 50
+</span><span class="lnt"> 51
+</span><span class="lnt"> 52
+</span><span class="lnt"> 53
+</span><span class="lnt"> 54
+</span><span class="lnt"> 55
+</span><span class="lnt"> 56
+</span><span class="lnt"> 57
+</span><span class="lnt"> 58
+</span><span class="lnt"> 59
+</span><span class="lnt"> 60
+</span><span class="lnt"> 61
+</span><span class="lnt"> 62
+</span><span class="lnt"> 63
+</span><span class="lnt"> 64
+</span><span class="lnt"> 65
+</span><span class="lnt"> 66
+</span><span class="lnt"> 67
+</span><span class="lnt"> 68
+</span><span class="lnt"> 69
+</span><span class="lnt"> 70
+</span><span class="lnt"> 71
+</span><span class="lnt"> 72
+</span><span class="lnt"> 73
+</span><span class="lnt"> 74
+</span><span class="lnt"> 75
+</span><span class="lnt"> 76
+</span><span class="lnt"> 77
+</span><span class="lnt"> 78
+</span><span class="lnt"> 79
+</span><span class="lnt"> 80
+</span><span class="lnt"> 81
+</span><span class="lnt"> 82
+</span><span class="lnt"> 83
+</span><span class="lnt"> 84
+</span><span class="lnt"> 85
+</span><span class="lnt"> 86
+</span><span class="lnt"> 87
+</span><span class="lnt"> 88
+</span><span class="lnt"> 89
+</span><span class="lnt"> 90
+</span><span class="lnt"> 91
+</span><span class="lnt"> 92
+</span><span class="lnt"> 93
+</span><span class="lnt"> 94
+</span><span class="lnt"> 95
+</span><span class="lnt"> 96
+</span><span class="lnt"> 97
+</span><span class="lnt"> 98
+</span><span class="lnt"> 99
+</span><span class="lnt">100
+</span><span class="lnt">101
+</span><span class="lnt">102
+</span><span class="lnt">103
+</span><span class="lnt">104
+</span><span class="lnt">105
+</span><span class="lnt">106
+</span><span class="lnt">107
+</span><span class="lnt">108
+</span><span class="lnt">109
+</span><span class="lnt">110
+</span><span class="lnt">111
+</span><span class="lnt">112
+</span><span class="lnt">113
+</span><span class="lnt">114
+</span><span class="lnt">115
+</span><span class="lnt">116
+</span><span class="lnt">117
+</span><span class="lnt">118
+</span><span class="lnt">119
+</span><span class="lnt">120
+</span><span class="lnt">121
+</span><span class="lnt">122
+</span><span class="lnt">123
+</span><span class="lnt">124
+</span><span class="lnt">125
+</span><span class="lnt">126
+</span><span class="lnt">127
+</span><span class="lnt">128
+</span><span class="lnt">129
+</span><span class="lnt">130
+</span><span class="lnt">131
+</span><span class="lnt">132
+</span><span class="lnt">133
+</span><span class="lnt">134
+</span><span class="lnt">135
+</span><span class="lnt">136
+</span><span class="lnt">137
+</span><span class="lnt">138
+</span><span class="lnt">139
+</span><span class="lnt">140
+</span><span class="lnt">141
+</span><span class="lnt">142
+</span><span class="lnt">143
+</span><span class="lnt">144
+</span><span class="lnt">145
+</span><span class="lnt">146
+</span><span class="lnt">147
+</span><span class="lnt">148
+</span><span class="lnt">149
+</span><span class="lnt">150
+</span><span class="lnt">151
+</span><span class="lnt">152
+</span><span class="lnt">153
+</span><span class="lnt">154
+</span><span class="lnt">155
+</span><span class="lnt">156
+</span><span class="lnt">157
+</span><span class="lnt">158
+</span><span class="lnt">159
+</span><span class="lnt">160
+</span><span class="lnt">161
+</span><span class="lnt">162
+</span><span class="lnt">163
+</span><span class="lnt">164
+</span><span class="lnt">165
+</span><span class="lnt">166
+</span><span class="lnt">167
+</span><span class="lnt">168
+</span><span class="lnt">169
+</span><span class="lnt">170
+</span><span class="lnt">171
+</span><span class="lnt">172
+</span><span class="lnt">173
+</span><span class="lnt">174
+</span><span class="lnt">175
+</span><span class="lnt">176
+</span><span class="lnt">177
+</span><span class="lnt">178
+</span><span class="lnt">179
+</span><span class="lnt">180
+</span><span class="lnt">181
+</span><span class="lnt">182
+</span><span class="lnt">183
+</span><span class="lnt">184
+</span><span class="lnt">185
+</span><span class="lnt">186
+</span><span class="lnt">187
+</span><span class="lnt">188
+</span><span class="lnt">189
+</span><span class="lnt">190
+</span><span class="lnt">191
+</span><span class="lnt">192
+</span><span class="lnt">193
+</span><span class="lnt">194
+</span><span class="lnt">195
+</span><span class="lnt">196
+</span><span class="lnt">197
+</span><span class="lnt">198
+</span><span class="lnt">199
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="n">Vote</span> <span class="nf">lookForLeader</span><span class="o">(</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">InterruptedException</span> <span class="o">{</span>
+    <span class="k">try</span> <span class="o">{</span>
+        <span class="n">self</span><span class="o">.</span><span class="na">jmxLeaderElectionBean</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LeaderElectionBean</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">MBeanRegistry</span><span class="o">.</span><span class="na">getInstance</span><span class="o">(</span><span class="o">)</span><span class="o">.</span><span class="na">register</span><span class="o">(</span><span class="n">self</span><span class="o">.</span><span class="na">jmxLeaderElectionBean</span><span class="o">,</span> <span class="n">self</span><span class="o">.</span><span class="na">jmxLocalPeerBean</span><span class="o">)</span><span class="o">;</span>
+    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">LOG</span><span class="o">.</span><span class="na">warn</span><span class="o">(</span><span class="s">&#34;Failed to register with JMX&#34;</span><span class="o">,</span> <span class="n">e</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">self</span><span class="o">.</span><span class="na">jmxLeaderElectionBean</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="n">self</span><span class="o">.</span><span class="na">start_fle</span> <span class="o">=</span> <span class="n">Time</span><span class="o">.</span><span class="na">currentElapsedTime</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+    <span class="k">try</span> <span class="o">{</span>
+        <span class="c1">// 存储选举投票
+</span><span class="c1"></span>        <span class="n">Map</span><span class="o">&lt;</span><span class="n">Long</span><span class="o">,</span> <span class="n">Vote</span><span class="o">&gt;</span> <span class="n">recvset</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Long</span><span class="o">,</span> <span class="n">Vote</span><span class="o">&gt;</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+
+        <span class="cm">/*
+</span><span class="cm">            * The votes from previous leader elections, as well as the votes from the current leader election are
+</span><span class="cm">            * stored in outofelection. Note that notifications in a LOOKING state are not stored in outofelection.
+</span><span class="cm">            * Only FOLLOWING or LEADING notifications are stored in outofelection. The current participant could use
+</span><span class="cm">            * outofelection to learn which participant is the leader if it arrives late (i.e., higher logicalclock than
+</span><span class="cm">            * the electionEpoch of the received notifications) in a leader election.
+</span><span class="cm">            */</span>
+        <span class="c1">// 当
+</span><span class="c1"></span>        <span class="n">Map</span><span class="o">&lt;</span><span class="n">Long</span><span class="o">,</span> <span class="n">Vote</span><span class="o">&gt;</span> <span class="n">outofelection</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Long</span><span class="o">,</span> <span class="n">Vote</span><span class="o">&gt;</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+
+        <span class="kt">int</span> <span class="n">notTimeout</span> <span class="o">=</span> <span class="n">minNotificationInterval</span><span class="o">;</span>
+
+        <span class="kd">synchronized</span> <span class="o">(</span><span class="k">this</span><span class="o">)</span> <span class="o">{</span>
+            <span class="c1">// 选举轮数加一
+</span><span class="c1"></span>            <span class="n">logicalclock</span><span class="o">.</span><span class="na">incrementAndGet</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+            <span class="c1">// 初始化投票信息
+</span><span class="c1"></span>            <span class="n">updateProposal</span><span class="o">(</span><span class="n">getInitId</span><span class="o">(</span><span class="o">)</span><span class="o">,</span> <span class="n">getInitLastLoggedZxid</span><span class="o">(</span><span class="o">)</span><span class="o">,</span> <span class="n">getPeerEpoch</span><span class="o">(</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+        <span class="o">}</span>
+
+        <span class="n">LOG</span><span class="o">.</span><span class="na">info</span><span class="o">(</span>
+            <span class="s">&#34;New election. My id = {}, proposed zxid=0x{}&#34;</span><span class="o">,</span>
+            <span class="n">self</span><span class="o">.</span><span class="na">getId</span><span class="o">(</span><span class="o">)</span><span class="o">,</span>
+            <span class="n">Long</span><span class="o">.</span><span class="na">toHexString</span><span class="o">(</span><span class="n">proposedZxid</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+        <span class="c1">// 发送广播，发送投票信息
+</span><span class="c1"></span>        <span class="n">sendNotifications</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+
+        <span class="n">SyncedLearnerTracker</span> <span class="n">voteSet</span><span class="o">;</span>
+        <span class="c1">// 循环接收投票信息，直到选出一个leader
+</span><span class="c1"></span>        <span class="k">while</span> <span class="o">(</span><span class="o">(</span><span class="n">self</span><span class="o">.</span><span class="na">getPeerState</span><span class="o">(</span><span class="o">)</span> <span class="o">=</span><span class="o">=</span> <span class="n">ServerState</span><span class="o">.</span><span class="na">LOOKING</span><span class="o">)</span> <span class="o">&amp;</span><span class="o">&amp;</span> <span class="o">(</span><span class="o">!</span><span class="n">stop</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span>
+            <span class="c1">// 从接收到的投票队列中获取投票信息
+</span><span class="c1"></span>            <span class="c1">// recvqueue LinkedBlockingQueue&lt;Notification&gt; recvqueue
+</span><span class="c1"></span>            <span class="n">Notification</span> <span class="n">n</span> <span class="o">=</span> <span class="n">recvqueue</span><span class="o">.</span><span class="na">poll</span><span class="o">(</span><span class="n">notTimeout</span><span class="o">,</span> <span class="n">TimeUnit</span><span class="o">.</span><span class="na">MILLISECONDS</span><span class="o">)</span><span class="o">;</span>
+
+            <span class="c1">// 判断是否有投票信息，没有的话判断其他投票人是否已经投票
+</span><span class="c1"></span>            <span class="k">if</span> <span class="o">(</span><span class="n">n</span> <span class="o">=</span><span class="o">=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+                <span class="c1">// 如果其他参与者都已经投票
+</span><span class="c1"></span>                <span class="k">if</span> <span class="o">(</span><span class="n">manager</span><span class="o">.</span><span class="na">haveDelivered</span><span class="o">(</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="c1">// 发送自身的投票信息
+</span><span class="c1"></span>                    <span class="n">sendNotifications</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+                <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+                    <span class="c1">// 没有投票的话可能是连接断开了，重新连接一下
+</span><span class="c1"></span>                    <span class="n">manager</span><span class="o">.</span><span class="na">connectAll</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+                <span class="o">}</span>
+                <span class="c1">// 延长超时时间
+</span><span class="c1"></span>                <span class="kt">int</span> <span class="n">tmpTimeOut</span> <span class="o">=</span> <span class="n">notTimeout</span> <span class="o">*</span> <span class="n">2</span><span class="o">;</span>
+                <span class="n">notTimeout</span> <span class="o">=</span> <span class="n">Math</span><span class="o">.</span><span class="na">min</span><span class="o">(</span><span class="n">tmpTimeOut</span><span class="o">,</span> <span class="n">maxNotificationInterval</span><span class="o">)</span><span class="o">;</span>
+                <span class="n">LOG</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">&#34;Notification time out: {}&#34;</span><span class="o">,</span> <span class="n">notTimeout</span><span class="o">)</span><span class="o">;</span>
+            <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">validVoter</span><span class="o">(</span><span class="n">n</span><span class="o">.</span><span class="na">sid</span><span class="o">)</span> <span class="o">&amp;</span><span class="o">&amp;</span> <span class="n">validVoter</span><span class="o">(</span><span class="n">n</span><span class="o">.</span><span class="na">leader</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span>
+                <span class="c1">// 如果获取到了投票信息，校验投票信息是否合法
+</span><span class="c1"></span>                <span class="c1">// validVoter(n.sid) 校验的是投票者的sid
+</span><span class="c1"></span>                <span class="cm">/*
+</span><span class="cm">                    * Only proceed if the vote comes from a replica in the current or next
+</span><span class="cm">                    * voting view for a replica in the current or next voting view.
+</span><span class="cm">                    */</span>
+                <span class="k">switch</span> <span class="o">(</span><span class="n">n</span><span class="o">.</span><span class="na">state</span><span class="o">)</span> <span class="o">{</span>
+                <span class="k">case</span> <span class="n">LOOKING</span><span class="o">:</span>
+                    <span class="k">if</span> <span class="o">(</span><span class="n">getInitLastLoggedZxid</span><span class="o">(</span><span class="o">)</span> <span class="o">=</span><span class="o">=</span> <span class="o">-</span><span class="n">1</span><span class="o">)</span> <span class="o">{</span>
+                        <span class="n">LOG</span><span class="o">.</span><span class="na">debug</span><span class="o">(</span><span class="s">&#34;Ignoring notification as our zxid is -1&#34;</span><span class="o">)</span><span class="o">;</span>
+                        <span class="k">break</span><span class="o">;</span>
+                    <span class="o">}</span>
+                    <span class="k">if</span> <span class="o">(</span><span class="n">n</span><span class="o">.</span><span class="na">zxid</span> <span class="o">=</span><span class="o">=</span> <span class="o">-</span><span class="n">1</span><span class="o">)</span> <span class="o">{</span>
+                        <span class="n">LOG</span><span class="o">.</span><span class="na">debug</span><span class="o">(</span><span class="s">&#34;Ignoring notification from member with -1 zxid {}&#34;</span><span class="o">,</span> <span class="n">n</span><span class="o">.</span><span class="na">sid</span><span class="o">)</span><span class="o">;</span>
+                        <span class="k">break</span><span class="o">;</span>
+                    <span class="o">}</span>
+                    <span class="c1">// If notification &gt; current, replace and send messages out
+</span><span class="c1"></span>                    <span class="k">if</span> <span class="o">(</span><span class="n">n</span><span class="o">.</span><span class="na">electionEpoch</span> <span class="o">&gt;</span> <span class="n">logicalclock</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span>
+                        <span class="n">logicalclock</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="n">n</span><span class="o">.</span><span class="na">electionEpoch</span><span class="o">)</span><span class="o">;</span>
+                        <span class="n">recvset</span><span class="o">.</span><span class="na">clear</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+                        <span class="k">if</span> <span class="o">(</span><span class="n">totalOrderPredicate</span><span class="o">(</span><span class="n">n</span><span class="o">.</span><span class="na">leader</span><span class="o">,</span> <span class="n">n</span><span class="o">.</span><span class="na">zxid</span><span class="o">,</span> <span class="n">n</span><span class="o">.</span><span class="na">peerEpoch</span><span class="o">,</span> <span class="n">getInitId</span><span class="o">(</span><span class="o">)</span><span class="o">,</span> <span class="n">getInitLastLoggedZxid</span><span class="o">(</span><span class="o">)</span><span class="o">,</span> <span class="n">getPeerEpoch</span><span class="o">(</span><span class="o">)</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span>
+                            <span class="n">updateProposal</span><span class="o">(</span><span class="n">n</span><span class="o">.</span><span class="na">leader</span><span class="o">,</span> <span class="n">n</span><span class="o">.</span><span class="na">zxid</span><span class="o">,</span> <span class="n">n</span><span class="o">.</span><span class="na">peerEpoch</span><span class="o">)</span><span class="o">;</span>
+                        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+                            <span class="n">updateProposal</span><span class="o">(</span><span class="n">getInitId</span><span class="o">(</span><span class="o">)</span><span class="o">,</span> <span class="n">getInitLastLoggedZxid</span><span class="o">(</span><span class="o">)</span><span class="o">,</span> <span class="n">getPeerEpoch</span><span class="o">(</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+                        <span class="o">}</span>
+                        <span class="n">sendNotifications</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+                    <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">n</span><span class="o">.</span><span class="na">electionEpoch</span> <span class="o">&lt;</span> <span class="n">logicalclock</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span>
+                            <span class="n">LOG</span><span class="o">.</span><span class="na">debug</span><span class="o">(</span>
+                                <span class="s">&#34;Notification election epoch is smaller than logicalclock. n.electionEpoch = 0x{}, logicalclock=0x{}&#34;</span><span class="o">,</span>
+                                <span class="n">Long</span><span class="o">.</span><span class="na">toHexString</span><span class="o">(</span><span class="n">n</span><span class="o">.</span><span class="na">electionEpoch</span><span class="o">)</span><span class="o">,</span>
+                                <span class="n">Long</span><span class="o">.</span><span class="na">toHexString</span><span class="o">(</span><span class="n">logicalclock</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="o">)</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+                        <span class="k">break</span><span class="o">;</span>
+                    <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">totalOrderPredicate</span><span class="o">(</span><span class="n">n</span><span class="o">.</span><span class="na">leader</span><span class="o">,</span> <span class="n">n</span><span class="o">.</span><span class="na">zxid</span><span class="o">,</span> <span class="n">n</span><span class="o">.</span><span class="na">peerEpoch</span><span class="o">,</span> <span class="n">proposedLeader</span><span class="o">,</span> <span class="n">proposedZxid</span><span class="o">,</span> <span class="n">proposedEpoch</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span>
+                        <span class="n">updateProposal</span><span class="o">(</span><span class="n">n</span><span class="o">.</span><span class="na">leader</span><span class="o">,</span> <span class="n">n</span><span class="o">.</span><span class="na">zxid</span><span class="o">,</span> <span class="n">n</span><span class="o">.</span><span class="na">peerEpoch</span><span class="o">)</span><span class="o">;</span>
+                        <span class="n">sendNotifications</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+                    <span class="o">}</span>
+
+                    <span class="n">LOG</span><span class="o">.</span><span class="na">debug</span><span class="o">(</span>
+                        <span class="s">&#34;Adding vote: from={}, proposed leader={}, proposed zxid=0x{}, proposed election epoch=0x{}&#34;</span><span class="o">,</span>
+                        <span class="n">n</span><span class="o">.</span><span class="na">sid</span><span class="o">,</span>
+                        <span class="n">n</span><span class="o">.</span><span class="na">leader</span><span class="o">,</span>
+                        <span class="n">Long</span><span class="o">.</span><span class="na">toHexString</span><span class="o">(</span><span class="n">n</span><span class="o">.</span><span class="na">zxid</span><span class="o">)</span><span class="o">,</span>
+                        <span class="n">Long</span><span class="o">.</span><span class="na">toHexString</span><span class="o">(</span><span class="n">n</span><span class="o">.</span><span class="na">electionEpoch</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+
+                    <span class="c1">// don&#39;t care about the version if it&#39;s in LOOKING state
+</span><span class="c1"></span>                    <span class="n">recvset</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">n</span><span class="o">.</span><span class="na">sid</span><span class="o">,</span> <span class="k">new</span> <span class="n">Vote</span><span class="o">(</span><span class="n">n</span><span class="o">.</span><span class="na">leader</span><span class="o">,</span> <span class="n">n</span><span class="o">.</span><span class="na">zxid</span><span class="o">,</span> <span class="n">n</span><span class="o">.</span><span class="na">electionEpoch</span><span class="o">,</span> <span class="n">n</span><span class="o">.</span><span class="na">peerEpoch</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+
+                    <span class="n">voteSet</span> <span class="o">=</span> <span class="n">getVoteTracker</span><span class="o">(</span><span class="n">recvset</span><span class="o">,</span> <span class="k">new</span> <span class="n">Vote</span><span class="o">(</span><span class="n">proposedLeader</span><span class="o">,</span> <span class="n">proposedZxid</span><span class="o">,</span> <span class="n">logicalclock</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="o">)</span><span class="o">,</span> <span class="n">proposedEpoch</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+
+                    <span class="k">if</span> <span class="o">(</span><span class="n">voteSet</span><span class="o">.</span><span class="na">hasAllQuorums</span><span class="o">(</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span>
+
+                        <span class="c1">// Verify if there is any change in the proposed leader
+</span><span class="c1"></span>                        <span class="k">while</span> <span class="o">(</span><span class="o">(</span><span class="n">n</span> <span class="o">=</span> <span class="n">recvqueue</span><span class="o">.</span><span class="na">poll</span><span class="o">(</span><span class="n">finalizeWait</span><span class="o">,</span> <span class="n">TimeUnit</span><span class="o">.</span><span class="na">MILLISECONDS</span><span class="o">)</span><span class="o">)</span> <span class="o">!</span><span class="o">=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+                            <span class="k">if</span> <span class="o">(</span><span class="n">totalOrderPredicate</span><span class="o">(</span><span class="n">n</span><span class="o">.</span><span class="na">leader</span><span class="o">,</span> <span class="n">n</span><span class="o">.</span><span class="na">zxid</span><span class="o">,</span> <span class="n">n</span><span class="o">.</span><span class="na">peerEpoch</span><span class="o">,</span> <span class="n">proposedLeader</span><span class="o">,</span> <span class="n">proposedZxid</span><span class="o">,</span> <span class="n">proposedEpoch</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span>
+                                <span class="n">recvqueue</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">n</span><span class="o">)</span><span class="o">;</span>
+                                <span class="k">break</span><span class="o">;</span>
+                            <span class="o">}</span>
+                        <span class="o">}</span>
+
+                        <span class="cm">/*
+</span><span class="cm">                            * This predicate is true once we don&#39;t read any new
+</span><span class="cm">                            * relevant message from the reception queue
+</span><span class="cm">                            */</span>
+                        <span class="k">if</span> <span class="o">(</span><span class="n">n</span> <span class="o">=</span><span class="o">=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+                            <span class="n">setPeerState</span><span class="o">(</span><span class="n">proposedLeader</span><span class="o">,</span> <span class="n">voteSet</span><span class="o">)</span><span class="o">;</span>
+                            <span class="n">Vote</span> <span class="n">endVote</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Vote</span><span class="o">(</span><span class="n">proposedLeader</span><span class="o">,</span> <span class="n">proposedZxid</span><span class="o">,</span> <span class="n">logicalclock</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="o">)</span><span class="o">,</span> <span class="n">proposedEpoch</span><span class="o">)</span><span class="o">;</span>
+                            <span class="n">leaveInstance</span><span class="o">(</span><span class="n">endVote</span><span class="o">)</span><span class="o">;</span>
+                            <span class="k">return</span> <span class="n">endVote</span><span class="o">;</span>
+                        <span class="o">}</span>
+                    <span class="o">}</span>
+                    <span class="k">break</span><span class="o">;</span>
+                <span class="k">case</span> <span class="n">OBSERVING</span><span class="o">:</span>
+                    <span class="n">LOG</span><span class="o">.</span><span class="na">debug</span><span class="o">(</span><span class="s">&#34;Notification from observer: {}&#34;</span><span class="o">,</span> <span class="n">n</span><span class="o">.</span><span class="na">sid</span><span class="o">)</span><span class="o">;</span>
+                    <span class="k">break</span><span class="o">;</span>
+                <span class="k">case</span> <span class="n">FOLLOWING</span><span class="o">:</span>
+                <span class="k">case</span> <span class="n">LEADING</span><span class="o">:</span>
+                    <span class="cm">/*
+</span><span class="cm">                        * Consider all notifications from the same epoch
+</span><span class="cm">                        * together.
+</span><span class="cm">                        */</span>
+                    <span class="k">if</span> <span class="o">(</span><span class="n">n</span><span class="o">.</span><span class="na">electionEpoch</span> <span class="o">=</span><span class="o">=</span> <span class="n">logicalclock</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span>
+                        <span class="n">recvset</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">n</span><span class="o">.</span><span class="na">sid</span><span class="o">,</span> <span class="k">new</span> <span class="n">Vote</span><span class="o">(</span><span class="n">n</span><span class="o">.</span><span class="na">leader</span><span class="o">,</span> <span class="n">n</span><span class="o">.</span><span class="na">zxid</span><span class="o">,</span> <span class="n">n</span><span class="o">.</span><span class="na">electionEpoch</span><span class="o">,</span> <span class="n">n</span><span class="o">.</span><span class="na">peerEpoch</span><span class="o">,</span> <span class="n">n</span><span class="o">.</span><span class="na">state</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+                        <span class="n">voteSet</span> <span class="o">=</span> <span class="n">getVoteTracker</span><span class="o">(</span><span class="n">recvset</span><span class="o">,</span> <span class="k">new</span> <span class="n">Vote</span><span class="o">(</span><span class="n">n</span><span class="o">.</span><span class="na">version</span><span class="o">,</span> <span class="n">n</span><span class="o">.</span><span class="na">leader</span><span class="o">,</span> <span class="n">n</span><span class="o">.</span><span class="na">zxid</span><span class="o">,</span> <span class="n">n</span><span class="o">.</span><span class="na">electionEpoch</span><span class="o">,</span> <span class="n">n</span><span class="o">.</span><span class="na">peerEpoch</span><span class="o">,</span> <span class="n">n</span><span class="o">.</span><span class="na">state</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+                        <span class="k">if</span> <span class="o">(</span><span class="n">voteSet</span><span class="o">.</span><span class="na">hasAllQuorums</span><span class="o">(</span><span class="o">)</span> <span class="o">&amp;</span><span class="o">&amp;</span> <span class="n">checkLeader</span><span class="o">(</span><span class="n">recvset</span><span class="o">,</span> <span class="n">n</span><span class="o">.</span><span class="na">leader</span><span class="o">,</span> <span class="n">n</span><span class="o">.</span><span class="na">electionEpoch</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span>
+                            <span class="n">setPeerState</span><span class="o">(</span><span class="n">n</span><span class="o">.</span><span class="na">leader</span><span class="o">,</span> <span class="n">voteSet</span><span class="o">)</span><span class="o">;</span>
+                            <span class="n">Vote</span> <span class="n">endVote</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Vote</span><span class="o">(</span><span class="n">n</span><span class="o">.</span><span class="na">leader</span><span class="o">,</span> <span class="n">n</span><span class="o">.</span><span class="na">zxid</span><span class="o">,</span> <span class="n">n</span><span class="o">.</span><span class="na">electionEpoch</span><span class="o">,</span> <span class="n">n</span><span class="o">.</span><span class="na">peerEpoch</span><span class="o">)</span><span class="o">;</span>
+                            <span class="n">leaveInstance</span><span class="o">(</span><span class="n">endVote</span><span class="o">)</span><span class="o">;</span>
+                            <span class="k">return</span> <span class="n">endVote</span><span class="o">;</span>
+                        <span class="o">}</span>
+                    <span class="o">}</span>
+
+                    <span class="cm">/*
+</span><span class="cm">                        * Before joining an established ensemble, verify that
+</span><span class="cm">                        * a majority are following the same leader.
+</span><span class="cm">                        *
+</span><span class="cm">                        * Note that the outofelection map also stores votes from the current leader election.
+</span><span class="cm">                        * See ZOOKEEPER-1732 for more information.
+</span><span class="cm">                        */</span>
+                    <span class="n">outofelection</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">n</span><span class="o">.</span><span class="na">sid</span><span class="o">,</span> <span class="k">new</span> <span class="n">Vote</span><span class="o">(</span><span class="n">n</span><span class="o">.</span><span class="na">version</span><span class="o">,</span> <span class="n">n</span><span class="o">.</span><span class="na">leader</span><span class="o">,</span> <span class="n">n</span><span class="o">.</span><span class="na">zxid</span><span class="o">,</span> <span class="n">n</span><span class="o">.</span><span class="na">electionEpoch</span><span class="o">,</span> <span class="n">n</span><span class="o">.</span><span class="na">peerEpoch</span><span class="o">,</span> <span class="n">n</span><span class="o">.</span><span class="na">state</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+                    <span class="n">voteSet</span> <span class="o">=</span> <span class="n">getVoteTracker</span><span class="o">(</span><span class="n">outofelection</span><span class="o">,</span> <span class="k">new</span> <span class="n">Vote</span><span class="o">(</span><span class="n">n</span><span class="o">.</span><span class="na">version</span><span class="o">,</span> <span class="n">n</span><span class="o">.</span><span class="na">leader</span><span class="o">,</span> <span class="n">n</span><span class="o">.</span><span class="na">zxid</span><span class="o">,</span> <span class="n">n</span><span class="o">.</span><span class="na">electionEpoch</span><span class="o">,</span> <span class="n">n</span><span class="o">.</span><span class="na">peerEpoch</span><span class="o">,</span> <span class="n">n</span><span class="o">.</span><span class="na">state</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+
+                    <span class="k">if</span> <span class="o">(</span><span class="n">voteSet</span><span class="o">.</span><span class="na">hasAllQuorums</span><span class="o">(</span><span class="o">)</span> <span class="o">&amp;</span><span class="o">&amp;</span> <span class="n">checkLeader</span><span class="o">(</span><span class="n">outofelection</span><span class="o">,</span> <span class="n">n</span><span class="o">.</span><span class="na">leader</span><span class="o">,</span> <span class="n">n</span><span class="o">.</span><span class="na">electionEpoch</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span>
+                        <span class="kd">synchronized</span> <span class="o">(</span><span class="k">this</span><span class="o">)</span> <span class="o">{</span>
+                            <span class="n">logicalclock</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="n">n</span><span class="o">.</span><span class="na">electionEpoch</span><span class="o">)</span><span class="o">;</span>
+                            <span class="n">setPeerState</span><span class="o">(</span><span class="n">n</span><span class="o">.</span><span class="na">leader</span><span class="o">,</span> <span class="n">voteSet</span><span class="o">)</span><span class="o">;</span>
+                        <span class="o">}</span>
+                        <span class="n">Vote</span> <span class="n">endVote</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Vote</span><span class="o">(</span><span class="n">n</span><span class="o">.</span><span class="na">leader</span><span class="o">,</span> <span class="n">n</span><span class="o">.</span><span class="na">zxid</span><span class="o">,</span> <span class="n">n</span><span class="o">.</span><span class="na">electionEpoch</span><span class="o">,</span> <span class="n">n</span><span class="o">.</span><span class="na">peerEpoch</span><span class="o">)</span><span class="o">;</span>
+                        <span class="n">leaveInstance</span><span class="o">(</span><span class="n">endVote</span><span class="o">)</span><span class="o">;</span>
+                        <span class="k">return</span> <span class="n">endVote</span><span class="o">;</span>
+                    <span class="o">}</span>
+                    <span class="k">break</span><span class="o">;</span>
+                <span class="k">default</span><span class="o">:</span>
+                    <span class="n">LOG</span><span class="o">.</span><span class="na">warn</span><span class="o">(</span><span class="s">&#34;Notification state unrecoginized: {} (n.state), {}(n.sid)&#34;</span><span class="o">,</span> <span class="n">n</span><span class="o">.</span><span class="na">state</span><span class="o">,</span> <span class="n">n</span><span class="o">.</span><span class="na">sid</span><span class="o">)</span><span class="o">;</span>
+                    <span class="k">break</span><span class="o">;</span>
+                <span class="o">}</span>
+            <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+                <span class="k">if</span> <span class="o">(</span><span class="o">!</span><span class="n">validVoter</span><span class="o">(</span><span class="n">n</span><span class="o">.</span><span class="na">leader</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="n">LOG</span><span class="o">.</span><span class="na">warn</span><span class="o">(</span><span class="s">&#34;Ignoring notification for non-cluster member sid {} from sid {}&#34;</span><span class="o">,</span> <span class="n">n</span><span class="o">.</span><span class="na">leader</span><span class="o">,</span> <span class="n">n</span><span class="o">.</span><span class="na">sid</span><span class="o">)</span><span class="o">;</span>
+                <span class="o">}</span>
+                <span class="k">if</span> <span class="o">(</span><span class="o">!</span><span class="n">validVoter</span><span class="o">(</span><span class="n">n</span><span class="o">.</span><span class="na">sid</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="n">LOG</span><span class="o">.</span><span class="na">warn</span><span class="o">(</span><span class="s">&#34;Ignoring notification for sid {} from non-quorum member sid {}&#34;</span><span class="o">,</span> <span class="n">n</span><span class="o">.</span><span class="na">leader</span><span class="o">,</span> <span class="n">n</span><span class="o">.</span><span class="na">sid</span><span class="o">)</span><span class="o">;</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+    <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">self</span><span class="o">.</span><span class="na">jmxLeaderElectionBean</span> <span class="o">!</span><span class="o">=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">MBeanRegistry</span><span class="o">.</span><span class="na">getInstance</span><span class="o">(</span><span class="o">)</span><span class="o">.</span><span class="na">unregister</span><span class="o">(</span><span class="n">self</span><span class="o">.</span><span class="na">jmxLeaderElectionBean</span><span class="o">)</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">LOG</span><span class="o">.</span><span class="na">warn</span><span class="o">(</span><span class="s">&#34;Failed to unregister with JMX&#34;</span><span class="o">,</span> <span class="n">e</span><span class="o">)</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="n">self</span><span class="o">.</span><span class="na">jmxLeaderElectionBean</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="n">LOG</span><span class="o">.</span><span class="na">debug</span><span class="o">(</span><span class="s">&#34;Number of connection processing threads: {}&#34;</span><span class="o">,</span> <span class="n">manager</span><span class="o">.</span><span class="na">getConnectionThreadCount</span><span class="o">(</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div>
+        </div>
+
+        <div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>本文于 2020-02-12 更新</span>
+            </div>
+            <div class="post-info-license">
+                
+            </div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md">
+                
+            </div>
+            <div class="post-info-share">
+                
+                    <span></span>
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section>
+            
+                
+                    <span class="tag">
+                        <a href="https://vtrily.github.io/tags/zookeeper/"><i class="fas fa-tag fa-fw"></i>ZooKeeper</a>
+                    </span>
+                
+            
+        </section>
+        <section>
+            <span><a href="javascript:window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="https://vtrily.github.io/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+            <a href="https://vtrily.github.io/2020/02/%E4%B8%BB%E6%B5%81rpc%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94%E5%88%86%E6%9E%90/" class="prev" rel="prev" title="主流RPC产品对比分析"><i class="fas fa-angle-left fa-fw"></i>主流RPC产品对比分析</a>
+        
+        
+            <a href="https://vtrily.github.io/2020/02/zookeeper%E6%B7%B1%E5%85%A5%E5%88%86%E6%9E%90%E4%B9%8B%E6%95%B0%E6%8D%AE%E5%AD%98%E5%82%A8/" class="next" rel="next" title="ZooKeeper深入分析之数据存储">ZooKeeper深入分析之数据存储<i class="fas fa-angle-right fa-fw"></i></a>
+        
+    </div>
+</div>
+
+        <div class="post-comment">
+            
+            
+
+            
+        </div>
+    </article></div>
+            </main>
+            <footer class="footer">
+    <div class="copyright">
+        <div class="copyright-line">
+            由 <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreffer">Hugo</a> 强力驱动&nbsp;|&nbsp;主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="external nofollow noopener noreffer">LoveIt<i class="far fa-heart fa-fw"></i></a>
+        </div>
+        <div class="copyright-line">
+            <i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2019 - 2020</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="https://vtrily.github.io/">Vtrily</a></span><span class="license">&nbsp;|&nbsp;<a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+    </div>
+</footer>
+
+
+    
+    
+
+
+
+
+    
+    
+
+
+
+
+    
+    
+
+
+
+
+
+    
+    
+
+
+
+    
+    
+
+
+
+    
+    
+
+
+
+
+
+    
+    
+
+
+
+
+
+    
+    
+
+
+
+    
+    
+
+
+
+
+
+    
+    
+
+
+
+
+    
+    
+
+
+
+
+    
+    
+
+
+
+    
+    
+
+
+
+
+
+    
+    
+
+
+<script src="/js/lib/jquery/jquery.slim.min.min.js"></script>
+<script src="/js/lib/lazysizes/lazysizes.min.min.js"></script>
+<script src="/js/lib/smooth-scroll/smooth-scroll.polyfills.min.min.js"></script><script>window.scroll = new SmoothScroll('[data-scroll]', {speed: 300, speedAsDuration: true});</script>
+
+
+    
+    
+
+    
+
+    
+
+    
+
+    
+
+
+
+
+
+
+<script src="/js/blog.min.js"></script>
+
+
+    
+</div>
+        <a href="#" class="dynamic-to-top" id="dynamic-to-top" data-scroll><span>&nbsp;</span></a>
+    </body>
+</html>

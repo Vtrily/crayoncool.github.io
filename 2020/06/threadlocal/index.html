@@ -6,7 +6,7 @@
         <title>ThreadLocal | Vtrily</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noodp" />
 <meta name="Description" content="Vtrily&#39;s Blog">
-<link rel="prev" href="https://vtrily.github.io/2020/05/rpc%E6%A1%86%E6%9E%B6%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90/" />
+<link rel="prev" href="https://vtrily.github.io/2020/05/aqs/" />
 <link rel="next" href="https://vtrily.github.io/2020/06/java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E7%90%86%E8%AE%BA/" />
 <link rel="canonical" href="https://vtrily.github.io/2020/06/threadlocal/" />
 <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
@@ -41,7 +41,7 @@
     
         "keywords": "java",
     
-    "wordcount":  7 ,
+    "wordcount":  11 ,
     "url": "https:\/\/vtrily.github.io\/2020\/06\/threadlocal\/",
     
         "datePublished": "2020-06-03T20:34:43\x2b08:00",
@@ -141,7 +141,7 @@
             </div>
             <div class="post-meta-other">
                 <i class="far fa-calendar-alt fa-fw"></i><time datetime=2020-06-03>2020-06-03</time>&nbsp;
-                <i class="fas fa-pencil-alt fa-fw"></i>约 7 字&nbsp;
+                <i class="fas fa-pencil-alt fa-fw"></i>约 11 字&nbsp;
                 <i class="far fa-clock fa-fw"></i>预计阅读 1 分钟&nbsp;</div>
         </div>
 
@@ -182,6 +182,10 @@
 <p>ThreadLocalMap中定义了Entry[]，而Entry继承了WeakReference。Entry数组初始化容量是16，Entry是以ThreadLocal为key，Object为value的对象。</p>
 <a class="post-dummy-target" id="hash"></a><h3>如何解决Hash碰撞？</h3>
 <p>使用了线性检测方法中的定址寻址法，为了减少Hash的碰撞，ThreadLocal的hashCode的生成每次会增加0x61c88647</p>
+<a class="post-dummy-target" id="java"></a><h3>java的四种引用类型</h3>
+<p>强引用，软引用，弱引用，虚引用</p>
+<p>四种引用类型的区别是回收的时间不同</p>
+<p>强引用</p>
         </div>
 
         <div class="post-footer" id="post-footer">
@@ -223,7 +227,7 @@
 
     <div class="post-nav">
         
-            <a href="https://vtrily.github.io/2020/05/rpc%E6%A1%86%E6%9E%B6%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90/" class="prev" rel="prev" title="RPC工作原理分析"><i class="fas fa-angle-left fa-fw"></i>RPC工作原理分析</a>
+            <a href="https://vtrily.github.io/2020/05/aqs/" class="prev" rel="prev" title="AQS"><i class="fas fa-angle-left fa-fw"></i>AQS</a>
         
         
             <a href="https://vtrily.github.io/2020/06/java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E7%90%86%E8%AE%BA/" class="next" rel="next" title="Java并发编程:核心理论">Java并发编程:核心理论<i class="fas fa-angle-right fa-fw"></i></a>

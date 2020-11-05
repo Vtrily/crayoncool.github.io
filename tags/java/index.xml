@@ -7,10 +7,37 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Tue, 14 Jul 2020 20:34:43 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 23 Sep 2020 20:34:43 +0800</lastBuildDate>
     
 	<atom:link href="https://vtrily.github.io/tags/java/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Redis常用命令</title>
+      <link>https://vtrily.github.io/2020/09/redis/</link>
+      <pubDate>Wed, 23 Sep 2020 20:34:43 +0800</pubDate>
+      
+      <guid>https://vtrily.github.io/2020/09/redis/</guid>
+      <description>&lt;p&gt;Redis常用命令&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>求中位数</title>
+      <link>https://vtrily.github.io/2020/09/%E6%B1%82%E4%B8%A4%E4%B8%AA%E6%9C%89%E5%BA%8F%E6%95%B0%E7%BB%84%E7%9A%84%E4%B8%AD%E4%BD%8D%E6%95%B0/</link>
+      <pubDate>Wed, 23 Sep 2020 20:34:43 +0800</pubDate>
+      
+      <guid>https://vtrily.github.io/2020/09/%E6%B1%82%E4%B8%A4%E4%B8%AA%E6%9C%89%E5%BA%8F%E6%95%B0%E7%BB%84%E7%9A%84%E4%B8%AD%E4%BD%8D%E6%95%B0/</guid>
+      <description>求两个有序数组的中位数解题思路</description>
+    </item>
+    
+    <item>
+      <title>面试整理</title>
+      <link>https://vtrily.github.io/2020/09/%E6%95%B4%E7%90%86/</link>
+      <pubDate>Wed, 23 Sep 2020 20:34:43 +0800</pubDate>
+      
+      <guid>https://vtrily.github.io/2020/09/%E6%95%B4%E7%90%86/</guid>
+      <description>&lt;p&gt;面试知识整理&lt;/p&gt;</description>
+    </item>
     
     <item>
       <title>二分查找</title>
@@ -92,12 +119,48 @@
     </item>
     
     <item>
-      <title>RPC工作原理分析</title>
-      <link>https://vtrily.github.io/2020/05/rpc%E6%A1%86%E6%9E%B6%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90/</link>
+      <title>AQS</title>
+      <link>https://vtrily.github.io/2020/05/aqs/</link>
       <pubDate>Wed, 20 May 2020 20:34:43 +0800</pubDate>
       
-      <guid>https://vtrily.github.io/2020/05/rpc%E6%A1%86%E6%9E%B6%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90/</guid>
+      <guid>https://vtrily.github.io/2020/05/aqs/</guid>
+      <description>&lt;p&gt;AQS详解&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>CAS</title>
+      <link>https://vtrily.github.io/2020/05/cas/</link>
+      <pubDate>Wed, 20 May 2020 20:34:43 +0800</pubDate>
+      
+      <guid>https://vtrily.github.io/2020/05/cas/</guid>
+      <description>&lt;p&gt;CAS(摘自:https://www.jianshu.com/p/24ffe531e9ee)&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>CAS</title>
+      <link>https://vtrily.github.io/2020/05/cas%E6%80%BB%E7%BB%93/</link>
+      <pubDate>Wed, 20 May 2020 20:34:43 +0800</pubDate>
+      
+      <guid>https://vtrily.github.io/2020/05/cas%E6%80%BB%E7%BB%93/</guid>
+      <description>&lt;p&gt;CAS总结&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>RPC工作原理分析</title>
+      <link>https://vtrily.github.io/2020/05/rpc%E6%A1%86%E6%9E%B6%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90client%E7%AB%AF/</link>
+      <pubDate>Wed, 20 May 2020 20:34:43 +0800</pubDate>
+      
+      <guid>https://vtrily.github.io/2020/05/rpc%E6%A1%86%E6%9E%B6%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90client%E7%AB%AF/</guid>
       <description>&lt;p&gt;RPC工作原理分析&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>RPC工作原理分析Provider端</title>
+      <link>https://vtrily.github.io/2020/05/rpc%E6%A1%86%E6%9E%B6%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90provider%E7%AB%AF/</link>
+      <pubDate>Wed, 20 May 2020 20:34:43 +0800</pubDate>
+      
+      <guid>https://vtrily.github.io/2020/05/rpc%E6%A1%86%E6%9E%B6%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90provider%E7%AB%AF/</guid>
+      <description>&lt;p&gt;RPC Provider功能分析&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -133,8 +196,7 @@
       <pubDate>Wed, 12 Feb 2020 22:34:43 +0800</pubDate>
       
       <guid>https://vtrily.github.io/2020/02/springboot%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86/</guid>
-      <description>SpringBootApplication注解
-SpringBoot启动机制</description>
+      <description>&lt;p&gt;SpringBoot启动原理&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -162,6 +224,15 @@ SpringBoot启动机制</description>
       
       <guid>https://vtrily.github.io/2020/01/hashmap%E7%9B%B8%E5%85%B3%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/</guid>
       <description>&lt;p&gt;为什么HashMap底层树化标准的元素个数是8？&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>mybatis插件学习</title>
+      <link>https://vtrily.github.io/2020/01/mybatis%E6%8F%92%E4%BB%B6%E5%AD%A6%E4%B9%A0/</link>
+      <pubDate>Mon, 06 Jan 2020 20:34:43 +0800</pubDate>
+      
+      <guid>https://vtrily.github.io/2020/01/mybatis%E6%8F%92%E4%BB%B6%E5%AD%A6%E4%B9%A0/</guid>
+      <description>&lt;p&gt;mybatis插件是基于JDK动态代理和责任链设计模式进行工作的&lt;/p&gt;</description>
     </item>
     
     <item>

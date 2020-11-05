@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="zh">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>RPC工作原理分析Provider端 | Vtrily</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noodp" />
+<meta name="Description" content="Vtrily&#39;s Blog">
+<link rel="prev" href="https://vtrily.github.io/2020/05/%E6%A0%88/" />
+<link rel="next" href="https://vtrily.github.io/2020/05/rpc%E6%A1%86%E6%9E%B6%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90client%E7%AB%AF/" />
+<link rel="canonical" href="https://vtrily.github.io/2020/05/rpc%E6%A1%86%E6%9E%B6%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90provider%E7%AB%AF/" />
+<link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="RPC工作原理分析Provider端"/>
+<meta name="twitter:description" content="RPC Provider功能分析"/>
+<script type="application/ld+json">
+    {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "RPC工作原理分析Provider端",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https:\/\/vtrily.github.io\/2020\/05\/rpc%E6%A1%86%E6%9E%B6%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90provider%E7%AB%AF\/"
+    },
+    
+        "image": {
+            "@type": "ImageObject",
+            "url": "https:\/\/vtrily.github.io\/cover.png",
+            "width":  800 ,
+            "height":  600 
+        },
+    
+    "genre": "posts",
+    
+        "keywords": "java, RPC",
+    
+    "wordcount":  58 ,
+    "url": "https:\/\/vtrily.github.io\/2020\/05\/rpc%E6%A1%86%E6%9E%B6%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90provider%E7%AB%AF\/",
+    
+        "datePublished": "2020-05-20T20:34:43\x2b08:00",
+    
+    
+        "dateModified": "2020-05-20T20:34:43\x2b08:00",
+    
+    
+        "license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.",
+    
+    
+        "publisher": {
+            "@type": "Organization",
+            "name": "Vtrily",
+            "logo": {
+            "@type": "ImageObject",
+            "url": "https:\/\/vtrily.github.io\/logo.png",
+            "width":  127 ,
+            "height":  40 
+            }
+        },
+    
+    
+    "description": ""
+    }
+    </script>
+<link rel="stylesheet" href="/css/style.min.css">
+<link rel="stylesheet" href="/css/lib/fontawesome-free/all.min.min.css">
+
+<link rel="stylesheet" href="/css/lib/animate/animate.min.min.css">
+
+    </head>
+    <body>
+        <script>
+            window.isDark = (window.localStorage && window.localStorage.getItem('theme')) === 'dark';
+            window.isDark && document.body.classList.add('dark-theme');
+        </script>
+        <div class="wrapper">
+            <nav class="navbar">
+    <div class="navbar-container">
+        <div class="navbar-header animated bounceIn">
+            <a href="https://vtrily.github.io/">Vtrily</a>
+        </div>
+        <div class="navbar-menu">
+            
+            
+                <a class="menu-item" href="https://vtrily.github.io/posts" title="">文章</a>
+            
+                <a class="menu-item" href="https://vtrily.github.io/tags" title="">标签</a>
+            
+                <a class="menu-item" href="https://vtrily.github.io/categories" title="">分类</a>
+            
+            <a href="javascript:void(0);" class="theme-switch"><i class="fas fa-adjust fa-rotate-180 fa-fw"></i></a>
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile">
+     <div class="navbar-container">
+        <div class="navbar-header">
+            <div class="navbar-header-title animated bounceIn">
+                <a href="https://vtrily.github.io/">Vtrily</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="navbar-menu" id="mobile-menu">
+            
+            
+                <a class="menu-item" href="https://vtrily.github.io/posts" title="">文章</a>
+            
+                <a class="menu-item" href="https://vtrily.github.io/tags" title="">标签</a>
+            
+                <a class="menu-item" href="https://vtrily.github.io/categories" title="">分类</a>
+            
+            <a href="javascript:void(0);" class="theme-switch"><i class="fas fa-adjust fa-rotate-180 fa-fw"></i></a>
+        </div>
+    </div>
+</nav><main class="main">
+                <div class="container">
+                    
+    
+    
+    
+
+    <article class="post-warp">
+        <h1 class="post-title animated flipInX">RPC工作原理分析Provider端</h1>
+
+        <div class="post-meta">
+            <div class="post-meta-main">
+                <a class="author" href="https://vtrily.github.io/" rel="author"><i class="fas fa-user-circle fa-fw"></i>Vtrily&nbsp;</a>
+                <span class="post-category">
+                        收录于
+                        <i class="far fa-folder fa-fw"></i><a href="https://vtrily.github.io/categories/%E6%9E%B6%E6%9E%84/">架构</a>
+                            
+                    </span>
+            </div>
+            <div class="post-meta-other">
+                <i class="far fa-calendar-alt fa-fw"></i><time datetime=2020-05-20>2020-05-20</time>&nbsp;
+                <i class="fas fa-pencil-alt fa-fw"></i>约 58 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>预计阅读 1 分钟&nbsp;</div>
+        </div>
+
+        
+
+        
+
+        <div class="post-content">
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <p>RPC Provider功能分析</p>
+<a class="post-dummy-target" id="provider"></a><h2>Provider功能分析</h2>
+<p>队列/线程池</p>
+<p>超时丢弃：快速失败已经超时的请求，缓解队列堆积</p>
+<p>优雅关闭</p>
+<p>过载保护</p>
+<a class="post-dummy-target" id="heading"></a><h3>线程池的分配</h3>
+<p>两种分配情况</p>
+<ol>
+<li>一个队列多个线程（1*64）</li>
+</ol>
+<p>缺点：锁粒度过大，线程切换消耗资源</p>
+<p>优点：对慢包的适应能力强，几乎没有影响</p>
+<ol start="2">
+<li>多个队列一个线程（64*1）</li>
+</ol>
+<p>缺点：对慢请求的适应能力差，容易造成堵塞</p>
+<p>优点：没有竞争锁的开销</p>
+<a class="post-dummy-target" id="heading1"></a><h4>队列数，线程池数如何选择？</h4>
+<p>通过压测进行测试</p>
+<a class="post-dummy-target" id="heading2"></a><h4>超时丢弃处理逻辑</h4>
+<p>IO线程任务入队，工作线程从队列中拿任务，判断任务是否超时，超时丢弃，不超时调用service方法处理</p>
+<a class="post-dummy-target" id="heading3"></a><h4>优雅关闭</h4>
+<p>发布代码时服务会重启，重启时服务端会通知客户端我需要重启，客户端就不发送新的请求到重启的结点，等队列中的任务处理完之后服务重启</p>
+<p>方法：</p>
+<p>1.返回数据中待关闭信息</p>
+<p>有人调用的时候才会返回关闭信息
+缺点：有的客户端可能接收不到关闭信息，因为客户端流量少，不会调用服务端</p>
+<p>2.专门关闭协议通知调用方</p>
+<a class="post-dummy-target" id="heading4"></a><h4>如何通知调用方？？</h4>
+<a class="post-dummy-target" id="server"></a><h6>优雅关闭Server端实现</h6>
+<p>监听关闭信号 kill -12</p>
+<p>改变服务状态</p>
+<p>通知客户端</p>
+<a class="post-dummy-target" id="heading5"></a><h5>优雅关闭客户端实现</h5>
+<p>根据返回改变节点状态</p>
+<p>节点探活</p>
+<a class="post-dummy-target" id="heading6"></a><h4>过载保护</h4>
+<p>主动丢弃超出处理能力外的请求，不让请求进入队列或者丢弃原有队列中的任务</p>
+<p>解决方法：马上扩容</p>
+<a class="post-dummy-target" id="rpc"></a><h3>RPC高级功能</h3>
+<p>服务熔断</p>
+<p>服务降级</p>
+<p>限流</p>
+<p>动态权重</p>
+<p>1.什么是服务熔断？</p>
+<p>当某服务出现不可用或超时的情况时，为了防止整个系统出现雪崩，暂时停止对该服务的调用</p>
+<p>RPC客户端触发熔断，某一个时间范围内的失败占比超过设定值的时候触发熔断（Hystrix实际上就是又代理了一层调用，时间的滑动窗口）</p>
+<ol start="2">
+<li>什么是降级？</li>
+</ol>
+<p>熔断了之后需要做一些默认处理，这个称之为降级。核心数据不能做降级操作</p>
+<ol start="3">
+<li>动态权重</li>
+</ol>
+<p>为节点分配权重，逐步提高权重</p>
+<p>权重是什么的权重？是服务端的权重，但是这个配置是在客户端配置的</p>
+<p>但是在客户端配置权重会导致交流成本的增加</p>
+<p>为什么服务端不能设置权重？</p>
+<p>服务端设置权重的话会导致客户端无感知，并且还会造成二次请求分发，并不推荐</p>
+<p>4.限流</p>
+<p>限流是针对客户端做的，限流是针对集群做的</p>
+<p>在发送端进行限流的操作，就不会发送请求到服务端</p>
+        </div>
+
+        <div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>本文于 2020-05-20 更新</span>
+            </div>
+            <div class="post-info-license">
+                
+            </div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md">
+                
+            </div>
+            <div class="post-info-share">
+                
+                    <span></span>
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section>
+            
+                
+                    <span class="tag">
+                        <a href="https://vtrily.github.io/tags/java/"><i class="fas fa-tag fa-fw"></i>java</a>
+                    </span>
+                
+                    <span class="tag">
+                        <a href="https://vtrily.github.io/tags/rpc/"><i class="fas fa-tag fa-fw"></i>RPC</a>
+                    </span>
+                
+            
+        </section>
+        <section>
+            <span><a href="javascript:window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="https://vtrily.github.io/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+            <a href="https://vtrily.github.io/2020/05/%E6%A0%88/" class="prev" rel="prev" title="栈（数据结构与算法笔记）"><i class="fas fa-angle-left fa-fw"></i>栈（数据结构与算法笔记）</a>
+        
+        
+            <a href="https://vtrily.github.io/2020/05/rpc%E6%A1%86%E6%9E%B6%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90client%E7%AB%AF/" class="next" rel="next" title="RPC工作原理分析">RPC工作原理分析<i class="fas fa-angle-right fa-fw"></i></a>
+        
+    </div>
+</div>
+
+        <div class="post-comment">
+            
+            
+
+            
+        </div>
+    </article></div>
+            </main>
+            <footer class="footer">
+    <div class="copyright">
+        <div class="copyright-line">
+            由 <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreffer">Hugo</a> 强力驱动&nbsp;|&nbsp;主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="external nofollow noopener noreffer">LoveIt<i class="far fa-heart fa-fw"></i></a>
+        </div>
+        <div class="copyright-line">
+            <i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2019 - 2020</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="https://vtrily.github.io/">Vtrily</a></span><span class="license">&nbsp;|&nbsp;<a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+    </div>
+</footer>
+
+
+    
+    
+
+
+
+
+    
+    
+
+
+
+
+    
+    
+
+
+
+
+
+    
+    
+
+
+
+    
+    
+
+
+
+    
+    
+
+
+
+
+
+    
+    
+
+
+
+
+
+    
+    
+
+
+
+    
+    
+
+
+
+
+
+    
+    
+
+
+
+
+    
+    
+
+
+
+
+    
+    
+
+
+
+    
+    
+
+
+
+
+
+    
+    
+
+
+<script src="/js/lib/jquery/jquery.slim.min.min.js"></script>
+<script src="/js/lib/lazysizes/lazysizes.min.min.js"></script>
+<script src="/js/lib/smooth-scroll/smooth-scroll.polyfills.min.min.js"></script><script>window.scroll = new SmoothScroll('[data-scroll]', {speed: 300, speedAsDuration: true});</script>
+
+
+    
+    
+
+    
+
+    
+
+    
+
+    
+
+
+
+
+
+
+<script src="/js/blog.min.js"></script>
+
+
+    
+</div>
+        <a href="#" class="dynamic-to-top" id="dynamic-to-top" data-scroll><span>&nbsp;</span></a>
+    </body>
+</html>

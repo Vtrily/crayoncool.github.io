@@ -19,8 +19,7 @@
 <meta name="theme-color" content="#ffffff">
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="SpringBoot核心知识"/>
-<meta name="twitter:description" content="SpringBootApplication注解
-SpringBoot启动机制"/>
+<meta name="twitter:description" content="SpringBoot启动原理"/>
 <script type="application/ld+json">
     {
     "@context": "http://schema.org",
@@ -42,7 +41,7 @@ SpringBoot启动机制"/>
     
         "keywords": "java, SpringBoot",
     
-    "wordcount":  2 ,
+    "wordcount":  100 ,
     "url": "https:\/\/vtrily.github.io\/2020\/02\/springboot%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86\/",
     
         "datePublished": "2020-02-12T22:34:43\x2b08:00",
@@ -142,7 +141,7 @@ SpringBoot启动机制"/>
             </div>
             <div class="post-meta-other">
                 <i class="far fa-calendar-alt fa-fw"></i><time datetime=2020-02-12>2020-02-12</time>&nbsp;
-                <i class="fas fa-pencil-alt fa-fw"></i>约 2 字&nbsp;
+                <i class="fas fa-pencil-alt fa-fw"></i>约 100 字&nbsp;
                 <i class="far fa-clock fa-fw"></i>预计阅读 1 分钟&nbsp;</div>
         </div>
 
@@ -176,9 +175,63 @@ SpringBoot启动机制"/>
             
             
             
-            <p>SpringBootApplication注解</p>
-<p>SpringBoot启动机制</p>
+            <p>SpringBoot启动原理</p>
+<a class="post-dummy-target" id="springboot"></a><h2>SpringBoot启动原理</h2>
+<p>源码基于SpringBoot2.2.0.RELEASE</p>
+<p>首先我们看SpringBoot的启动类代码</p>
+<pre><code>@SpringBootApplication
+public class DemoApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(DemoApplication.class, args);
+    }
+}
 
+</code></pre><p>从代码中我们可以看到，SpringBoot启动类中有着@SpringBootApplication注解和SpringApplication.run()方法</p>
+<p>我们先来看@SpringBootApplication注解的作用</p>
+<pre><code>@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@Inherited
+@SpringBootConfiguration
+@EnableAutoConfiguration
+@ComponentScan(excludeFilters = { @Filter(type = FilterType.CUSTOM, classes = TypeExcludeFilter.class),
+		@Filter(type = FilterType.CUSTOM, classes = AutoConfigurationExcludeFilter.class) })
+@ConfigurationPropertiesScan
+public @interface SpringBootApplication {
+
+	
+	@AliasFor(annotation = EnableAutoConfiguration.class)
+	Class&lt;?&gt;[] exclude() default {};
+
+	
+	@AliasFor(annotation = EnableAutoConfiguration.class)
+	String[] excludeName() default {};
+
+	
+	@AliasFor(annotation = ComponentScan.class, attribute = &quot;basePackages&quot;)
+	String[] scanBasePackages() default {};
+
+	
+	@AliasFor(annotation = ComponentScan.class, attribute = &quot;basePackageClasses&quot;)
+	Class&lt;?&gt;[] scanBasePackageClasses() default {};
+
+	
+	@AliasFor(annotation = Configuration.class)
+	boolean proxyBeanMethods() default true;
+
+}
+</code></pre><p>@Target：这个注解能被用到什么元素上，元素可以多个。ElementType.TYPE能被用到类，接口，声明枚举上</p>
+<p>@Retention：这个注解是说这个注解能被保留多久，一共有三种</p>
+<ol>
+<li>SOURCE,只保留在源码上</li>
+<li>CLASS,注解通过编译器记录在类文件上。默认行为</li>
+<li>RUNTIME,注解通过编译器记录在类文件上，运行时可通过反射获取到</li>
+</ol>
+<p>@Inherited：通过Inherited元注解声明的自定义注解，在类上使用时，可以被子类继承</p>
+<p>以上三个注解往往在自定义注解的时候使用较多</p>
+<p>@SpringBootConfiguration
+@EnableAutoConfiguration
+@ComponentScan</p>
         </div>
 
         <div class="post-footer" id="post-footer">

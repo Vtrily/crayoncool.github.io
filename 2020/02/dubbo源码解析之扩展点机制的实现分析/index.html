@@ -1,0 +1,1243 @@
+<!DOCTYPE html>
+<html lang="zh">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>dubbo源码解析之扩展点机制 | Vtrily</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noodp" />
+<meta name="Description" content="Vtrily&#39;s Blog">
+<link rel="prev" href="https://vtrily.github.io/2020/02/hikaricp%E5%AD%A6%E4%B9%A0/" />
+<link rel="next" href="https://vtrily.github.io/2020/02/dubbo%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%E4%B9%8B%E6%89%A9%E5%B1%95%E7%82%B9%E6%9C%BA%E5%88%B6/" />
+<link rel="canonical" href="https://vtrily.github.io/2020/02/dubbo%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%E4%B9%8B%E6%89%A9%E5%B1%95%E7%82%B9%E6%9C%BA%E5%88%B6%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%88%86%E6%9E%90/" />
+<link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="dubbo源码解析之扩展点机制"/>
+<meta name="twitter:description" content="本文主要分析dubbo的扩展点机制"/>
+<script type="application/ld+json">
+    {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "dubbo源码解析之扩展点机制",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https:\/\/vtrily.github.io\/2020\/02\/dubbo%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%E4%B9%8B%E6%89%A9%E5%B1%95%E7%82%B9%E6%9C%BA%E5%88%B6%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%88%86%E6%9E%90\/"
+    },
+    
+        "image": {
+            "@type": "ImageObject",
+            "url": "https:\/\/vtrily.github.io\/cover.png",
+            "width":  800 ,
+            "height":  600 
+        },
+    
+    "genre": "posts",
+    
+        "keywords": "dubbo, 扩展点机制",
+    
+    "wordcount":  1663 ,
+    "url": "https:\/\/vtrily.github.io\/2020\/02\/dubbo%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%E4%B9%8B%E6%89%A9%E5%B1%95%E7%82%B9%E6%9C%BA%E5%88%B6%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%88%86%E6%9E%90\/",
+    
+        "datePublished": "2020-02-12T22:34:43\x2b08:00",
+    
+    
+        "dateModified": "2020-02-12T22:34:43\x2b08:00",
+    
+    
+        "license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.",
+    
+    
+        "publisher": {
+            "@type": "Organization",
+            "name": "Vtrily",
+            "logo": {
+            "@type": "ImageObject",
+            "url": "https:\/\/vtrily.github.io\/logo.png",
+            "width":  127 ,
+            "height":  40 
+            }
+        },
+    
+    
+    "description": ""
+    }
+    </script>
+<link rel="stylesheet" href="/css/style.min.css">
+<link rel="stylesheet" href="/css/lib/fontawesome-free/all.min.min.css">
+
+<link rel="stylesheet" href="/css/lib/animate/animate.min.min.css">
+
+    </head>
+    <body>
+        <script>
+            window.isDark = (window.localStorage && window.localStorage.getItem('theme')) === 'dark';
+            window.isDark && document.body.classList.add('dark-theme');
+        </script>
+        <div class="wrapper">
+            <nav class="navbar">
+    <div class="navbar-container">
+        <div class="navbar-header animated bounceIn">
+            <a href="https://vtrily.github.io/">Vtrily</a>
+        </div>
+        <div class="navbar-menu">
+            
+            
+                <a class="menu-item" href="https://vtrily.github.io/posts" title="">文章</a>
+            
+                <a class="menu-item" href="https://vtrily.github.io/tags" title="">标签</a>
+            
+                <a class="menu-item" href="https://vtrily.github.io/categories" title="">分类</a>
+            
+            <a href="javascript:void(0);" class="theme-switch"><i class="fas fa-adjust fa-rotate-180 fa-fw"></i></a>
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile">
+     <div class="navbar-container">
+        <div class="navbar-header">
+            <div class="navbar-header-title animated bounceIn">
+                <a href="https://vtrily.github.io/">Vtrily</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="navbar-menu" id="mobile-menu">
+            
+            
+                <a class="menu-item" href="https://vtrily.github.io/posts" title="">文章</a>
+            
+                <a class="menu-item" href="https://vtrily.github.io/tags" title="">标签</a>
+            
+                <a class="menu-item" href="https://vtrily.github.io/categories" title="">分类</a>
+            
+            <a href="javascript:void(0);" class="theme-switch"><i class="fas fa-adjust fa-rotate-180 fa-fw"></i></a>
+        </div>
+    </div>
+</nav><main class="main">
+                <div class="container">
+                    
+    
+    
+    
+
+    <article class="post-warp">
+        <h1 class="post-title animated flipInX">dubbo源码解析之扩展点机制</h1>
+
+        <div class="post-meta">
+            <div class="post-meta-main">
+                <a class="author" href="https://vtrily.github.io/" rel="author"><i class="fas fa-user-circle fa-fw"></i>Vtrily&nbsp;</a>
+                <span class="post-category">
+                        收录于
+                        <i class="far fa-folder fa-fw"></i><a href="https://vtrily.github.io/categories/%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93/">学习总结</a>
+                            
+                    </span>
+            </div>
+            <div class="post-meta-other">
+                <i class="far fa-calendar-alt fa-fw"></i><time datetime=2020-02-12>2020-02-12</time>&nbsp;
+                <i class="fas fa-pencil-alt fa-fw"></i>约 1663 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>预计阅读 8 分钟&nbsp;</div>
+        </div>
+
+        
+
+        
+
+        <div class="post-content">
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <p>本文主要分析dubbo的扩展点机制</p>
+<p>本文主要从一下四个问题分析Dubbo SPI机制</p>
+<p>1.Java SPI是什么？</p>
+<p>2.Dubbo SPI是什么？</p>
+<p>3.Dubbo SPI是如何实现IOC和AOP的增强？</p>
+<p>4.扩展点是如何实现的？</p>
+<a class="post-dummy-target" id="1java-spi"></a><h2>1.Java SPI是什么？</h2>
+<p>Service Provider Interface 服务提供接口，它是在resource文件夹下META-INF文件夹中创建一个类的全路径命名的一个文件，文件中的内容是实现类的全路径</p>
+<a class="post-dummy-target" id="2dubbo-spi"></a><h2>2.Dubbo SPI是什么？</h2>
+<p>Dubbo SPI是在Java SPI的基础上实现了IOC和AOP功能的增强，它是在resource文件夹下META-INF文件夹中创建一个类路径命名的文件，文件中的内容有所不同，
+文件中的格式是xxx=xxxxx这种形式</p>
+<a class="post-dummy-target" id="3dubbo-spiiocaop"></a><h2>3.Dubbo SPI是如何实现IOC和AOP增强的？</h2>
+<p>Dubbo的SPI主要有以下四个特点</p>
+<p>1.扩展点自动包装（自包装扩展了AOP）</p>
+<p>2.扩展点自动装配（自装配扩展了IOC）</p>
+<p>3.扩展点自适应（@Adaptive，这个是为了在需要的时候加载需要的扩展类）</p>
+<p>加载扩展类有两种方式，一种是@SPI注解和静态文件，另一种是在方法上加上@Adaptive注解</p>
+<p>4.扩展点自激活</p>
+<p>自激活的场景是一个扩展类可能有多个扩展类的实现，需要对多个扩展类构造一个链表</p>
+<a class="post-dummy-target" id="4"></a><h2>4.扩展点是如何实现的？</h2>
+<p>我们以LoadBalance的扩展点加载为例去分析扩展点的实现，首先我们先找到LoadBalance的入口，在AbstractClusterInvoker中有initLoadBalance方法,代码如下</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">protected</span> <span class="n">LoadBalance</span> <span class="nf">initLoadBalance</span><span class="o">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Invoker</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="o">&gt;</span> <span class="n">invokers</span><span class="o">,</span> <span class="n">Invocation</span> <span class="n">invocation</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">CollectionUtils</span><span class="o">.</span><span class="na">isNotEmpty</span><span class="o">(</span><span class="n">invokers</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">// 1 根据类型获取Extension
+</span><span class="c1"></span>        <span class="k">return</span> <span class="n">ExtensionLoader</span><span class="o">.</span><span class="na">getExtensionLoader</span><span class="o">(</span><span class="n">LoadBalance</span><span class="o">.</span><span class="na">class</span><span class="o">)</span><span class="o">.</span><span class="na">getExtension</span><span class="o">(</span><span class="n">invokers</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">0</span><span class="o">)</span><span class="o">.</span><span class="na">getUrl</span><span class="o">(</span><span class="o">)</span>
+                <span class="o">.</span><span class="na">getMethodParameter</span><span class="o">(</span><span class="n">RpcUtils</span><span class="o">.</span><span class="na">getMethodName</span><span class="o">(</span><span class="n">invocation</span><span class="o">)</span><span class="o">,</span> <span class="n">LOADBALANCE_KEY</span><span class="o">,</span> <span class="n">DEFAULT_LOADBALANCE</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">ExtensionLoader</span><span class="o">.</span><span class="na">getExtensionLoader</span><span class="o">(</span><span class="n">LoadBalance</span><span class="o">.</span><span class="na">class</span><span class="o">)</span><span class="o">.</span><span class="na">getExtension</span><span class="o">(</span><span class="n">DEFAULT_LOADBALANCE</span><span class="o">)</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>首先我们可以看到ExtensionLoader.getExtensionLoader方法，它的入参是LoadBalance.class</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">static</span> <span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">ExtensionLoader</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="nf">getExtensionLoader</span><span class="o">(</span><span class="n">Class</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">type</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">type</span> <span class="o">=</span><span class="o">=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="n">IllegalArgumentException</span><span class="o">(</span><span class="s">&#34;Extension type == null&#34;</span><span class="o">)</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="c1">// 判断类型是不是一个接口
+</span><span class="c1"></span>    <span class="k">if</span> <span class="o">(</span><span class="o">!</span><span class="n">type</span><span class="o">.</span><span class="na">isInterface</span><span class="o">(</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="n">IllegalArgumentException</span><span class="o">(</span><span class="s">&#34;Extension type (&#34;</span> <span class="o">+</span> <span class="n">type</span> <span class="o">+</span> <span class="s">&#34;) is not an interface!&#34;</span><span class="o">)</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="c1">// 判断是否有扩展注解 @SPI
+</span><span class="c1"></span>    <span class="k">if</span> <span class="o">(</span><span class="o">!</span><span class="n">withExtensionAnnotation</span><span class="o">(</span><span class="n">type</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="n">IllegalArgumentException</span><span class="o">(</span><span class="s">&#34;Extension type (&#34;</span> <span class="o">+</span> <span class="n">type</span> <span class="o">+</span>
+                <span class="s">&#34;) is not an extension, because it is NOT annotated with @&#34;</span> <span class="o">+</span> <span class="n">SPI</span><span class="o">.</span><span class="na">class</span><span class="o">.</span><span class="na">getSimpleName</span><span class="o">(</span><span class="o">)</span> <span class="o">+</span> <span class="s">&#34;!&#34;</span><span class="o">)</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="c1">// 从ConcurrentHashMap中获取ExtensionLoader,key是ClassesLoader,如果没有，新创建一个ExtensionLoader放进Map中
+</span><span class="c1"></span>    <span class="n">ExtensionLoader</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">loader</span> <span class="o">=</span> <span class="o">(</span><span class="n">ExtensionLoader</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="o">)</span> <span class="n">EXTENSION_LOADERS</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">type</span><span class="o">)</span><span class="o">;</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">loader</span> <span class="o">=</span><span class="o">=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">EXTENSION_LOADERS</span><span class="o">.</span><span class="na">putIfAbsent</span><span class="o">(</span><span class="n">type</span><span class="o">,</span> <span class="k">new</span> <span class="n">ExtensionLoader</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="o">(</span><span class="n">type</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">loader</span> <span class="o">=</span> <span class="o">(</span><span class="n">ExtensionLoader</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="o">)</span> <span class="n">EXTENSION_LOADERS</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">type</span><span class="o">)</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="k">return</span> <span class="n">loader</span><span class="o">;</span>
+<span class="o">}</span>
+
+</code></pre></td></tr></table>
+</div>
+</div><p>从代码中我们可以看到，getExtensionLoader(Class<!-- raw HTML omitted --> type) 方法只是从EXTENSION_LOADERS缓存中获取ExtensionLoader类，如果获取不到创建一个新的ExtensionLoader然后放进EXTENSION_LOADERS（用于缓存）中</p>
+<p>接下来我们主要分析ExtensionLoader这个类里的实现
+我们接着代码1处分析getExtension方法的实现</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="n">T</span> <span class="nf">getExtension</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">StringUtils</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">(</span><span class="n">name</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="n">IllegalArgumentException</span><span class="o">(</span><span class="s">&#34;Extension name == null&#34;</span><span class="o">)</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="k">if</span> <span class="o">(</span><span class="s">&#34;true&#34;</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">name</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">getDefaultExtension</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="c1">// 用于存放value，value是volatile类型
+</span><span class="c1"></span>    <span class="kd">final</span> <span class="n">Holder</span><span class="o">&lt;</span><span class="n">Object</span><span class="o">&gt;</span> <span class="n">holder</span> <span class="o">=</span> <span class="n">getOrCreateHolder</span><span class="o">(</span><span class="n">name</span><span class="o">)</span><span class="o">;</span>
+    <span class="n">Object</span> <span class="n">instance</span> <span class="o">=</span> <span class="n">holder</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">instance</span> <span class="o">=</span><span class="o">=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">// 双重检查
+</span><span class="c1"></span>        <span class="kd">synchronized</span> <span class="o">(</span><span class="n">holder</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">instance</span> <span class="o">=</span> <span class="n">holder</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">instance</span> <span class="o">=</span><span class="o">=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+                <span class="c1">// 根据Name创建实例
+</span><span class="c1"></span>                <span class="n">instance</span> <span class="o">=</span> <span class="n">createExtension</span><span class="o">(</span><span class="n">name</span><span class="o">)</span><span class="o">;</span>
+                <span class="n">holder</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="n">instance</span><span class="o">)</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+    <span class="k">return</span> <span class="o">(</span><span class="n">T</span><span class="o">)</span> <span class="n">instance</span><span class="o">;</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>getExtension方法中可以看出调用了getOrCreateHolder方法，从getOrCreateHolder方法中可以看出这个方法是用来构建一个key为name,value为Holder实例的一个缓存cachedInstances</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">private</span> <span class="n">Holder</span><span class="o">&lt;</span><span class="n">Object</span><span class="o">&gt;</span> <span class="nf">getOrCreateHolder</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">Holder</span><span class="o">&lt;</span><span class="n">Object</span><span class="o">&gt;</span> <span class="n">holder</span> <span class="o">=</span> <span class="n">cachedInstances</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">name</span><span class="o">)</span><span class="o">;</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">holder</span> <span class="o">=</span><span class="o">=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">cachedInstances</span><span class="o">.</span><span class="na">putIfAbsent</span><span class="o">(</span><span class="n">name</span><span class="o">,</span> <span class="k">new</span> <span class="n">Holder</span><span class="o">&lt;</span><span class="o">&gt;</span><span class="o">(</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">holder</span> <span class="o">=</span> <span class="n">cachedInstances</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">name</span><span class="o">)</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="k">return</span> <span class="n">holder</span><span class="o">;</span>
+<span class="o">}</span>
+
+</code></pre></td></tr></table>
+</div>
+</div><p>从getExtension方法中可以看出cachedInstances缓存是用来存放扩展类的实例的，存放的时候加了synchronized锁，使用了双重check机制，这个地方主要是用来防止高并发的时候在加锁前已经存放进去了扩展类实例，所以要二次get一下</p>
+<p>接下来我们看createExtension方法，创建扩展类的方法</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">private</span> <span class="n">T</span> <span class="nf">createExtension</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">Class</span><span class="o">&lt;</span><span class="o">?</span><span class="o">&gt;</span> <span class="n">clazz</span> <span class="o">=</span> <span class="n">getExtensionClasses</span><span class="o">(</span><span class="o">)</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">name</span><span class="o">)</span><span class="o">;</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">clazz</span> <span class="o">=</span><span class="o">=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">throw</span> <span class="n">findException</span><span class="o">(</span><span class="n">name</span><span class="o">)</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="k">try</span> <span class="o">{</span>
+        <span class="n">T</span> <span class="n">instance</span> <span class="o">=</span> <span class="o">(</span><span class="n">T</span><span class="o">)</span> <span class="n">EXTENSION_INSTANCES</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">clazz</span><span class="o">)</span><span class="o">;</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">instance</span> <span class="o">=</span><span class="o">=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">EXTENSION_INSTANCES</span><span class="o">.</span><span class="na">putIfAbsent</span><span class="o">(</span><span class="n">clazz</span><span class="o">,</span> <span class="n">clazz</span><span class="o">.</span><span class="na">newInstance</span><span class="o">(</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+            <span class="n">instance</span> <span class="o">=</span> <span class="o">(</span><span class="n">T</span><span class="o">)</span> <span class="n">EXTENSION_INSTANCES</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">clazz</span><span class="o">)</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="c1">// 扩展点自动装配
+</span><span class="c1"></span>        <span class="n">injectExtension</span><span class="o">(</span><span class="n">instance</span><span class="o">)</span><span class="o">;</span>
+        <span class="c1">// 扩展点自动包装
+</span><span class="c1"></span>        <span class="n">Set</span><span class="o">&lt;</span><span class="n">Class</span><span class="o">&lt;</span><span class="o">?</span><span class="o">&gt;</span><span class="o">&gt;</span> <span class="n">wrapperClasses</span> <span class="o">=</span> <span class="n">cachedWrapperClasses</span><span class="o">;</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">CollectionUtils</span><span class="o">.</span><span class="na">isNotEmpty</span><span class="o">(</span><span class="n">wrapperClasses</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">for</span> <span class="o">(</span><span class="n">Class</span><span class="o">&lt;</span><span class="o">?</span><span class="o">&gt;</span> <span class="n">wrapperClass</span> <span class="o">:</span> <span class="n">wrapperClasses</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">instance</span> <span class="o">=</span> <span class="n">injectExtension</span><span class="o">(</span><span class="o">(</span><span class="n">T</span><span class="o">)</span> <span class="n">wrapperClass</span><span class="o">.</span><span class="na">getConstructor</span><span class="o">(</span><span class="n">type</span><span class="o">)</span><span class="o">.</span><span class="na">newInstance</span><span class="o">(</span><span class="n">instance</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="c1">// 初始化扩展实例
+</span><span class="c1"></span>        <span class="n">initExtension</span><span class="o">(</span><span class="n">instance</span><span class="o">)</span><span class="o">;</span>
+        <span class="k">return</span> <span class="n">instance</span><span class="o">;</span>
+    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Throwable</span> <span class="n">t</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="n">IllegalStateException</span><span class="o">(</span><span class="s">&#34;Extension instance (name: &#34;</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s">&#34;, class: &#34;</span> <span class="o">+</span>
+                <span class="n">type</span> <span class="o">+</span> <span class="s">&#34;) couldn&#39;t be instantiated: &#34;</span> <span class="o">+</span> <span class="n">t</span><span class="o">.</span><span class="na">getMessage</span><span class="o">(</span><span class="o">)</span><span class="o">,</span> <span class="n">t</span><span class="o">)</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+</code></pre></td></tr></table>
+</div>
+</div><p>我们可以看到在创建扩展类之前会先获取一下扩展类，调用了getExtensionClasses方法</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="c1">// 获取扩展类
+</span><span class="c1"></span><span class="kd">private</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Class</span><span class="o">&lt;</span><span class="o">?</span><span class="o">&gt;</span><span class="o">&gt;</span> <span class="n">getExtensionClasses</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
+    <span class="c1">// 从缓存中获取扩展类
+</span><span class="c1"></span>    <span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Class</span><span class="o">&lt;</span><span class="o">?</span><span class="o">&gt;</span><span class="o">&gt;</span> <span class="n">classes</span> <span class="o">=</span> <span class="n">cachedClasses</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">classes</span> <span class="o">=</span><span class="o">=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">// 如果没有，加锁再获取一次
+</span><span class="c1"></span>        <span class="c1">// 考虑并发情况，加锁再获取一次
+</span><span class="c1"></span>        <span class="kd">synchronized</span> <span class="o">(</span><span class="n">cachedClasses</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">classes</span> <span class="o">=</span> <span class="n">cachedClasses</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">classes</span> <span class="o">=</span><span class="o">=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+                <span class="c1">// 如果不存在，load扩展类，将扩展类放到缓存中
+</span><span class="c1"></span>                <span class="n">classes</span> <span class="o">=</span> <span class="n">loadExtensionClasses</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+                <span class="n">cachedClasses</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="n">classes</span><span class="o">)</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+    <span class="k">return</span> <span class="n">classes</span><span class="o">;</span>
+<span class="o">}</span>
+
+</code></pre></td></tr></table>
+</div>
+</div><p>从代码中我们可以看出getExtensionClasses方法将扩展类放到了cachedClasses缓存中
+如果缓存中存在扩展类直接返回，如果不存在进行一次load,调用了loadExtensionClasses()方法</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="c1">// 加载扩展类
+</span><span class="c1"></span><span class="kd">private</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Class</span><span class="o">&lt;</span><span class="o">?</span><span class="o">&gt;</span><span class="o">&gt;</span> <span class="n">loadExtensionClasses</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
+    <span class="c1">// 缓存默认的扩展名
+</span><span class="c1"></span>    <span class="n">cacheDefaultExtensionName</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+
+    <span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Class</span><span class="o">&lt;</span><span class="o">?</span><span class="o">&gt;</span><span class="o">&gt;</span> <span class="n">extensionClasses</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="o">&gt;</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+    <span class="c1">// 加载所有的扩展类
+</span><span class="c1"></span>    <span class="k">for</span> <span class="o">(</span><span class="n">LoadingStrategy</span> <span class="n">strategy</span> <span class="o">:</span> <span class="n">strategies</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">loadDirectory</span><span class="o">(</span><span class="n">extensionClasses</span><span class="o">,</span> <span class="n">strategy</span><span class="o">.</span><span class="na">directory</span><span class="o">(</span><span class="o">)</span><span class="o">,</span> <span class="n">type</span><span class="o">.</span><span class="na">getName</span><span class="o">(</span><span class="o">)</span><span class="o">,</span> <span class="n">strategy</span><span class="o">.</span><span class="na">preferExtensionClassLoader</span><span class="o">(</span><span class="o">)</span><span class="o">,</span> <span class="n">strategy</span><span class="o">.</span><span class="na">excludedPackages</span><span class="o">(</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">loadDirectory</span><span class="o">(</span><span class="n">extensionClasses</span><span class="o">,</span> <span class="n">strategy</span><span class="o">.</span><span class="na">directory</span><span class="o">(</span><span class="o">)</span><span class="o">,</span> <span class="n">type</span><span class="o">.</span><span class="na">getName</span><span class="o">(</span><span class="o">)</span><span class="o">.</span><span class="na">replace</span><span class="o">(</span><span class="s">&#34;org.apache&#34;</span><span class="o">,</span> <span class="s">&#34;com.alibaba&#34;</span><span class="o">)</span><span class="o">,</span> <span class="n">strategy</span><span class="o">.</span><span class="na">preferExtensionClassLoader</span><span class="o">(</span><span class="o">)</span><span class="o">,</span> <span class="n">strategy</span><span class="o">.</span><span class="na">excludedPackages</span><span class="o">(</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="k">return</span> <span class="n">extensionClasses</span><span class="o">;</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>此处加载扩展类会缓存默认的扩展名，会将扩展名放到cachedDefaultName中</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="c1">// 缓存默认扩展名称
+</span><span class="c1"></span><span class="kd">private</span> <span class="kt">void</span> <span class="nf">cacheDefaultExtensionName</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
+    <span class="c1">// 获取SPI注解
+</span><span class="c1"></span>    <span class="kd">final</span> <span class="n">SPI</span> <span class="n">defaultAnnotation</span> <span class="o">=</span> <span class="n">type</span><span class="o">.</span><span class="na">getAnnotation</span><span class="o">(</span><span class="n">SPI</span><span class="o">.</span><span class="na">class</span><span class="o">)</span><span class="o">;</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">defaultAnnotation</span> <span class="o">=</span><span class="o">=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="c1">// 获取注解value
+</span><span class="c1"></span>    <span class="n">String</span> <span class="n">value</span> <span class="o">=</span> <span class="n">defaultAnnotation</span><span class="o">.</span><span class="na">value</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+    <span class="k">if</span> <span class="o">(</span><span class="o">(</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="na">trim</span><span class="o">(</span><span class="o">)</span><span class="o">)</span><span class="o">.</span><span class="na">length</span><span class="o">(</span><span class="o">)</span> <span class="o">&gt;</span> <span class="n">0</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">String</span><span class="o">[</span><span class="o">]</span> <span class="n">names</span> <span class="o">=</span> <span class="n">NAME_SEPARATOR</span><span class="o">.</span><span class="na">split</span><span class="o">(</span><span class="n">value</span><span class="o">)</span><span class="o">;</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">names</span><span class="o">.</span><span class="na">length</span> <span class="o">&gt;</span> <span class="n">1</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="n">IllegalStateException</span><span class="o">(</span><span class="s">&#34;More than 1 default extension name on extension &#34;</span> <span class="o">+</span> <span class="n">type</span><span class="o">.</span><span class="na">getName</span><span class="o">(</span><span class="o">)</span>
+                    <span class="o">+</span> <span class="s">&#34;: &#34;</span> <span class="o">+</span> <span class="n">Arrays</span><span class="o">.</span><span class="na">toString</span><span class="o">(</span><span class="n">names</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">names</span><span class="o">.</span><span class="na">length</span> <span class="o">=</span><span class="o">=</span> <span class="n">1</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">cachedDefaultName</span> <span class="o">=</span> <span class="n">names</span><span class="o">[</span><span class="n">0</span><span class="o">]</span><span class="o">;</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>缓存默认的扩展名称获取的是SPI注解中的value字段，这个value字段只能有1个，大于1会抛出IllegalStateException异常信息</p>
+<p>loadExtensionClasses方法中缓存完扩展名之后会加载资源文件夹下的所有扩展类，调用的是loadDirectory方法</p>
+<p>接下来我们分析loadDirectory方法</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="c1">// 加载文件目录
+</span><span class="c1"></span><span class="kd">private</span> <span class="kt">void</span> <span class="nf">loadDirectory</span><span class="o">(</span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Class</span><span class="o">&lt;</span><span class="o">?</span><span class="o">&gt;</span><span class="o">&gt;</span> <span class="n">extensionClasses</span><span class="o">,</span> <span class="n">String</span> <span class="n">dir</span><span class="o">,</span> <span class="n">String</span> <span class="n">type</span><span class="o">,</span>
+                            <span class="kt">boolean</span> <span class="n">extensionLoaderClassLoaderFirst</span><span class="o">,</span> <span class="n">String</span><span class="o">.</span><span class="o">.</span><span class="o">.</span> <span class="n">excludedPackages</span><span class="o">)</span> <span class="o">{</span>
+    <span class="c1">// 目录和type拼成文件名
+</span><span class="c1"></span>    <span class="n">String</span> <span class="n">fileName</span> <span class="o">=</span> <span class="n">dir</span> <span class="o">+</span> <span class="n">type</span><span class="o">;</span>
+    <span class="k">try</span> <span class="o">{</span>
+        <span class="n">Enumeration</span><span class="o">&lt;</span><span class="n">java</span><span class="o">.</span><span class="na">net</span><span class="o">.</span><span class="na">URL</span><span class="o">&gt;</span> <span class="n">urls</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="n">ClassLoader</span> <span class="n">classLoader</span> <span class="o">=</span> <span class="n">findClassLoader</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+
+        <span class="c1">// try to load from ExtensionLoader&#39;s ClassLoader first
+</span><span class="c1"></span>        <span class="k">if</span> <span class="o">(</span><span class="n">extensionLoaderClassLoaderFirst</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">ClassLoader</span> <span class="n">extensionLoaderClassLoader</span> <span class="o">=</span> <span class="n">ExtensionLoader</span><span class="o">.</span><span class="na">class</span><span class="o">.</span><span class="na">getClassLoader</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">ClassLoader</span><span class="o">.</span><span class="na">getSystemClassLoader</span><span class="o">(</span><span class="o">)</span> <span class="o">!</span><span class="o">=</span> <span class="n">extensionLoaderClassLoader</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">urls</span> <span class="o">=</span> <span class="n">extensionLoaderClassLoader</span><span class="o">.</span><span class="na">getResources</span><span class="o">(</span><span class="n">fileName</span><span class="o">)</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+
+        <span class="k">if</span> <span class="o">(</span><span class="n">urls</span> <span class="o">=</span><span class="o">=</span> <span class="kc">null</span> <span class="o">|</span><span class="o">|</span> <span class="o">!</span><span class="n">urls</span><span class="o">.</span><span class="na">hasMoreElements</span><span class="o">(</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">classLoader</span> <span class="o">!</span><span class="o">=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">urls</span> <span class="o">=</span> <span class="n">classLoader</span><span class="o">.</span><span class="na">getResources</span><span class="o">(</span><span class="n">fileName</span><span class="o">)</span><span class="o">;</span>
+            <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+                <span class="n">urls</span> <span class="o">=</span> <span class="n">ClassLoader</span><span class="o">.</span><span class="na">getSystemResources</span><span class="o">(</span><span class="n">fileName</span><span class="o">)</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+
+        <span class="k">if</span> <span class="o">(</span><span class="n">urls</span> <span class="o">!</span><span class="o">=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">while</span> <span class="o">(</span><span class="n">urls</span><span class="o">.</span><span class="na">hasMoreElements</span><span class="o">(</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">java</span><span class="o">.</span><span class="na">net</span><span class="o">.</span><span class="na">URL</span> <span class="n">resourceURL</span> <span class="o">=</span> <span class="n">urls</span><span class="o">.</span><span class="na">nextElement</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+                <span class="n">loadResource</span><span class="o">(</span><span class="n">extensionClasses</span><span class="o">,</span> <span class="n">classLoader</span><span class="o">,</span> <span class="n">resourceURL</span><span class="o">,</span> <span class="n">excludedPackages</span><span class="o">)</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Throwable</span> <span class="n">t</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">logger</span><span class="o">.</span><span class="na">error</span><span class="o">(</span><span class="s">&#34;Exception occurred when loading extension class (interface: &#34;</span> <span class="o">+</span>
+                <span class="n">type</span> <span class="o">+</span> <span class="s">&#34;, description file: &#34;</span> <span class="o">+</span> <span class="n">fileName</span> <span class="o">+</span> <span class="s">&#34;).&#34;</span><span class="o">,</span> <span class="n">t</span><span class="o">)</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>loadDirectory方法我们主要看loadResource方法</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java">
+<span class="kd">private</span> <span class="kt">void</span> <span class="nf">loadResource</span><span class="o">(</span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Class</span><span class="o">&lt;</span><span class="o">?</span><span class="o">&gt;</span><span class="o">&gt;</span> <span class="n">extensionClasses</span><span class="o">,</span> <span class="n">ClassLoader</span> <span class="n">classLoader</span><span class="o">,</span>
+                              <span class="n">java</span><span class="o">.</span><span class="na">net</span><span class="o">.</span><span class="na">URL</span> <span class="n">resourceURL</span><span class="o">,</span> <span class="n">String</span><span class="o">.</span><span class="o">.</span><span class="o">.</span> <span class="n">excludedPackages</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">try</span> <span class="o">{</span>
+        <span class="k">try</span> <span class="o">(</span><span class="n">BufferedReader</span> <span class="n">reader</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BufferedReader</span><span class="o">(</span><span class="k">new</span> <span class="n">InputStreamReader</span><span class="o">(</span><span class="n">resourceURL</span><span class="o">.</span><span class="na">openStream</span><span class="o">(</span><span class="o">)</span><span class="o">,</span> <span class="n">StandardCharsets</span><span class="o">.</span><span class="na">UTF_8</span><span class="o">)</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">String</span> <span class="n">line</span><span class="o">;</span>
+            <span class="k">while</span> <span class="o">(</span><span class="o">(</span><span class="n">line</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="na">readLine</span><span class="o">(</span><span class="o">)</span><span class="o">)</span> <span class="o">!</span><span class="o">=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+                <span class="kd">final</span> <span class="kt">int</span> <span class="n">ci</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="na">indexOf</span><span class="o">(</span><span class="sc">&#39;#&#39;</span><span class="o">)</span><span class="o">;</span>
+                <span class="k">if</span> <span class="o">(</span><span class="n">ci</span> <span class="o">&gt;</span><span class="o">=</span> <span class="n">0</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="na">substring</span><span class="o">(</span><span class="n">0</span><span class="o">,</span> <span class="n">ci</span><span class="o">)</span><span class="o">;</span>
+                <span class="o">}</span>
+                <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="na">trim</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+                <span class="k">if</span> <span class="o">(</span><span class="n">line</span><span class="o">.</span><span class="na">length</span><span class="o">(</span><span class="o">)</span> <span class="o">&gt;</span> <span class="n">0</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="k">try</span> <span class="o">{</span>
+                        <span class="n">String</span> <span class="n">name</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+                        <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="na">indexOf</span><span class="o">(</span><span class="sc">&#39;=&#39;</span><span class="o">)</span><span class="o">;</span>
+                        <span class="k">if</span> <span class="o">(</span><span class="n">i</span> <span class="o">&gt;</span> <span class="n">0</span><span class="o">)</span> <span class="o">{</span>
+                            <span class="n">name</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="na">substring</span><span class="o">(</span><span class="n">0</span><span class="o">,</span> <span class="n">i</span><span class="o">)</span><span class="o">.</span><span class="na">trim</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+                            <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="na">substring</span><span class="o">(</span><span class="n">i</span> <span class="o">+</span> <span class="n">1</span><span class="o">)</span><span class="o">.</span><span class="na">trim</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+                        <span class="o">}</span>
+                        <span class="k">if</span> <span class="o">(</span><span class="n">line</span><span class="o">.</span><span class="na">length</span><span class="o">(</span><span class="o">)</span> <span class="o">&gt;</span> <span class="n">0</span> <span class="o">&amp;</span><span class="o">&amp;</span> <span class="o">!</span><span class="n">isExcluded</span><span class="o">(</span><span class="n">line</span><span class="o">,</span> <span class="n">excludedPackages</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span>
+                            <span class="n">loadClass</span><span class="o">(</span><span class="n">extensionClasses</span><span class="o">,</span> <span class="n">resourceURL</span><span class="o">,</span> <span class="n">Class</span><span class="o">.</span><span class="na">forName</span><span class="o">(</span><span class="n">line</span><span class="o">,</span> <span class="kc">true</span><span class="o">,</span> <span class="n">classLoader</span><span class="o">)</span><span class="o">,</span> <span class="n">name</span><span class="o">)</span><span class="o">;</span>
+                        <span class="o">}</span>
+                    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Throwable</span> <span class="n">t</span><span class="o">)</span> <span class="o">{</span>
+                        <span class="n">IllegalStateException</span> <span class="n">e</span> <span class="o">=</span> <span class="k">new</span> <span class="n">IllegalStateException</span><span class="o">(</span><span class="s">&#34;Failed to load extension class (interface: &#34;</span> <span class="o">+</span> <span class="n">type</span> <span class="o">+</span> <span class="s">&#34;, class line: &#34;</span> <span class="o">+</span> <span class="n">line</span> <span class="o">+</span> <span class="s">&#34;) in &#34;</span> <span class="o">+</span> <span class="n">resourceURL</span> <span class="o">+</span> <span class="s">&#34;, cause: &#34;</span> <span class="o">+</span> <span class="n">t</span><span class="o">.</span><span class="na">getMessage</span><span class="o">(</span><span class="o">)</span><span class="o">,</span> <span class="n">t</span><span class="o">)</span><span class="o">;</span>
+                        <span class="n">exceptions</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">line</span><span class="o">,</span> <span class="n">e</span><span class="o">)</span><span class="o">;</span>
+                    <span class="o">}</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Throwable</span> <span class="n">t</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">logger</span><span class="o">.</span><span class="na">error</span><span class="o">(</span><span class="s">&#34;Exception occurred when loading extension class (interface: &#34;</span> <span class="o">+</span>
+                <span class="n">type</span> <span class="o">+</span> <span class="s">&#34;, class file: &#34;</span> <span class="o">+</span> <span class="n">resourceURL</span> <span class="o">+</span> <span class="s">&#34;) in &#34;</span> <span class="o">+</span> <span class="n">resourceURL</span><span class="o">,</span> <span class="n">t</span><span class="o">)</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>loadResource方法主要解析了以扩展类路径命名的文件中xxx=com.xxx.xxx这样的内容</p>
+<p>我们主要看loadClass方法</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java">
+<span class="kd">private</span> <span class="kt">void</span> <span class="nf">loadClass</span><span class="o">(</span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Class</span><span class="o">&lt;</span><span class="o">?</span><span class="o">&gt;</span><span class="o">&gt;</span> <span class="n">extensionClasses</span><span class="o">,</span> <span class="n">java</span><span class="o">.</span><span class="na">net</span><span class="o">.</span><span class="na">URL</span> <span class="n">resourceURL</span><span class="o">,</span> <span class="n">Class</span><span class="o">&lt;</span><span class="o">?</span><span class="o">&gt;</span> <span class="n">clazz</span><span class="o">,</span> <span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">NoSuchMethodException</span> <span class="o">{</span>
+    <span class="k">if</span> <span class="o">(</span><span class="o">!</span><span class="n">type</span><span class="o">.</span><span class="na">isAssignableFrom</span><span class="o">(</span><span class="n">clazz</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="n">IllegalStateException</span><span class="o">(</span><span class="s">&#34;Error occurred when loading extension class (interface: &#34;</span> <span class="o">+</span>
+                <span class="n">type</span> <span class="o">+</span> <span class="s">&#34;, class line: &#34;</span> <span class="o">+</span> <span class="n">clazz</span><span class="o">.</span><span class="na">getName</span><span class="o">(</span><span class="o">)</span> <span class="o">+</span> <span class="s">&#34;), class &#34;</span>
+                <span class="o">+</span> <span class="n">clazz</span><span class="o">.</span><span class="na">getName</span><span class="o">(</span><span class="o">)</span> <span class="o">+</span> <span class="s">&#34; is not subtype of interface.&#34;</span><span class="o">)</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="c1">// 判断类上的注解是否是Adaptive
+</span><span class="c1"></span>    <span class="k">if</span> <span class="o">(</span><span class="n">clazz</span><span class="o">.</span><span class="na">isAnnotationPresent</span><span class="o">(</span><span class="n">Adaptive</span><span class="o">.</span><span class="na">class</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">// 缓存Adaptive Class
+</span><span class="c1"></span>        <span class="n">cacheAdaptiveClass</span><span class="o">(</span><span class="n">clazz</span><span class="o">)</span><span class="o">;</span>
+    <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">isWrapperClass</span><span class="o">(</span><span class="n">clazz</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">// 缓存包装类，Set集合
+</span><span class="c1"></span>        <span class="n">cacheWrapperClass</span><span class="o">(</span><span class="n">clazz</span><span class="o">)</span><span class="o">;</span>
+    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+        <span class="n">clazz</span><span class="o">.</span><span class="na">getConstructor</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">StringUtils</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">(</span><span class="n">name</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">findAnnotationName</span><span class="o">(</span><span class="n">clazz</span><span class="o">)</span><span class="o">;</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">name</span><span class="o">.</span><span class="na">length</span><span class="o">(</span><span class="o">)</span> <span class="o">=</span><span class="o">=</span> <span class="n">0</span><span class="o">)</span> <span class="o">{</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="n">IllegalStateException</span><span class="o">(</span><span class="s">&#34;No such extension name for the class &#34;</span> <span class="o">+</span> <span class="n">clazz</span><span class="o">.</span><span class="na">getName</span><span class="o">(</span><span class="o">)</span> <span class="o">+</span> <span class="s">&#34; in the config &#34;</span> <span class="o">+</span> <span class="n">resourceURL</span><span class="o">)</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+
+        <span class="n">String</span><span class="o">[</span><span class="o">]</span> <span class="n">names</span> <span class="o">=</span> <span class="n">NAME_SEPARATOR</span><span class="o">.</span><span class="na">split</span><span class="o">(</span><span class="n">name</span><span class="o">)</span><span class="o">;</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">ArrayUtils</span><span class="o">.</span><span class="na">isNotEmpty</span><span class="o">(</span><span class="n">names</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">cacheActivateClass</span><span class="o">(</span><span class="n">clazz</span><span class="o">,</span> <span class="n">names</span><span class="o">[</span><span class="n">0</span><span class="o">]</span><span class="o">)</span><span class="o">;</span>
+            <span class="k">for</span> <span class="o">(</span><span class="n">String</span> <span class="n">n</span> <span class="o">:</span> <span class="n">names</span><span class="o">)</span> <span class="o">{</span>
+                <span class="c1">// 缓存
+</span><span class="c1"></span>                <span class="n">cacheName</span><span class="o">(</span><span class="n">clazz</span><span class="o">,</span> <span class="n">n</span><span class="o">)</span><span class="o">;</span>
+                <span class="c1">// 保存扩展类
+</span><span class="c1"></span>                <span class="n">saveInExtensionClass</span><span class="o">(</span><span class="n">extensionClasses</span><span class="o">,</span> <span class="n">clazz</span><span class="o">,</span> <span class="n">n</span><span class="o">)</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>loadClass方法中主要缓存了带有Adaptive注解的自适应类,cachedAdaptiveClass和包装类，缓存了自激活类，name字段并且保存了扩展类</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="c1">// 缓存自适应类
+</span><span class="c1"></span><span class="kd">private</span> <span class="kt">void</span> <span class="nf">cacheAdaptiveClass</span><span class="o">(</span><span class="n">Class</span><span class="o">&lt;</span><span class="o">?</span><span class="o">&gt;</span> <span class="n">clazz</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">cachedAdaptiveClass</span> <span class="o">=</span><span class="o">=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">cachedAdaptiveClass</span> <span class="o">=</span> <span class="n">clazz</span><span class="o">;</span>
+    <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="o">!</span><span class="n">cachedAdaptiveClass</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">clazz</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="n">IllegalStateException</span><span class="o">(</span><span class="s">&#34;More than 1 adaptive class found: &#34;</span>
+                <span class="o">+</span> <span class="n">cachedAdaptiveClass</span><span class="o">.</span><span class="na">getName</span><span class="o">(</span><span class="o">)</span>
+                <span class="o">+</span> <span class="s">&#34;, &#34;</span> <span class="o">+</span> <span class="n">clazz</span><span class="o">.</span><span class="na">getName</span><span class="o">(</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>如果类上没有@Adaptive注解就判断这个类是不是包装类</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="c1">// 是否是包装类
+</span><span class="c1"></span> <span class="kd">private</span> <span class="kt">boolean</span> <span class="nf">isWrapperClass</span><span class="o">(</span><span class="n">Class</span><span class="o">&lt;</span><span class="o">?</span><span class="o">&gt;</span> <span class="n">clazz</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">try</span> <span class="o">{</span>
+        <span class="n">clazz</span><span class="o">.</span><span class="na">getConstructor</span><span class="o">(</span><span class="n">type</span><span class="o">)</span><span class="o">;</span>
+        <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">NoSuchMethodException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>如果是包装类的话，将包装类缓存起来cachedWrapperClasses</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="c1">// 缓存包装类
+</span><span class="c1"></span><span class="kd">private</span> <span class="kt">void</span> <span class="nf">cacheWrapperClass</span><span class="o">(</span><span class="n">Class</span><span class="o">&lt;</span><span class="o">?</span><span class="o">&gt;</span> <span class="n">clazz</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">cachedWrapperClasses</span> <span class="o">=</span><span class="o">=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">cachedWrapperClasses</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ConcurrentHashSet</span><span class="o">&lt;</span><span class="o">&gt;</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="n">cachedWrapperClasses</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">clazz</span><span class="o">)</span><span class="o">;</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>如果既不是自适应类又不是包装类，就缓存自激活类</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="c1">// 缓存自激活类
+</span><span class="c1"></span><span class="kd">private</span> <span class="kt">void</span> <span class="nf">cacheActivateClass</span><span class="o">(</span><span class="n">Class</span><span class="o">&lt;</span><span class="o">?</span><span class="o">&gt;</span> <span class="n">clazz</span><span class="o">,</span> <span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">Activate</span> <span class="n">activate</span> <span class="o">=</span> <span class="n">clazz</span><span class="o">.</span><span class="na">getAnnotation</span><span class="o">(</span><span class="n">Activate</span><span class="o">.</span><span class="na">class</span><span class="o">)</span><span class="o">;</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">activate</span> <span class="o">!</span><span class="o">=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">cachedActivates</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">name</span><span class="o">,</span> <span class="n">activate</span><span class="o">)</span><span class="o">;</span>
+    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+        <span class="c1">// support com.alibaba.dubbo.common.extension.Activate
+</span><span class="c1"></span>        <span class="n">com</span><span class="o">.</span><span class="na">alibaba</span><span class="o">.</span><span class="na">dubbo</span><span class="o">.</span><span class="na">common</span><span class="o">.</span><span class="na">extension</span><span class="o">.</span><span class="na">Activate</span> <span class="n">oldActivate</span> <span class="o">=</span> <span class="n">clazz</span><span class="o">.</span><span class="na">getAnnotation</span><span class="o">(</span><span class="n">com</span><span class="o">.</span><span class="na">alibaba</span><span class="o">.</span><span class="na">dubbo</span><span class="o">.</span><span class="na">common</span><span class="o">.</span><span class="na">extension</span><span class="o">.</span><span class="na">Activate</span><span class="o">.</span><span class="na">class</span><span class="o">)</span><span class="o">;</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">oldActivate</span> <span class="o">!</span><span class="o">=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">cachedActivates</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">name</span><span class="o">,</span> <span class="n">oldActivate</span><span class="o">)</span><span class="o">;</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>代码的最后就将扩展类保存进去</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="c1">// 保存扩展类
+</span><span class="c1"></span><span class="kd">private</span> <span class="kt">void</span> <span class="nf">saveInExtensionClass</span><span class="o">(</span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Class</span><span class="o">&lt;</span><span class="o">?</span><span class="o">&gt;</span><span class="o">&gt;</span> <span class="n">extensionClasses</span><span class="o">,</span> <span class="n">Class</span><span class="o">&lt;</span><span class="o">?</span><span class="o">&gt;</span> <span class="n">clazz</span><span class="o">,</span> <span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">Class</span><span class="o">&lt;</span><span class="o">?</span><span class="o">&gt;</span> <span class="n">c</span> <span class="o">=</span> <span class="n">extensionClasses</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">name</span><span class="o">)</span><span class="o">;</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">c</span> <span class="o">=</span><span class="o">=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">extensionClasses</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">name</span><span class="o">,</span> <span class="n">clazz</span><span class="o">)</span><span class="o">;</span>
+    <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">c</span> <span class="o">!</span><span class="o">=</span> <span class="n">clazz</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">String</span> <span class="n">duplicateMsg</span> <span class="o">=</span> <span class="s">&#34;Duplicate extension &#34;</span> <span class="o">+</span> <span class="n">type</span><span class="o">.</span><span class="na">getName</span><span class="o">(</span><span class="o">)</span> <span class="o">+</span> <span class="s">&#34; name &#34;</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s">&#34; on &#34;</span> <span class="o">+</span> <span class="n">c</span><span class="o">.</span><span class="na">getName</span><span class="o">(</span><span class="o">)</span> <span class="o">+</span> <span class="s">&#34; and &#34;</span> <span class="o">+</span> <span class="n">clazz</span><span class="o">.</span><span class="na">getName</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="na">error</span><span class="o">(</span><span class="n">duplicateMsg</span><span class="o">)</span><span class="o">;</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="n">IllegalStateException</span><span class="o">(</span><span class="n">duplicateMsg</span><span class="o">)</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>等这些资源加载完毕之后，我们再回到createExtension方法继续往下看，下面调用了injectExtension(instance)方法实现了扩展点的自动装配</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="c1">//注入扩展
+</span><span class="c1"></span><span class="kd">private</span> <span class="n">T</span> <span class="nf">injectExtension</span><span class="o">(</span><span class="n">T</span> <span class="n">instance</span><span class="o">)</span> <span class="o">{</span>
+
+    <span class="k">if</span> <span class="o">(</span><span class="n">objectFactory</span> <span class="o">=</span><span class="o">=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">instance</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="k">try</span> <span class="o">{</span>
+        <span class="k">for</span> <span class="o">(</span><span class="n">Method</span> <span class="n">method</span> <span class="o">:</span> <span class="n">instance</span><span class="o">.</span><span class="na">getClass</span><span class="o">(</span><span class="o">)</span><span class="o">.</span><span class="na">getMethods</span><span class="o">(</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">if</span> <span class="o">(</span><span class="o">!</span><span class="n">isSetter</span><span class="o">(</span><span class="n">method</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span>
+                <span class="k">continue</span><span class="o">;</span>
+            <span class="o">}</span>
+            <span class="cm">/**
+</span><span class="cm">                * Check {@link DisableInject} to see if we need auto injection for this property
+</span><span class="cm">                */</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">method</span><span class="o">.</span><span class="na">getAnnotation</span><span class="o">(</span><span class="n">DisableInject</span><span class="o">.</span><span class="na">class</span><span class="o">)</span> <span class="o">!</span><span class="o">=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+                <span class="k">continue</span><span class="o">;</span>
+            <span class="o">}</span>
+            <span class="n">Class</span><span class="o">&lt;</span><span class="o">?</span><span class="o">&gt;</span> <span class="n">pt</span> <span class="o">=</span> <span class="n">method</span><span class="o">.</span><span class="na">getParameterTypes</span><span class="o">(</span><span class="o">)</span><span class="o">[</span><span class="n">0</span><span class="o">]</span><span class="o">;</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">ReflectUtils</span><span class="o">.</span><span class="na">isPrimitives</span><span class="o">(</span><span class="n">pt</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span>
+                <span class="k">continue</span><span class="o">;</span>
+            <span class="o">}</span>
+
+            <span class="k">try</span> <span class="o">{</span>
+                <span class="n">String</span> <span class="n">property</span> <span class="o">=</span> <span class="n">getSetterProperty</span><span class="o">(</span><span class="n">method</span><span class="o">)</span><span class="o">;</span>
+                <span class="n">Object</span> <span class="n">object</span> <span class="o">=</span> <span class="n">objectFactory</span><span class="o">.</span><span class="na">getExtension</span><span class="o">(</span><span class="n">pt</span><span class="o">,</span> <span class="n">property</span><span class="o">)</span><span class="o">;</span>
+                <span class="k">if</span> <span class="o">(</span><span class="n">object</span> <span class="o">!</span><span class="o">=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="n">method</span><span class="o">.</span><span class="na">invoke</span><span class="o">(</span><span class="n">instance</span><span class="o">,</span> <span class="n">object</span><span class="o">)</span><span class="o">;</span>
+                <span class="o">}</span>
+            <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">logger</span><span class="o">.</span><span class="na">error</span><span class="o">(</span><span class="s">&#34;Failed to inject via method &#34;</span> <span class="o">+</span> <span class="n">method</span><span class="o">.</span><span class="na">getName</span><span class="o">(</span><span class="o">)</span>
+                        <span class="o">+</span> <span class="s">&#34; of interface &#34;</span> <span class="o">+</span> <span class="n">type</span><span class="o">.</span><span class="na">getName</span><span class="o">(</span><span class="o">)</span> <span class="o">+</span> <span class="s">&#34;: &#34;</span> <span class="o">+</span> <span class="n">e</span><span class="o">.</span><span class="na">getMessage</span><span class="o">(</span><span class="o">)</span><span class="o">,</span> <span class="n">e</span><span class="o">)</span><span class="o">;</span>
+            <span class="o">}</span>
+
+        <span class="o">}</span>
+    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">logger</span><span class="o">.</span><span class="na">error</span><span class="o">(</span><span class="n">e</span><span class="o">.</span><span class="na">getMessage</span><span class="o">(</span><span class="o">)</span><span class="o">,</span> <span class="n">e</span><span class="o">)</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="k">return</span> <span class="n">instance</span><span class="o">;</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>这个方法实际就是调用了扩展类的set方法，将依赖的扩展类set进去</p>
+<p>进行完了自动装配就开始进行自动包装</p>
+<p>实际上自动包装就是调用了下面这一段方法,这一段方法中就是循环调用了injectExtension方法，只不过我们需要注意的是入参，
+入参是包装类，所以包装的顺序是从最底层依次进行的，举一个例子就是
+A里面有B，B里面有C,C里面有D</p>
+<p>先从D开始包装DC,然后DCB,然后DCBA,一层一层向上包装</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="c1">// 扩展点自动包装
+</span><span class="c1"></span><span class="n">Set</span><span class="o">&lt;</span><span class="n">Class</span><span class="o">&lt;</span><span class="o">?</span><span class="o">&gt;</span><span class="o">&gt;</span> <span class="n">wrapperClasses</span> <span class="o">=</span> <span class="n">cachedWrapperClasses</span><span class="o">;</span>
+<span class="k">if</span> <span class="o">(</span><span class="n">CollectionUtils</span><span class="o">.</span><span class="na">isNotEmpty</span><span class="o">(</span><span class="n">wrapperClasses</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">for</span> <span class="o">(</span><span class="n">Class</span><span class="o">&lt;</span><span class="o">?</span><span class="o">&gt;</span> <span class="n">wrapperClass</span> <span class="o">:</span> <span class="n">wrapperClasses</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">instance</span> <span class="o">=</span> <span class="n">injectExtension</span><span class="o">(</span><span class="o">(</span><span class="n">T</span><span class="o">)</span> <span class="n">wrapperClass</span><span class="o">.</span><span class="na">getConstructor</span><span class="o">(</span><span class="n">type</span><span class="o">)</span><span class="o">.</span><span class="na">newInstance</span><span class="o">(</span><span class="n">instance</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>代码的最后就是初始化扩展实例</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="c1">// 初始化扩展
+</span><span class="c1"></span><span class="kd">private</span> <span class="kt">void</span> <span class="nf">initExtension</span><span class="o">(</span><span class="n">T</span> <span class="n">instance</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">instance</span> <span class="k">instanceof</span> <span class="n">Lifecycle</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">Lifecycle</span> <span class="n">lifecycle</span> <span class="o">=</span> <span class="o">(</span><span class="n">Lifecycle</span><span class="o">)</span> <span class="n">instance</span><span class="o">;</span>
+        <span class="n">lifecycle</span><span class="o">.</span><span class="na">initialize</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>以上我们将getExtension方法分析完毕,总结下来如下图所示</p>
+<pre><code class="language-mermaid" data-lang="mermaid">graph TD
+   getExtension --&gt; getOrCreateHolder构造缓存 --是--&gt; 加载扩展类信息getExtensionClasses --&gt; 实例化扩展类 
+   实例化扩展类 --&gt; 注入依赖 --&gt; 查找匹配包装类注入扩展类实例
+查找匹配包装类注入扩展类实例 --&gt; 返回
+   getOrCreateHolder构造缓存 --否--&gt; 返回
+</code></pre>
+        </div>
+
+        <div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>本文于 2020-02-12 更新</span>
+            </div>
+            <div class="post-info-license">
+                
+            </div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md">
+                
+            </div>
+            <div class="post-info-share">
+                
+                    <span></span>
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section>
+            
+                
+                    <span class="tag">
+                        <a href="https://vtrily.github.io/tags/dubbo/"><i class="fas fa-tag fa-fw"></i>dubbo</a>
+                    </span>
+                
+                    <span class="tag">
+                        <a href="https://vtrily.github.io/tags/%E6%89%A9%E5%B1%95%E7%82%B9%E6%9C%BA%E5%88%B6/"><i class="fas fa-tag fa-fw"></i>扩展点机制</a>
+                    </span>
+                
+            
+        </section>
+        <section>
+            <span><a href="javascript:window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="https://vtrily.github.io/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+            <a href="https://vtrily.github.io/2020/02/hikaricp%E5%AD%A6%E4%B9%A0/" class="prev" rel="prev" title="HikariCP学习"><i class="fas fa-angle-left fa-fw"></i>HikariCP学习</a>
+        
+        
+            <a href="https://vtrily.github.io/2020/02/dubbo%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%E4%B9%8B%E6%89%A9%E5%B1%95%E7%82%B9%E6%9C%BA%E5%88%B6/" class="next" rel="next" title="dubbo源码解析之扩展点机制">dubbo源码解析之扩展点机制<i class="fas fa-angle-right fa-fw"></i></a>
+        
+    </div>
+</div>
+
+        <div class="post-comment">
+            
+            
+
+            
+        </div>
+    </article></div>
+            </main>
+            <footer class="footer">
+    <div class="copyright">
+        <div class="copyright-line">
+            由 <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreffer">Hugo</a> 强力驱动&nbsp;|&nbsp;主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="external nofollow noopener noreffer">LoveIt<i class="far fa-heart fa-fw"></i></a>
+        </div>
+        <div class="copyright-line">
+            <i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2019 - 2020</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="https://vtrily.github.io/">Vtrily</a></span><span class="license">&nbsp;|&nbsp;<a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+    </div>
+</footer>
+
+
+    
+    
+
+
+
+
+    
+    
+
+
+
+
+    
+    
+
+
+
+
+
+    
+    
+
+
+
+    
+    
+
+
+
+    
+    
+
+
+
+
+
+    
+    
+
+
+
+
+
+    
+    
+
+
+
+    
+    
+
+
+
+
+
+    
+    
+
+
+
+
+    
+    
+
+
+
+
+    
+    
+
+
+
+    
+    
+
+
+
+
+
+    
+    
+
+
+<script src="/js/lib/jquery/jquery.slim.min.min.js"></script>
+<script src="/js/lib/lazysizes/lazysizes.min.min.js"></script>
+<script src="/js/lib/smooth-scroll/smooth-scroll.polyfills.min.min.js"></script><script>window.scroll = new SmoothScroll('[data-scroll]', {speed: 300, speedAsDuration: true});</script>
+
+
+    
+    
+
+    
+
+    
+
+    
+
+    
+
+
+
+
+
+
+<script src="/js/blog.min.js"></script>
+
+
+    
+</div>
+        <a href="#" class="dynamic-to-top" id="dynamic-to-top" data-scroll><span>&nbsp;</span></a>
+    </body>
+</html>

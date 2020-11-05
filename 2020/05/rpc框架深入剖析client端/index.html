@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="zh">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>RPC工作原理分析 | Vtrily</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noodp" />
+<meta name="Description" content="Vtrily&#39;s Blog">
+<link rel="prev" href="https://vtrily.github.io/2020/05/rpc%E6%A1%86%E6%9E%B6%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90provider%E7%AB%AF/" />
+<link rel="next" href="https://vtrily.github.io/2020/05/cas%E6%80%BB%E7%BB%93/" />
+<link rel="canonical" href="https://vtrily.github.io/2020/05/rpc%E6%A1%86%E6%9E%B6%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90client%E7%AB%AF/" />
+<link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="RPC工作原理分析"/>
+<meta name="twitter:description" content="RPC工作原理分析"/>
+<script type="application/ld+json">
+    {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "RPC工作原理分析",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https:\/\/vtrily.github.io\/2020\/05\/rpc%E6%A1%86%E6%9E%B6%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90client%E7%AB%AF\/"
+    },
+    
+        "image": {
+            "@type": "ImageObject",
+            "url": "https:\/\/vtrily.github.io\/cover.png",
+            "width":  800 ,
+            "height":  600 
+        },
+    
+    "genre": "posts",
+    
+        "keywords": "java, RPC",
+    
+    "wordcount":  56 ,
+    "url": "https:\/\/vtrily.github.io\/2020\/05\/rpc%E6%A1%86%E6%9E%B6%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90client%E7%AB%AF\/",
+    
+        "datePublished": "2020-05-20T20:34:43\x2b08:00",
+    
+    
+        "dateModified": "2020-05-20T20:34:43\x2b08:00",
+    
+    
+        "license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.",
+    
+    
+        "publisher": {
+            "@type": "Organization",
+            "name": "Vtrily",
+            "logo": {
+            "@type": "ImageObject",
+            "url": "https:\/\/vtrily.github.io\/logo.png",
+            "width":  127 ,
+            "height":  40 
+            }
+        },
+    
+    
+    "description": ""
+    }
+    </script>
+<link rel="stylesheet" href="/css/style.min.css">
+<link rel="stylesheet" href="/css/lib/fontawesome-free/all.min.min.css">
+
+<link rel="stylesheet" href="/css/lib/animate/animate.min.min.css">
+
+    </head>
+    <body>
+        <script>
+            window.isDark = (window.localStorage && window.localStorage.getItem('theme')) === 'dark';
+            window.isDark && document.body.classList.add('dark-theme');
+        </script>
+        <div class="wrapper">
+            <nav class="navbar">
+    <div class="navbar-container">
+        <div class="navbar-header animated bounceIn">
+            <a href="https://vtrily.github.io/">Vtrily</a>
+        </div>
+        <div class="navbar-menu">
+            
+            
+                <a class="menu-item" href="https://vtrily.github.io/posts" title="">文章</a>
+            
+                <a class="menu-item" href="https://vtrily.github.io/tags" title="">标签</a>
+            
+                <a class="menu-item" href="https://vtrily.github.io/categories" title="">分类</a>
+            
+            <a href="javascript:void(0);" class="theme-switch"><i class="fas fa-adjust fa-rotate-180 fa-fw"></i></a>
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile">
+     <div class="navbar-container">
+        <div class="navbar-header">
+            <div class="navbar-header-title animated bounceIn">
+                <a href="https://vtrily.github.io/">Vtrily</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="navbar-menu" id="mobile-menu">
+            
+            
+                <a class="menu-item" href="https://vtrily.github.io/posts" title="">文章</a>
+            
+                <a class="menu-item" href="https://vtrily.github.io/tags" title="">标签</a>
+            
+                <a class="menu-item" href="https://vtrily.github.io/categories" title="">分类</a>
+            
+            <a href="javascript:void(0);" class="theme-switch"><i class="fas fa-adjust fa-rotate-180 fa-fw"></i></a>
+        </div>
+    </div>
+</nav><main class="main">
+                <div class="container">
+                    
+    
+    
+    
+
+    <article class="post-warp">
+        <h1 class="post-title animated flipInX">RPC工作原理分析</h1>
+
+        <div class="post-meta">
+            <div class="post-meta-main">
+                <a class="author" href="https://vtrily.github.io/" rel="author"><i class="fas fa-user-circle fa-fw"></i>Vtrily&nbsp;</a>
+                <span class="post-category">
+                        收录于
+                        <i class="far fa-folder fa-fw"></i><a href="https://vtrily.github.io/categories/%E6%9E%B6%E6%9E%84/">架构</a>
+                            
+                    </span>
+            </div>
+            <div class="post-meta-other">
+                <i class="far fa-calendar-alt fa-fw"></i><time datetime=2020-05-20>2020-05-20</time>&nbsp;
+                <i class="fas fa-pencil-alt fa-fw"></i>约 56 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>预计阅读 1 分钟&nbsp;</div>
+        </div>
+
+        
+
+        
+
+        <div class="post-content">
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <p>RPC工作原理分析</p>
+<a class="post-dummy-target" id="rpc"></a><h2>RPC定义</h2>
+<p>RPC: 远程过程调用，像调用本地方法一样调用远程服务</p>
+<a class="post-dummy-target" id="rpc1"></a><h2>RPC的作用</h2>
+<p>组包与解包
+数据发送与接收
+提高开发效率
+业务发展的产物</p>
+<a class="post-dummy-target" id="rpc2"></a><h2>RPC的核心组成</h2>
+<p>远程方法对象的代理
+连接管理
+序列化与反序列化
+寻址与负载均衡</p>
+<a class="post-dummy-target" id="rpc3"></a><h2>RPC的调用方式</h2>
+<p>同步调用
+异步调用</p>
+<a class="post-dummy-target" id="rpc4"></a><h2>RPC的调用过程</h2>
+<p>远程代理
+序列化
+网络传输
+反序列化</p>
+<p>client:创建连接，构造数据，网络传输
+provider:等待连接，解析数据，获取数据，构造数据，网络传输
+client:接收数据，解析数据</p>
+<a class="post-dummy-target" id="heading"></a><h2>序列化协议</h2>
+<p>head+body
+版本号+cmd+magic+bodylength+body
+识别协议是否是你需要的，需要一个magic code</p>
+<p>一次传输需要序列化两次，body序列化一次，对象序列化一次</p>
+<p>请求先放到队列里，然后由另外的线程去实现，实现之后方法发到返回队列里，然后由IO线程进行返回。这个实现和mysql的多线程很相似</p>
+<a class="post-dummy-target" id="heading1"></a><h2>序列化与反序列化的实现方式</h2>
+<a class="post-dummy-target" id="heading2"></a><h3>序列化</h3>
+<p>右移8*i位</p>
+<a class="post-dummy-target" id="heading3"></a><h3>反序列化</h3>
+<p>左移8*i位与0xff相与，最后或操作</p>
+<p>校验包的完整性，头的长度，body的长度</p>
+<a class="post-dummy-target" id="rpc5"></a><h3>RPC核心功能分析</h3>
+<p>Consumer核心功能：连接管理，负载均衡，请求里有，超时处理，健康检查</p>
+<p>Provider核心功能：队列/线程池，超时丢弃，优雅关闭，过载保护</p>
+<p>连接管理：初始化时机，连接数，心跳</p>
+<p>负载均衡：轮训，随机，取模，带权重，一致性Hash</p>
+<a class="post-dummy-target" id="heading4"></a><h3>权重负载均衡设计</h3>
+<p>使用数组存放权重</p>
+<p>路由功能设计</p>
+<p>匹配规则
+行为
+链表</p>
+<p>超时处理</p>
+<p>工作线程阻塞通知：等待回包通知</p>
+<p>超时逻辑</p>
+<p>工作线程等待通知
+数据返回终止等待
+超时抛出异常</p>
+<a class="post-dummy-target" id="rpc6"></a><h3>RPC</h3>
+<p><img src="/blog-img/RPC-Client%E7%AB%AF.jpg" alt="client"></p>
+        </div>
+
+        <div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>本文于 2020-05-20 更新</span>
+            </div>
+            <div class="post-info-license">
+                
+            </div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md">
+                
+            </div>
+            <div class="post-info-share">
+                
+                    <span></span>
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section>
+            
+                
+                    <span class="tag">
+                        <a href="https://vtrily.github.io/tags/java/"><i class="fas fa-tag fa-fw"></i>java</a>
+                    </span>
+                
+                    <span class="tag">
+                        <a href="https://vtrily.github.io/tags/rpc/"><i class="fas fa-tag fa-fw"></i>RPC</a>
+                    </span>
+                
+            
+        </section>
+        <section>
+            <span><a href="javascript:window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="https://vtrily.github.io/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+            <a href="https://vtrily.github.io/2020/05/rpc%E6%A1%86%E6%9E%B6%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90provider%E7%AB%AF/" class="prev" rel="prev" title="RPC工作原理分析Provider端"><i class="fas fa-angle-left fa-fw"></i>RPC工作原理分析Provider端</a>
+        
+        
+            <a href="https://vtrily.github.io/2020/05/cas%E6%80%BB%E7%BB%93/" class="next" rel="next" title="CAS">CAS<i class="fas fa-angle-right fa-fw"></i></a>
+        
+    </div>
+</div>
+
+        <div class="post-comment">
+            
+            
+
+            
+        </div>
+    </article></div>
+            </main>
+            <footer class="footer">
+    <div class="copyright">
+        <div class="copyright-line">
+            由 <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreffer">Hugo</a> 强力驱动&nbsp;|&nbsp;主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="external nofollow noopener noreffer">LoveIt<i class="far fa-heart fa-fw"></i></a>
+        </div>
+        <div class="copyright-line">
+            <i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2019 - 2020</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="https://vtrily.github.io/">Vtrily</a></span><span class="license">&nbsp;|&nbsp;<a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+    </div>
+</footer>
+
+
+    
+    
+
+
+
+
+    
+    
+
+
+
+
+    
+    
+
+
+
+
+
+    
+    
+
+
+
+    
+    
+
+
+
+    
+    
+
+
+
+
+
+    
+    
+
+
+
+
+
+    
+    
+
+
+
+    
+    
+
+
+
+
+
+    
+    
+
+
+
+
+    
+    
+
+
+
+
+    
+    
+
+
+
+    
+    
+
+
+
+
+
+    
+    
+
+
+<script src="/js/lib/jquery/jquery.slim.min.min.js"></script>
+<script src="/js/lib/lazysizes/lazysizes.min.min.js"></script>
+<script src="/js/lib/smooth-scroll/smooth-scroll.polyfills.min.min.js"></script><script>window.scroll = new SmoothScroll('[data-scroll]', {speed: 300, speedAsDuration: true});</script>
+
+
+    
+    
+
+    
+
+    
+
+    
+
+    
+
+
+
+
+
+
+<script src="/js/blog.min.js"></script>
+
+
+    
+</div>
+        <a href="#" class="dynamic-to-top" id="dynamic-to-top" data-scroll><span>&nbsp;</span></a>
+    </body>
+</html>

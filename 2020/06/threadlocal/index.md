@@ -18,7 +18,13 @@ ThreadLocalMap中定义了Entry[]，而Entry继承了WeakReference。Entry数组
 使用了线性检测方法中的定址寻址法，为了减少Hash的碰撞，ThreadLocal的hashCode的生成每次会增加0x61c88647
 
 
+### java的四种引用类型
 
+强引用，软引用，弱引用，虚引用
+
+四种引用类型的区别是回收的时间不同
+
+强引用
 
 
 
